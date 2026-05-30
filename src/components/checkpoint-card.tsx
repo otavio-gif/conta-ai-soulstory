@@ -35,8 +35,8 @@ function DetalhePayload({ payload }: { payload: CheckpointPayload }) {
           <Linha rotulo="Palavras-chave" valor={plano.palavrasChave.join(", ")} />
           <Linha rotulo="Custo estimado" valor={formatBRL(plano.custo.totalBRL)} />
           <Linha
-            rotulo="Guardrail"
-            valor={`${formatBRL(plano.custo.guardrailBRL)} (${plano.custo.dentroDoGuardrail ? "dentro" : "acima"})`}
+            rotulo="Orcamento"
+            valor={`${formatBRL(plano.custo.orcamentoBRL)} (${plano.custo.dentroDoOrcamento ? "dentro" : "acima"})`}
           />
         </div>
       );

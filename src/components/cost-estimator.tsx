@@ -15,7 +15,7 @@ export function CostEstimator({
   custoAcumulado: number;
   estimado: CustoEstimado | null;
 }) {
-  const acimaDoGuardrail = estimado ? !estimado.dentroDoGuardrail : false;
+  const acimaDoOrcamento = estimado ? !estimado.dentroDoOrcamento : false;
 
   return (
     <Card>
@@ -38,16 +38,16 @@ export function CostEstimator({
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">
-                Guardrail ({estimado.mesesJanela} mes(es))
+                Orcamento ({estimado.mesesJanela} mes(es))
               </span>
-              <span>{formatBRL(estimado.guardrailBRL)}</span>
+              <span>{formatBRL(estimado.orcamentoBRL)}</span>
             </div>
-            {acimaDoGuardrail ? (
+            {acimaDoOrcamento ? (
               <Badge variant="warning">
-                Acima do alvo. Requer aprovacao explicita.
+                Acima do orcamento. Requer aprovacao explicita no checkpoint 1.
               </Badge>
             ) : (
-              <Badge variant="success">Dentro do alvo.</Badge>
+              <Badge variant="success">Dentro do orcamento.</Badge>
             )}
           </>
         ) : (

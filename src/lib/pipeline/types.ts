@@ -93,9 +93,10 @@ export interface CustoPorFonte {
 export interface CustoEstimado {
   porFonte: CustoPorFonte[];
   totalBRL: number;
-  guardrailBRL: number;
+  // Orcamento por projeto aprovado pelo operador no checkpoint 1 (nao e teto fixo).
+  orcamentoBRL: number;
   mesesJanela: number;
-  dentroDoGuardrail: boolean;
+  dentroDoOrcamento: boolean;
 }
 
 // ----- Estagios -----
@@ -112,6 +113,10 @@ export interface PlanoColeta {
   tipo: "marca" | "influenciador";
   janela: { inicio: string; fim: string };
   palavrasChave: string[];
+  /** Handle do perfil principal no Instagram, interpretado do briefing. */
+  instagramHandle?: string;
+  /** URL da pagina do Reclame Aqui, quando a marca tem presenca. */
+  reclameAquiUrl?: string;
   fontes: FontePlanejada[];
   custo: CustoEstimado;
 }
@@ -137,6 +142,88 @@ export interface Inventario {
   metricasIndisponiveis: string[];
 }
 
+// ----- Corpus em memoria (dados normalizados que atravessam os estagios) -----
+
+export interface MetricaPublica {
+  nome: string;
+  valor: number | null;
+  // false quando a metrica nao e publica (salvamentos, compartilhamentos),
+  // nunca estimada (PRD secao 9.5).
+  disponivel: boolean;
+}
+
+export interface ComentarioColetado {
+  id: string;
+  // Pseudonimo estavel (autor_xxxx) por LGPD; a conta da marca nao e anonimizada.
+  autor: string;
+  texto: string;
+  publicadoEm: string;
+}
+
+export type TipoMidia = "imagem" | "carrossel" | "reel" | "video" | "desconhecido";
+
+export interface PostColetado {
+  externalId: string;
+  fonte: SourceKind;
+  tipoMidia: TipoMidia;
+  legenda: string;
+  url: string;
+  publicadoEm: string;
+  // Quando o post e de terceiro citando a marca (midia espontanea).
+  ehMencao: boolean;
+  autorMencao?: string | null;
+  videoUrl?: string | null;
+  imagens: string[];
+  metricas: MetricaPublica[];
+  comentarios: ComentarioColetado[];
+}
+
+export interface ReclamacaoColetada {
+  id: string;
+  titulo: string;
+  texto: string;
+  resposta: string | null;
+  status: string | null;
+  avaliacao: number | null;
+  url: string;
+  publicadoEm?: string | null;
+}
+
+export interface IndicadoresReclameAqui {
+  nota?: number | null;
+  indiceResposta?: string | null;
+  indiceSolucao?: string | null;
+  reclamacoesRespondidas?: string | null;
+}
+
+export interface TranscricaoItem {
+  postExternalId: string;
+  texto: string;
+  idioma?: string | null;
+  modelo: string;
+}
+
+export interface OcrItem {
+  postExternalId: string;
+  texto: string;
+}
+
+/** Tudo que foi coletado e normalizado, threadado entre os estagios. */
+export interface Corpus {
+  marca: string;
+  tipo: "marca" | "influenciador";
+  janela: { inicio: string; fim: string };
+  instagramHandle?: string;
+  bio?: string;
+  posts: PostColetado[];
+  reclamacoes: ReclamacaoColetada[];
+  indicadoresRA: IndicadoresReclameAqui | null;
+  transcricoes: TranscricaoItem[];
+  ocr: OcrItem[];
+  lacunas: LacunaColeta[];
+  metricasIndisponiveis: string[];
+}
+
 export interface AmostraItem {
   origem: string;
   tipo: "transcricao" | "ocr";
@@ -153,11 +240,45 @@ export interface InsightAnalise {
   otica: "cientista_dados" | "analista_conteudo";
   titulo: string;
   conteudo: string;
+  // Identificadores dos dados brutos que sustentam o insight (ledger).
+  suportes: string[];
+}
+
+/** Grafico gerado pelo chart-builder, com PNG (ou dados para fallback de tabela). */
+export interface GraficoRef {
+  id: string;
+  titulo: string;
+  descricao: string;
+  tipo: "barras" | "linha" | "distribuicao";
+  caminhoPng?: string;
+  // Dados que originaram o grafico, para anexo e fallback de tabela.
+  dados: Array<{ rotulo: string; valor: number }>;
+}
+
+/** Afirmacao candidata, antes da verificacao factual (PRD secao 9.2). */
+export interface ClaimCandidato {
+  texto: string;
+  tipoSuporte: "citacao_direta" | "contagem" | "agregacao" | "padrao_observado";
+  suportes: string[];
+  otica: "cientista_dados" | "analista_conteudo" | "sintetizador";
+  construto?: string;
+  parte: "I" | "II";
+}
+
+/** Achado consolidado por otica e construto metodologico. */
+export interface FindingItem {
+  otica: string;
+  construto?: string;
+  parte: "I" | "II";
+  titulo: string;
+  conteudo: string;
 }
 
 export interface SaidaAnalise {
   insights: InsightAnalise[];
-  graficos: Array<{ titulo: string; descricao: string }>;
+  graficos: GraficoRef[];
+  claims: ClaimCandidato[];
+  findings: FindingItem[];
 }
 
 export interface SecaoOutline {
@@ -182,6 +303,8 @@ export interface ClaimVerificada {
   suportes: string[];
   status: ClaimStatus;
   nota?: string;
+  parte?: "I" | "II";
+  construto?: string;
 }
 
 export interface ResultadoVerificacao {
@@ -192,9 +315,31 @@ export interface ResultadoVerificacao {
 
 // ----- Contrato do documento (entrada da skill soulstory-docx) -----
 
+/** Componentes visuais do padrao Soulstory mapeados pelo build script. */
+export type ElementoSecao =
+  | { tipo: "paragrafo"; texto: string }
+  | { tipo: "callout"; eyebrow?: string; paragrafos: string[]; atribuicao?: string }
+  | {
+      tipo: "cards";
+      titulo?: string;
+      itens: Array<{ numero: string; titulo: string; texto: string }>;
+    }
+  | { tipo: "tabela"; titulo?: string; cabecalho: string[]; linhas: string[][] }
+  | { tipo: "grafico"; graficoId: string; legenda?: string }
+  | { tipo: "glossario"; itens: Array<{ termo: string; definicao: string }> };
+
 export interface ReportSpecSecao {
   titulo: string;
+  // Mantido por compatibilidade com o fallback embutido em adapter.ts.
   paragrafos: string[];
+  // Componentes ricos consumidos pelo build script soulstory-docx.
+  elementos?: ElementoSecao[];
+}
+
+export interface ReportSpecAnexo {
+  titulo: string;
+  descricao: string;
+  elementos?: ElementoSecao[];
 }
 
 export interface ReportSpec {
@@ -204,11 +349,14 @@ export interface ReportSpec {
     janela: { inicio: string; fim: string };
   };
   geradoEm: string;
+  subtitulo?: { linha1: string; linha2: string };
   resumoCheckpoints: Array<{ numero: number; titulo: string; resumo: string }>;
   parteI: { titulo: string; secoes: ReportSpecSecao[] };
   parteII: { titulo: string; secoes: ReportSpecSecao[] };
   evidencias: Array<{ afirmacao: string; status: ClaimStatus; suporte: string }>;
-  anexos: Array<{ titulo: string; descricao: string }>;
+  anexos: ReportSpecAnexo[];
+  // Charts gerados, referenciados por id nos elementos do tipo "grafico".
+  graficos?: GraficoRef[];
 }
 
 /** Payload tipado por checkpoint, usado no campo Checkpoint.payload (Json). */

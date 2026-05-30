@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Skills versionadas (CommonJS, fora do padrao do app) e build script CJS.
+    ".claude/**",
+    "scripts/soulstory-docx-build.js",
   ]),
 ]);
 
