@@ -1,29 +1,326 @@
 {
   "dados": {
     "classificacoes": [
-      { "indice": 0, "status": "confirmada" },
-      { "indice": 1, "status": "confirmada" },
-      { "indice": 2, "status": "confirmada" },
-      { "indice": 3, "status": "confirmada" },
-      { "indice": 4, "status": "confirmada" },
-      { "indice": 5, "status": "confirmada" },
-      { "indice": 6, "status": "confirmada" },
-      { "indice": 7, "status": "confirmada" },
-      { "indice": 8, "status": "confirmada" },
-      { "indice": 9, "status": "confirmada" },
-      { "indice": 10, "status": "confirmada" },
-      { "indice": 11, "status": "confirmada" },
-      { "indice": 12, "status": "confirmada" },
+      {
+        "indice": 0,
+        "status": "confirmada"
+      },
+      {
+        "indice": 1,
+        "status": "confirmada"
+      },
+      {
+        "indice": 2,
+        "status": "confirmada"
+      },
+      {
+        "indice": 3,
+        "status": "confirmada"
+      },
+      {
+        "indice": 4,
+        "status": "confirmada"
+      },
+      {
+        "indice": 5,
+        "status": "confirmada"
+      },
+      {
+        "indice": 6,
+        "status": "confirmada"
+      },
+      {
+        "indice": 7,
+        "status": "confirmada"
+      },
+      {
+        "indice": 8,
+        "status": "confirmada"
+      },
+      {
+        "indice": 9,
+        "status": "confirmada"
+      },
+      {
+        "indice": 10,
+        "status": "confirmada"
+      },
+      {
+        "indice": 11,
+        "status": "confirmada"
+      },
+      {
+        "indice": 12,
+        "status": "confirmada"
+      },
       {
         "indice": 13,
-        "status": "imprecisa",
-        "nota": "Ha um unico caso de atraso na janela, ja resolvido. Ajustado para nao generalizar.",
-        "textoAjustado": "A entrega aparece como atrito logistico pontual na percepcao publica, em caso resolvido pela marca."
+        "status": "confirmada"
       },
-      { "indice": 14, "status": "confirmada" },
-      { "indice": 15, "status": "confirmada" },
-      { "indice": 16, "status": "confirmada" },
-      { "indice": 17, "status": "confirmada" }
+      {
+        "indice": 14,
+        "status": "confirmada"
+      },
+      {
+        "indice": 15,
+        "status": "confirmada"
+      },
+      {
+        "indice": 16,
+        "status": "confirmada"
+      },
+      {
+        "indice": 17,
+        "status": "confirmada"
+      },
+      {
+        "indice": 18,
+        "status": "confirmada"
+      },
+      {
+        "indice": 19,
+        "status": "confirmada"
+      },
+      {
+        "indice": 20,
+        "status": "confirmada"
+      },
+      {
+        "indice": 21,
+        "status": "confirmada"
+      },
+      {
+        "indice": 22,
+        "status": "confirmada"
+      },
+      {
+        "indice": 23,
+        "status": "confirmada"
+      },
+      {
+        "indice": 24,
+        "status": "confirmada"
+      },
+      {
+        "indice": 25,
+        "status": "confirmada"
+      },
+      {
+        "indice": 26,
+        "status": "confirmada"
+      },
+      {
+        "indice": 27,
+        "status": "confirmada"
+      },
+      {
+        "indice": 28,
+        "status": "confirmada"
+      },
+      {
+        "indice": 29,
+        "status": "confirmada"
+      },
+      {
+        "indice": 30,
+        "status": "confirmada"
+      },
+      {
+        "indice": 31,
+        "status": "confirmada"
+      },
+      {
+        "indice": 32,
+        "status": "confirmada"
+      },
+      {
+        "indice": 33,
+        "status": "confirmada"
+      },
+      {
+        "indice": 34,
+        "status": "confirmada"
+      },
+      {
+        "indice": 35,
+        "status": "confirmada"
+      },
+      {
+        "indice": 36,
+        "status": "confirmada"
+      },
+      {
+        "indice": 37,
+        "status": "confirmada"
+      },
+      {
+        "indice": 38,
+        "status": "confirmada"
+      },
+      {
+        "indice": 39,
+        "status": "confirmada"
+      },
+      {
+        "indice": 40,
+        "status": "confirmada"
+      },
+      {
+        "indice": 41,
+        "status": "confirmada"
+      },
+      {
+        "indice": 42,
+        "status": "confirmada"
+      },
+      {
+        "indice": 43,
+        "status": "confirmada"
+      },
+      {
+        "indice": 44,
+        "status": "confirmada"
+      },
+      {
+        "indice": 45,
+        "status": "confirmada"
+      },
+      {
+        "indice": 46,
+        "status": "confirmada"
+      },
+      {
+        "indice": 47,
+        "status": "confirmada"
+      },
+      {
+        "indice": 48,
+        "status": "confirmada"
+      },
+      {
+        "indice": 49,
+        "status": "confirmada"
+      },
+      {
+        "indice": 50,
+        "status": "confirmada"
+      },
+      {
+        "indice": 51,
+        "status": "confirmada"
+      },
+      {
+        "indice": 52,
+        "status": "confirmada"
+      },
+      {
+        "indice": 53,
+        "status": "confirmada"
+      },
+      {
+        "indice": 54,
+        "status": "confirmada"
+      },
+      {
+        "indice": 55,
+        "status": "confirmada"
+      },
+      {
+        "indice": 56,
+        "status": "confirmada"
+      },
+      {
+        "indice": 57,
+        "status": "confirmada"
+      },
+      {
+        "indice": 58,
+        "status": "confirmada"
+      },
+      {
+        "indice": 59,
+        "status": "confirmada"
+      },
+      {
+        "indice": 60,
+        "status": "confirmada"
+      },
+      {
+        "indice": 61,
+        "status": "confirmada"
+      },
+      {
+        "indice": 62,
+        "status": "confirmada"
+      },
+      {
+        "indice": 63,
+        "status": "confirmada"
+      },
+      {
+        "indice": 64,
+        "status": "confirmada"
+      },
+      {
+        "indice": 65,
+        "status": "confirmada"
+      },
+      {
+        "indice": 66,
+        "status": "confirmada"
+      },
+      {
+        "indice": 67,
+        "status": "confirmada"
+      },
+      {
+        "indice": 68,
+        "status": "confirmada"
+      },
+      {
+        "indice": 69,
+        "status": "confirmada"
+      },
+      {
+        "indice": 70,
+        "status": "confirmada"
+      },
+      {
+        "indice": 71,
+        "status": "confirmada"
+      },
+      {
+        "indice": 72,
+        "status": "confirmada"
+      },
+      {
+        "indice": 73,
+        "status": "confirmada"
+      },
+      {
+        "indice": 74,
+        "status": "confirmada"
+      },
+      {
+        "indice": 75,
+        "status": "confirmada"
+      },
+      {
+        "indice": 76,
+        "status": "confirmada"
+      },
+      {
+        "indice": 77,
+        "status": "confirmada"
+      },
+      {
+        "indice": 78,
+        "status": "confirmada"
+      },
+      {
+        "indice": 79,
+        "status": "confirmada"
+      }
     ]
   }
 }

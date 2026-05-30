@@ -54,6 +54,19 @@ function indiceEvidencias(corpus: Corpus): Map<string, string> {
       `Reclamacao ${r.id}: "${r.titulo}". Texto: "${r.texto}". Status: ${r.status ?? "n/d"}. Resposta da marca: ${r.resposta ? `"${r.resposta}"` : "sem resposta"}.`,
     );
   }
+  // SEO e busca (Fase 3): itens de SERP e volume de busca declarado pela API.
+  for (const s of corpus.serp ?? []) {
+    idx.set(
+      s.externalId,
+      `Resultado de busca ${s.externalId} (tipo ${s.tipo}, termo "${s.termo}", ${s.ehTerceiro ? "terceiro" : "marca"}). Titulo: "${s.titulo}". Posicao: ${s.posicao ?? "n/d"}. Dominio: ${s.dominio || "n/d"}. Trecho: "${s.snippet}".`,
+    );
+  }
+  for (const v of corpus.volumesBusca ?? []) {
+    idx.set(
+      `volume:${v.termo}`,
+      `Volume de busca do termo "${v.termo}": ${v.disponivel ? v.volume : "dado nao disponivel publicamente"} (dado declarado pela API, nunca estimado).`,
+    );
+  }
   return idx;
 }
 

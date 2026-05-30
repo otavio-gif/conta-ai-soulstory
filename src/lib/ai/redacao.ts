@@ -302,6 +302,91 @@ function anexos(
     });
   }
 
+  // Anexo de SEO e busca (Fase 3): o que aparece ao pesquisar a marca, mais o
+  // volume de busca declarado pela API (nunca estimado).
+  const serp = corpus.serp ?? [];
+  if (serp.length > 0) {
+    const elementos: ElementoSecao[] = [
+      {
+        tipo: "tabela",
+        titulo: "Resultados de busca sobre a marca",
+        cabecalho: ["Termo", "Tipo", "Posicao", "Titulo", "Dominio", "Origem"],
+        linhas: serp
+          .filter((s) => s.tipo === "organico" || s.tipo === "featured_snippet" || s.tipo === "paa")
+          .map((s) => [
+            s.termo,
+            s.tipo,
+            s.posicao !== null ? String(s.posicao) : "n/d",
+            s.titulo,
+            s.dominio || "n/d",
+            s.ehTerceiro ? "terceiro" : "marca",
+          ]),
+      },
+    ];
+    const sugestoes = serp.filter((s) => s.tipo === "autocomplete" || s.tipo === "related");
+    if (sugestoes.length > 0) {
+      elementos.push({
+        tipo: "callout",
+        eyebrow: "Sugestoes e buscas relacionadas",
+        paragrafos: [sugestoes.map((s) => s.titulo).join("; ")],
+      });
+    }
+    const volumes = corpus.volumesBusca ?? [];
+    if (volumes.length > 0) {
+      elementos.push({
+        tipo: "tabela",
+        titulo: "Volume de busca (dado declarado pela API)",
+        cabecalho: ["Termo", "Volume mensal"],
+        linhas: volumes.map((v) => [
+          v.termo,
+          v.disponivel ? String(v.volume) : "dado nao disponivel",
+        ]),
+      });
+    }
+    lista.push({
+      titulo: "SEO e SERP",
+      descricao:
+        "O que aparece ao pesquisar a marca no Google: SERP organica, featured snippets, as pessoas tambem perguntam, sugestoes e volume de busca declarado.",
+      elementos,
+    });
+  }
+
+  // Anexo de mencoes e share of voice (Fase 3): midia espontanea de terceiros.
+  const mencoes = corpus.posts.filter((p) => p.ehMencao);
+  if (mencoes.length > 0) {
+    const sovVerificadas = verificacao.claims.filter(
+      (c) =>
+        c.construto === "share_of_voice" &&
+        (c.status === "confirmada" || c.status === "imprecisa"),
+    );
+    const elementos: ElementoSecao[] = [];
+    if (sovVerificadas.length > 0) {
+      elementos.push({
+        tipo: "callout",
+        eyebrow: "Share of voice de mencao",
+        paragrafos: sovVerificadas.map((c) => c.texto),
+      });
+    }
+    elementos.push({
+      tipo: "tabela",
+      titulo: "Pecas de terceiros sobre a marca",
+      cabecalho: ["Peca", "Tipo", "Data", "Autor", "Trecho"],
+      linhas: mencoes.map((p) => [
+        p.externalId,
+        p.tipoMidia,
+        p.publicadoEm.slice(0, 10),
+        p.autorMencao ?? "n/d",
+        p.legenda.slice(0, 120),
+      ]),
+    });
+    lista.push({
+      titulo: "Mencoes e share of voice",
+      descricao:
+        "Conteudo de terceiros que cita a marca (midia espontanea), com a proporcao de voz de terceiros versus a propria marca na janela. So entram afirmacoes verificadas.",
+      elementos,
+    });
+  }
+
   lista.push({
     titulo: "Registro de evidencias",
     descricao: "Todas as afirmacoes candidatas e o resultado da verificacao factual.",

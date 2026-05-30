@@ -14,6 +14,8 @@ import { coletarInstagram } from "@/lib/collectors/instagram";
 import { coletarReclameAqui } from "@/lib/collectors/reclame-aqui";
 import { coletarTiktok } from "@/lib/collectors/tiktok";
 import { coletarYoutube } from "@/lib/collectors/youtube";
+import { coletarSeoSerp } from "@/lib/collectors/seo-serp";
+import { coletarMencoes } from "@/lib/collectors/mencoes";
 import { mapearComConcorrencia } from "@/lib/collectors/util";
 import { transcreverAudio } from "@/lib/transcribe/whisper";
 import { ocrCarrossel } from "@/lib/transcribe/ocr";
@@ -23,6 +25,7 @@ import type {
   AmostraItem,
   AmostraTranscricao,
   Corpus,
+  FontePlanejada,
   Inventario,
   InventarioFonte,
   Outline,
@@ -50,10 +53,15 @@ interface SaidaInterprete {
   tiktokHandle?: string;
   youtubeHandle?: string;
   palavrasChave: string[];
+  // Termos de busca (nome e variacoes) e dominios oficiais para SEO e mencoes.
+  termosBusca?: string[];
+  dominiosMarca?: string[];
   volumeInstagram: number;
   volumeReclameAqui: number;
   volumeTiktok: number;
   volumeYoutube: number;
+  volumeSeoSerp?: number;
+  volumeMencoes?: number;
 }
 
 export async function interpretarBriefing(
@@ -68,7 +76,7 @@ export async function interpretarBriefing(
         `Briefing:\n${input.briefing}\n\nJanela: ${input.janela.inicio} a ${input.janela.fim}.`,
       ),
       bloco(
-        "Extraia o plano de coleta para Instagram, Reclame Aqui, TikTok e YouTube. Estime o volume por fonte.",
+        "Extraia o plano de coleta para Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google (seo_serp) e mencoes de terceiros (mencoes). Para SEO e mencoes, derive os termos de busca (nome da marca e variacoes) e os dominios e perfis oficiais da marca. Estime o volume por fonte.",
       ),
     ],
     ferramenta: {
@@ -84,10 +92,14 @@ export async function interpretarBriefing(
           tiktokHandle: { type: "string" },
           youtubeHandle: { type: "string" },
           palavrasChave: { type: "array", items: { type: "string" } },
+          termosBusca: { type: "array", items: { type: "string" } },
+          dominiosMarca: { type: "array", items: { type: "string" } },
           volumeInstagram: { type: "number" },
           volumeReclameAqui: { type: "number" },
           volumeTiktok: { type: "number" },
           volumeYoutube: { type: "number" },
+          volumeSeoSerp: { type: "number" },
+          volumeMencoes: { type: "number" },
         },
         required: ["marca", "tipo", "palavrasChave", "volumeInstagram", "volumeReclameAqui"],
       },
@@ -98,7 +110,7 @@ export async function interpretarBriefing(
   const d = resp.dados;
   if (!d) throw new Error("Interprete nao devolveu o plano de coleta.");
 
-  const fontes = [
+  const fontes: FontePlanejada[] = [
     ...(d.instagramHandle
       ? [
           {
@@ -137,6 +149,15 @@ export async function interpretarBriefing(
       : []),
   ];
 
+  // SEO/SERP e mencoes (Fase 3): entram quando ha termos de busca da marca.
+  const termosBusca =
+    d.termosBusca && d.termosBusca.length > 0 ? d.termosBusca : [d.marca];
+  const dominiosMarca = d.dominiosMarca ?? [];
+  fontes.push(
+    { kind: "seo_serp" as const, volumeEstimado: d.volumeSeoSerp ?? termosBusca.length },
+    { kind: "mencoes" as const, volumeEstimado: d.volumeMencoes ?? 0 },
+  );
+
   return {
     marca: d.marca,
     tipo: d.tipo,
@@ -146,6 +167,8 @@ export async function interpretarBriefing(
     reclameAquiUrl: d.reclameAquiUrl,
     tiktokHandle: d.tiktokHandle,
     youtubeHandle: d.youtubeHandle,
+    termosBusca,
+    dominiosMarca,
     fontes,
     custo: estimarCusto({ fontes, janela: input.janela, orcamentoBRL: input.orcamentoBRL }),
   };
@@ -196,7 +219,32 @@ export async function coletar(
       })
     : { reclamacoes: [], indicadores: null, lacunas: [], paginasBrutas: [] };
 
-  const posts: PostColetado[] = [...ig.posts, ...tt.posts, ...yt.posts];
+  // SEO e busca no Google (Fase 3). Roda primeiro para alimentar as mencoes web
+  // com as URLs de terceiros que ranqueiam.
+  const temSeo = plano.fontes.some((f) => f.kind === "seo_serp");
+  const seo = temSeo
+    ? await coletarSeoSerp({
+        projectId,
+        termos: plano.termosBusca ?? [plano.marca],
+        dominiosMarca: plano.dominiosMarca ?? [],
+        webhookBase,
+      })
+    : { serp: [], volumes: [], lacunas: [], urlsTerceiros: [] };
+
+  // Mencoes de terceiros (midia espontanea, Fase 3), cross-plataforma.
+  const temMencoes = plano.fontes.some((f) => f.kind === "mencoes");
+  const men = temMencoes
+    ? await coletarMencoes({
+        projectId,
+        marca: plano.marca,
+        termos: plano.termosBusca ?? [plano.marca],
+        janela: plano.janela,
+        urlsTerceiros: seo.urlsTerceiros,
+        webhookBase,
+      })
+    : { posts: [], lacunas: [] };
+
+  const posts: PostColetado[] = [...ig.posts, ...tt.posts, ...yt.posts, ...men.posts];
 
   const corpus: Corpus = {
     marca: plano.marca,
@@ -210,7 +258,16 @@ export async function coletar(
     transcricoes: [],
     ocr: [],
     legendasOficiais: yt.legendasOficiais,
-    lacunas: [...ig.lacunas, ...tt.lacunas, ...yt.lacunas, ...ra.lacunas],
+    serp: seo.serp,
+    volumesBusca: seo.volumes,
+    lacunas: [
+      ...ig.lacunas,
+      ...tt.lacunas,
+      ...yt.lacunas,
+      ...ra.lacunas,
+      ...seo.lacunas,
+      ...men.lacunas,
+    ],
     metricasIndisponiveis: [
       ...ig.metricasIndisponiveis,
       ...tt.metricasIndisponiveis,
@@ -252,6 +309,33 @@ function montarInventario(corpus: Corpus): Inventario {
       videos: 0,
       reclamacoes: corpus.reclamacoes.length,
       artefatosBrutos: corpus.reclamacoes.length,
+    });
+  }
+
+  // SEO e busca (Fase 3): cada item de SERP e um artefato bruto.
+  const serp = corpus.serp ?? [];
+  if (serp.length > 0) {
+    porFonte.push({
+      fonte: "seo_serp",
+      posts: serp.length,
+      comentarios: 0,
+      videos: 0,
+      reclamacoes: 0,
+      artefatosBrutos: serp.length,
+    });
+  }
+
+  // Mencoes (Fase 3): pecas de terceiros e seus comentarios.
+  const mencoes = corpus.posts.filter((p) => p.fonte === "mencoes");
+  if (mencoes.length > 0) {
+    const comentariosMencoes = mencoes.reduce((a, p) => a + p.comentarios.length, 0);
+    porFonte.push({
+      fonte: "mencoes",
+      posts: mencoes.length,
+      comentarios: comentariosMencoes,
+      videos: mencoes.filter((p) => p.tipoMidia === "reel" || p.tipoMidia === "video").length,
+      reclamacoes: 0,
+      artefatosBrutos: mencoes.length + comentariosMencoes,
     });
   }
 

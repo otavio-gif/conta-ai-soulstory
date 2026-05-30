@@ -7,6 +7,10 @@
 import { bloco, blocoCacheavel, chamarClaude } from "@/lib/ai/anthropic";
 import { doutrina } from "@/lib/ai/doctrine";
 import { renderizarGraficos } from "@/lib/charts";
+import { calcularShareOfVoice } from "@/lib/analytics/share-of-voice";
+import { calcularPicoTimeline } from "@/lib/analytics/pico-timeline";
+import { analisarSentimento } from "@/lib/analytics/sentimento";
+import { consolidarGlossario, mapearTemas } from "@/lib/analytics/temas";
 import {
   PROMPT_ANALISTA_CONTEUDO,
   PROMPT_CIENTISTA_DADOS,
@@ -433,15 +437,53 @@ export async function analisar(
   corpus: Corpus,
   projectId: string,
 ): Promise<SaidaAnalise> {
-  const graficos = await renderizarGraficos(construirGraficos(corpus), projectId);
+  // Especificacoes dos graficos das oticas, referenciadas por id nos prompts.
+  const graficosOticas = construirGraficos(corpus);
   const porPost = await analisarPorPost(corpus);
-  const cientista = await analisarCientista(corpus, graficos);
-  const viralizacao = await analisarViralizacao(corpus, graficos);
+  const cientista = await analisarCientista(corpus, graficosOticas);
+  const viralizacao = await analisarViralizacao(corpus, graficosOticas);
+
+  // Analises adicionais (PRD secao 3.8, Fase 3). Deterministicas (share of voice,
+  // formato e horario de pico, linha do tempo) e por modelo (sentimento, temas).
+  // O glossario consolida de forma deterministica a linguagem nativa por post.
+  const sov = calcularShareOfVoice(corpus);
+  const pico = calcularPicoTimeline(corpus);
+  const sentimento = await analisarSentimento(corpus);
+  const temas = await mapearTemas(corpus);
+  const glossario = consolidarGlossario(porPost.findings);
+
+  // Renderiza os graficos das oticas e das analises adicionais numa unica passada.
+  const graficos = await renderizarGraficos(
+    [
+      ...graficosOticas,
+      ...sov.graficos,
+      ...pico.graficos,
+      ...sentimento.graficos,
+      ...temas.graficos,
+    ],
+    projectId,
+  );
 
   return {
     insights: [...cientista.insights, ...porPost.insights, ...viralizacao.insights],
     graficos,
-    claims: [...porPost.claims, ...cientista.claims, ...viralizacao.claims],
-    findings: [...porPost.findings, ...viralizacao.findings],
+    claims: [
+      ...porPost.claims,
+      ...cientista.claims,
+      ...viralizacao.claims,
+      ...sov.claims,
+      ...pico.claims,
+      ...sentimento.claims,
+      ...temas.claims,
+    ],
+    findings: [
+      ...porPost.findings,
+      ...viralizacao.findings,
+      ...sov.findings,
+      ...pico.findings,
+      ...sentimento.findings,
+      ...temas.findings,
+      ...glossario,
+    ],
   };
 }

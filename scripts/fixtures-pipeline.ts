@@ -44,7 +44,7 @@ async function main() {
 
   const plano = await interpretarBriefing({
     briefing:
-      "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok e YouTube, com foco em torra artesanal e cafe especial.",
+      "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google e mencoes de terceiros, com foco em torra artesanal e cafe especial.",
     janela,
   });
   checkpoint(
@@ -179,6 +179,109 @@ async function main() {
     usouLegenda && usouFallback
       ? "OK: legenda oficial e fallback de transcricao exercidos."
       : `FALHA: legenda=${usouLegenda}, fallback=${usouFallback} (esperados ambos).`,
+  );
+
+  // ----- Aceite especifico da Fase 3 (busca e midia espontanea) -----
+  console.log("\nAceite da Fase 3\n----------------");
+
+  const fontesF3 = inventario.porFonte.map((f) => f.fonte);
+  const temSeoEMencoes = ["seo_serp", "mencoes"].every((f) =>
+    fontesF3.includes(f as (typeof fontesF3)[number]),
+  );
+  console.log(
+    temSeoEMencoes
+      ? "OK: camadas de SEO/busca e de mencoes integradas ao mesmo relatorio."
+      : `FALHA: fontes presentes ${fontesF3.join(", ")} (esperadas seo_serp e mencoes).`,
+  );
+
+  const serp = corpusTr.serp ?? [];
+  const temPaa = serp.some((s) => s.tipo === "paa");
+  const temAutocomplete = serp.some((s) => s.tipo === "autocomplete");
+  const temTerceiroRanqueando = serp.some((s) => s.ehTerceiro && s.url);
+  console.log(
+    temPaa && temAutocomplete && temTerceiroRanqueando
+      ? "OK: SERP com PAA, autocomplete e conteudo de terceiros que ranqueia."
+      : `FALHA: paa=${temPaa}, autocomplete=${temAutocomplete}, terceiro=${temTerceiroRanqueando}.`,
+  );
+
+  const volumes = corpusTr.volumesBusca ?? [];
+  const volumeDeclarado = volumes.some((v) => v.disponivel && v.volume !== null);
+  const volumeIndisponivel = volumes.some((v) => !v.disponivel);
+  console.log(
+    volumeDeclarado && volumeIndisponivel
+      ? "OK: volume de busca declarado pela API e ausencia declarada indisponivel (nunca estimado)."
+      : `FALHA: volume declarado=${volumeDeclarado}, indisponivel declarado=${volumeIndisponivel}.`,
+  );
+
+  const plataformasMencao = new Set(
+    corpusTr.posts
+      .filter((p) => p.ehMencao)
+      .map((p) => p.externalId.split(":")[0]),
+  );
+  const cobreQuatro = ["web", "tiktok", "youtube", "instagram"].every((p) =>
+    plataformasMencao.has(p),
+  );
+  console.log(
+    cobreQuatro
+      ? "OK: mencoes de terceiros nas quatro plataformas (web, TikTok, YouTube, Instagram)."
+      : `FALHA: plataformas de mencao presentes: ${[...plataformasMencao].join(", ")}.`,
+  );
+
+  const autoresMencaoOk = corpusTr.posts
+    .filter((p) => p.ehMencao)
+    .every((p) => !p.autorMencao || p.autorMencao.startsWith("autor_"));
+  console.log(
+    autoresMencaoOk
+      ? "OK: autores de mencao pseudonimizados por hash (LGPD)."
+      : "FALHA: ha mencao com autor nao pseudonimizado.",
+  );
+
+  function temConstrutoVerificado(construto: string): boolean {
+    return verificacao.claims.some(
+      (c) =>
+        c.construto === construto &&
+        (c.status === "confirmada" || c.status === "imprecisa"),
+    );
+  }
+  for (const construto of [
+    "share_of_voice",
+    "sentimento",
+    "temas",
+    "formato_horario",
+    "linha_tempo",
+  ]) {
+    const ok = temConstrutoVerificado(construto);
+    console.log(
+      ok
+        ? `OK: analise 3.8 "${construto}" com afirmacao verificada.`
+        : `ATENCAO: nenhuma afirmacao verificada para "${construto}".`,
+    );
+  }
+
+  const temGlossario = analise.findings.some((f) => f.construto === "glossario");
+  console.log(
+    temGlossario
+      ? "OK: glossario de linguagem nativa consolidado."
+      : "ATENCAO: glossario de linguagem nativa vazio.",
+  );
+
+  const anexosTitulos = spec.anexos.map((a) => a.titulo);
+  const temAnexoSeo = anexosTitulos.some((t) => t.includes("SEO e SERP"));
+  const temAnexoMencoes = anexosTitulos.some((t) => t.includes("Mencoes e share of voice"));
+  console.log(
+    temAnexoSeo && temAnexoMencoes
+      ? "OK: anexos de SEO/SERP e de mencoes presentes no relatorio."
+      : `FALHA: anexo SEO=${temAnexoSeo}, anexo mencoes=${temAnexoMencoes}.`,
+  );
+
+  const graficosIds = (spec.graficos ?? []).map((g) => g.id);
+  const graficosNovos = ["share-of-voice", "linha-tempo-sentimento", "mapa-temas"].filter((g) =>
+    graficosIds.includes(g),
+  );
+  console.log(
+    graficosNovos.length === 3
+      ? "OK: graficos novos (share of voice, sentimento longitudinal, mapa de temas) gerados."
+      : `FALHA: graficos novos presentes: ${graficosNovos.join(", ")}.`,
   );
 
   console.log("\nConcluido. Os 7 checkpoints passaram sobre o pipeline real (fixtures).");

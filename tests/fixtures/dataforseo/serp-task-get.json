@@ -1,0 +1,85 @@
+[
+  {
+    "keyword": "cafes serra azul",
+    "type": "organic",
+    "se_domain": "google.com.br",
+    "location_code": 2076,
+    "language_code": "pt",
+    "items_count": 6,
+    "items": [
+      {
+        "type": "organic",
+        "rank_group": 1,
+        "rank_absolute": 1,
+        "domain": "cafesserraazul.com.br",
+        "title": "Cafes Serra Azul | Torra artesanal da Mantiqueira",
+        "url": "https://cafesserraazul.com.br",
+        "description": "Cafe especial torrado em pequenos lotes, direto do produtor da Serra da Mantiqueira."
+      },
+      {
+        "type": "featured_snippet",
+        "rank_group": 1,
+        "rank_absolute": 1,
+        "domain": "blogdocafe.com.br",
+        "title": "O que torna o cafe da Serra Azul especial",
+        "url": "https://blogdocafe.com.br/serra-azul-resenha",
+        "description": "A Serra Azul trabalha com torra media e graos de colheita manual, o que preserva a doçura natural."
+      },
+      {
+        "type": "organic",
+        "rank_group": 2,
+        "rank_absolute": 3,
+        "domain": "mercadolivre.com.br",
+        "title": "Cafe Serra Azul a venda",
+        "url": "https://mercadolivre.com.br/cafe-serra-azul",
+        "description": "Encontre o cafe Serra Azul com entrega para todo o Brasil."
+      },
+      {
+        "type": "organic",
+        "rank_group": 3,
+        "rank_absolute": 4,
+        "domain": "reclameaqui.com.br",
+        "title": "Cafes Serra Azul - Reclame Aqui",
+        "url": "https://reclameaqui.com.br/empresa/cafes-serra-azul",
+        "description": "Reputacao, reclamacoes e respostas da marca Cafes Serra Azul."
+      },
+      {
+        "type": "people_also_ask",
+        "items": [
+          {
+            "type": "people_also_ask_element",
+            "title": "O cafe da Serra Azul vale a pena?",
+            "expanded_element": [
+              {
+                "type": "people_also_ask_expanded_element",
+                "url": "https://blogdocafe.com.br/serra-azul-resenha",
+                "title": "Resenha: vale a pena o cafe da Serra Azul",
+                "description": "Para quem busca torra media e procedencia rastreavel, a Serra Azul entrega consistencia."
+              }
+            ]
+          },
+          {
+            "type": "people_also_ask_element",
+            "title": "Onde comprar cafe Serra Azul?",
+            "expanded_element": [
+              {
+                "type": "people_also_ask_expanded_element",
+                "url": "https://cafesserraazul.com.br/loja",
+                "title": "Loja oficial Cafes Serra Azul",
+                "description": "Compre direto no site oficial com frete para todo o Brasil."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "related_searches",
+        "items": [
+          "cafe serra azul preco",
+          "cafe serra azul onde comprar",
+          "cafe serra azul torra media"
+        ]
+      }
+    ]
+  }
+]

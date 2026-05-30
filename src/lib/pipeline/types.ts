@@ -121,6 +121,10 @@ export interface PlanoColeta {
   tiktokHandle?: string;
   /** Handle ou identificador do canal no YouTube, interpretado do briefing. */
   youtubeHandle?: string;
+  /** Termos de busca da marca (nome e variacoes) para SEO/SERP e mencoes (Fase 3). */
+  termosBusca?: string[];
+  /** Dominios e perfis oficiais da marca, para separar terceiro de proprio (Fase 3). */
+  dominiosMarca?: string[];
   fontes: FontePlanejada[];
   custo: CustoEstimado;
 }
@@ -214,6 +218,38 @@ export interface OcrItem {
   texto: string;
 }
 
+/**
+ * Item de SERP normalizado (Fase 3, SEO e busca no Google). Cada item carrega o
+ * termo pesquisado, o tipo de resultado e a proveniencia. ehTerceiro marca o que
+ * ranqueia sobre a marca sem ser dominio oficial dela.
+ */
+export interface SerpItem {
+  externalId: string;
+  termo: string;
+  tipo:
+    | "organico"
+    | "paa"
+    | "featured_snippet"
+    | "related"
+    | "autocomplete";
+  posicao: number | null;
+  titulo: string;
+  url: string;
+  snippet: string;
+  dominio: string;
+  ehTerceiro: boolean;
+}
+
+/**
+ * Volume de busca declarado pela API (Fase 3). Nunca estimado: quando a API nao
+ * retorna o numero, disponivel=false e valor nulo (PRD secao 9.5).
+ */
+export interface VolumeBusca {
+  termo: string;
+  volume: number | null;
+  disponivel: boolean;
+}
+
 /** Tudo que foi coletado e normalizado, threadado entre os estagios. */
 export interface Corpus {
   marca: string;
@@ -229,6 +265,9 @@ export interface Corpus {
   // Legendas oficiais do YouTube por externalId do video, preenchidas na coleta.
   // Curto-circuitam a transcricao paga no estagio de transcricao.
   legendasOficiais?: Record<string, { texto: string; idioma: string }>;
+  // SEO e busca no Google (Fase 3). Itens de SERP e volume de busca declarado.
+  serp?: SerpItem[];
+  volumesBusca?: VolumeBusca[];
   lacunas: LacunaColeta[];
   metricasIndisponiveis: string[];
 }

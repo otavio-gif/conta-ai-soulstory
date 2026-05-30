@@ -60,9 +60,12 @@ export async function persistirColeta(
       imagens: p.imagens,
     });
 
-    // Instagram vai para o modelo Post; videos de TikTok e YouTube para o modelo
-    // Video (PRD secao 11). Ambos compartilham comentarios e metricas.
-    if (p.fonte === "instagram") {
+    // Instagram e mencoes nao video vao para o modelo Post; videos de TikTok,
+    // YouTube e mencoes em video para o modelo Video (PRD secao 11). Ambos
+    // compartilham comentarios e metricas.
+    const ehVideo = p.tipoMidia === "reel" || p.tipoMidia === "video";
+    const comoPost = p.fonte === "instagram" || (p.fonte === "mencoes" && !ehVideo);
+    if (comoPost) {
       await prisma.post.create({
         data: {
           projectId,
@@ -91,7 +94,7 @@ export async function persistirColeta(
     await prisma.metric.createMany({
       data: p.metricas.map((m) => ({
         projectId,
-        itemTipo: p.fonte === "instagram" ? "post" : "video",
+        itemTipo: comoPost ? "post" : "video",
         itemId: p.externalId,
         nome: m.nome,
         valor: m.valor,
@@ -132,6 +135,45 @@ export async function persistirColeta(
         status: r.status,
         avaliacao: r.avaliacao,
         raw: toJson({ rawArtifactId: artifact.id, id: r.id }),
+      },
+    });
+  }
+
+  // SEO e busca (Fase 3): cada item de SERP vira RawArtifact + SerpResult.
+  for (const s of corpus.serp ?? []) {
+    const artifact = await prisma.rawArtifact.create({
+      data: {
+        projectId,
+        fonte: "seo_serp",
+        url: s.url || `serp://${s.termo}/${s.externalId}`,
+        payload: toJson(s),
+      },
+    });
+    await prisma.serpResult.create({
+      data: {
+        projectId,
+        termo: s.termo,
+        posicao: s.posicao,
+        titulo: s.titulo,
+        url: s.url,
+        snippet: s.snippet,
+        tipo: s.tipo,
+        raw: toJson({ rawArtifactId: artifact.id, dominio: s.dominio, ehTerceiro: s.ehTerceiro }),
+      },
+    });
+  }
+
+  // Volume de busca declarado pela API (nunca estimado): vira Metric por termo.
+  for (const v of corpus.volumesBusca ?? []) {
+    await prisma.metric.create({
+      data: {
+        projectId,
+        itemTipo: "termo_busca",
+        itemId: v.termo,
+        nome: "volume_busca",
+        valor: v.volume,
+        disponivel: v.disponivel,
+        fonte: "seo_serp",
       },
     });
   }

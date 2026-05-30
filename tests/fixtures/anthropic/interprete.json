@@ -7,9 +7,13 @@
     "tiktokHandle": "@cafesserraazul",
     "youtubeHandle": "@cafesserraazul",
     "palavrasChave": ["cafe especial", "serra azul", "torra artesanal"],
+    "termosBusca": ["cafes serra azul", "cafe especial", "torra artesanal"],
+    "dominiosMarca": ["cafesserraazul.com.br", "instagram.com/cafesserraazul"],
     "volumeInstagram": 4,
     "volumeReclameAqui": 2,
     "volumeTiktok": 2,
-    "volumeYoutube": 2
+    "volumeYoutube": 2,
+    "volumeSeoSerp": 3,
+    "volumeMencoes": 5
   }
 }

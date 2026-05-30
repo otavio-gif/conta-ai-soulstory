@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ttm_001",
+    "text": "Provei o cafe da Cafes Serra Azul e a torra media surpreendeu. Recomendo para quem gosta de coado. #cafe #cafeespecial",
+    "createTimeISO": "2026-02-22T19:00:00.000Z",
+    "webVideoUrl": "https://www.tiktok.com/@baristadahora/video/ttm_001",
+    "videoUrl": "https://cdn.example/ttm_001.mp4",
+    "authorMeta": { "name": "baristadahora", "signature": "Dicas de cafe." },
+    "diggCount": 9300,
+    "commentCount": 210,
+    "playCount": 188000,
+    "shareCount": 540
+  },
+  {
+    "id": "ttm_002",
+    "text": "Comparei tres cafes especiais e o da Serra Azul ficou em primeiro no coado.",
+    "createTimeISO": "2026-03-10T16:00:00.000Z",
+    "webVideoUrl": "https://www.tiktok.com/@cafecomana/video/ttm_002",
+    "videoUrl": "https://cdn.example/ttm_002.mp4",
+    "authorMeta": { "name": "cafecomana", "signature": "Cafe todo dia." },
+    "diggCount": 4100,
+    "commentCount": 96,
+    "playCount": 72000,
+    "shareCount": 180
+  }
+]

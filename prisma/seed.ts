@@ -19,7 +19,7 @@ async function main() {
     data: {
       nome: MOCK_BRAND.nome,
       tipo: MOCK_BRAND.tipo,
-      briefing: `Diagnostico de Visao Externa da marca ${MOCK_BRAND.nome}. Perfil ${MOCK_BRAND.handles.instagram}, site ${MOCK_BRAND.site}, presenca no Reclame Aqui e busca. Palavras-chave: ${MOCK_BRAND.palavrasChave.join(", ")}.`,
+      briefing: `Diagnostico de Visao Externa da marca ${MOCK_BRAND.nome}. Perfil ${MOCK_BRAND.handles.instagram}, site ${MOCK_BRAND.site}, presenca no Reclame Aqui, TikTok e YouTube, SEO e busca no Google e mencoes de terceiros. Palavras-chave: ${MOCK_BRAND.palavrasChave.join(", ")}.`,
       janelaInicio: new Date("2026-02-01T00:00:00.000Z"),
       janelaFim: new Date("2026-03-31T23:59:59.000Z"),
       status: "rascunho",
