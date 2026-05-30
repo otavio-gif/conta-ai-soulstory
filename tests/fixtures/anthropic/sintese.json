@@ -1,0 +1,92 @@
+{
+  "dados": {
+    "findings": [
+      {
+        "construto": "gap_percepcao",
+        "titulo": "A marca fala de metodo, o publico responde com pertencimento",
+        "conteudo": "A comunicacao enfatiza tecnica e origem; a percepcao publica devolve sobretudo vinculo, ritual e identificacao com o preparo em casa.",
+        "suportes": ["ig_002", "c_002_3"]
+      },
+      {
+        "construto": "promotores",
+        "titulo": "Origem rastreavel e didatica de preparo",
+        "conteudo": "Procedencia da Mantiqueira e o passo a passo de coar puxam confianca e fidelidade espontaneas.",
+        "suportes": ["c_001_2", "ig_001"]
+      },
+      {
+        "construto": "detratores",
+        "titulo": "Atrito logistico pontual",
+        "conteudo": "A entrega aparece como ponto de atrito, ainda que resolvido pela marca com prioridade.",
+        "suportes": ["ra_001", "c_003_1"]
+      },
+      {
+        "construto": "aceleradores",
+        "titulo": "Conteudo de metodo e edicoes limitadas",
+        "conteudo": "Reels didaticos e lancamentos sazonais sao os gatilhos que mais movem a conversa a favor.",
+        "suportes": ["ig_002", "ig_003"]
+      },
+      {
+        "construto": "persona",
+        "titulo": "Entusiasta que prepara cafe em casa",
+        "conteudo": "Perfil que valoriza tecnica, origem e ritual, e que aprende com a marca para melhorar o proprio preparo.",
+        "suportes": ["c_002_1", "c_002_2"]
+      },
+      {
+        "construto": "ondas_valor",
+        "titulo": "Produto forte, pessoas em formacao, proposito de origem",
+        "conteudo": "O produto sustenta a percepcao; a camada de pessoas cresce pela didatica; o proposito se ancora na origem rastreavel.",
+        "suportes": ["ig_001", "ig_002"]
+      },
+      {
+        "construto": "depara",
+        "titulo": "De cafe artesanal para guia do ritual em casa",
+        "conteudo": "A percepcao abre espaco para a marca assumir o papel de guia do ritual de cafe, alem de fornecedora do grao.",
+        "suportes": ["ig_002", "c_002_3"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "A marca comunica metodo e o publico responde com pertencimento e ritual.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["ig_002", "c_002_3"],
+        "construto": "gap_percepcao"
+      },
+      {
+        "texto": "Origem rastreavel e didatica de preparo sao os principais promotores na percepcao publica.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["c_001_2", "ig_001"],
+        "construto": "promotores"
+      },
+      {
+        "texto": "A entrega aparece como atrito logistico na percepcao publica.",
+        "tipoSuporte": "citacao_direta",
+        "suportes": ["ra_001", "c_003_1"],
+        "construto": "detratores"
+      },
+      {
+        "texto": "Reels de metodo e edicoes limitadas sao aceleradores de valor.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["ig_002", "ig_003"],
+        "construto": "aceleradores"
+      },
+      {
+        "texto": "A persona dominante e a do entusiasta que prepara cafe em casa.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["c_002_1", "c_002_2"],
+        "construto": "persona"
+      },
+      {
+        "texto": "As tres ondas de valor aparecem com produto forte e pessoas em formacao.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["ig_001", "ig_002"],
+        "construto": "ondas_valor"
+      },
+      {
+        "texto": "Ha espaco para a marca assumir o papel de guia do ritual de cafe em casa.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["ig_002", "c_002_3"],
+        "construto": "depara"
+      }
+    ]
+  }
+}

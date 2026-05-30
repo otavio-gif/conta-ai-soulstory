@@ -1,0 +1,25 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Reel de metodo vira material de consulta",
+        "conteudo": "O publico trata o passo a passo como conteudo util de guardar e repassar, o que sustenta o engajamento mais alto da janela.",
+        "suportes": ["ig_002", "c_002_2", "c_002_3"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O Reel de metodo concentra o maior engajamento da janela, com 138 comentarios.",
+        "tipoSuporte": "contagem",
+        "suportes": ["ig_002"],
+        "construto": "aceleradores"
+      }
+    ],
+    "termosNativos": [
+      {
+        "termo": "coado em casa",
+        "definicao": "Expressao do publico para o preparo manual que a marca ensina no Reel."
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Edicao limitada ativa desejo de recorrencia",
+        "conteudo": "A pre-venda sazonal gera pedido espontaneo para que a edicao vire permanente, sinal de apego ao produto.",
+        "suportes": ["ig_003", "c_003_2"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "A edicao de inverno gera pedido espontaneo de recorrencia entre seguidores.",
+        "tipoSuporte": "citacao_direta",
+        "suportes": ["c_003_2"],
+        "construto": "aceleradores"
+      }
+    ],
+    "termosNativos": [
+      {
+        "termo": "edicao de inverno",
+        "definicao": "Como o publico se refere ao lancamento sazonal da marca."
+      }
+    ]
+  }
+}
