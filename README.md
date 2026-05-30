@@ -7,12 +7,23 @@ Soulstory. Sem travessao.
 
 Contexto permanente em `CLAUDE.md`. PRD completo em `docs/PRD.md`.
 
-## Estado: Fase 0 (fundacao)
+## Estado: Fase 1 (MVP vertical)
 
-Esta fase entrega a fundacao tecnica e o fluxo de ponta a ponta com dado
-simulado, parando nos 7 checkpoints de aprovacao humana e gerando um docx
-minimo. As fontes reais (Instagram, TikTok, YouTube, Reclame Aqui, SEO) e as
-analises chegam a partir da Fase 1.
+O pipeline e real e vertical para Instagram e Reclame Aqui, ponta a ponta,
+mantendo os 7 checkpoints. Inclui coleta via Apify (perfil, posts, Reels,
+carrosseis, comentarios integrais e mencoes) com webhook fechando o waitpoint,
+Reclame Aqui via Firecrawl com retomada, transcricao de Reels (gpt-4o-transcribe),
+OCR de carrosseis (visao do Claude), as duas oticas de analise e a sintese
+metodologica via API Anthropic com prompt caching, evidence ledger com
+verificacao factual bloqueante e o relatorio completo (Parte I e II) em
+soulstory-docx com anexos e graficos. TikTok, YouTube e SEO entram nas fases
+seguintes.
+
+Modelos (preset Equilibrio): Sonnet 4.6 para OCR, analise e (com Haiku 4.5 nas
+tarefas mecanicas); Opus 4.8 para sintese, verificacao factual e redacao. O
+orcamento e por projeto, aprovado no checkpoint 1; cada chamada paga vira um
+CostEvent. As 50+ paginas de qualidade saem dos runs reais com Opus; o run de
+fixtures valida toda a maquinaria e a estrutura sem custo.
 
 ## Stack
 
@@ -40,22 +51,33 @@ pnpm dev               # em outro terminal: app em http://localhost:3000
 Login com a senha de `APP_ACCESS_PASSWORD`. Crie um diagnostico, aprove cada um
 dos 7 checkpoints e o ultimo gera o `.docx` (Supabase Storage ou `./tmp`).
 
-## Aceite da Fase 0 sem infra externa
+## Validacao sem credenciais (MOCK_EXTERNAL)
 
 ```bash
 pnpm typecheck
 pnpm build
-pnpm mock:pipeline     # roda os 7 estagios e gera ./tmp/diagnostico-mock.docx
+pnpm fixtures:pipeline  # roda o pipeline real sobre fixtures e gera ./tmp/diagnostico-fixtures.docx
 ```
+
+Com `MOCK_EXTERNAL=1` os clientes de API (Apify, Firecrawl, OpenAI, Anthropic)
+leem respostas gravadas em `tests/fixtures/`, exercendo toda a logica real
+(normalizacao, ledger, verificacao bloqueante, redacao e docx) sem chave e sem
+custo. O script confere que nenhuma afirmacao entra sem lastro verificado, que
+as metricas indisponiveis sao declaradas e que a regra de ouro descarta
+afirmacoes sem suporte.
 
 ## Arquitetura
 
-- `src/lib/pipeline/` estagios puros (mock), tipos e os 7 checkpoints.
-- `src/lib/cost.ts` estimador e medidor de custo (guardrail R$ 35/mes).
-- `src/lib/docx/adapter.ts` ponte para a skill soulstory-docx (ou fallback). Ver `src/lib/docx/README.md`.
+- `src/lib/pipeline/` os 7 estagios reais, tipos e o corpus que atravessa a cadeia.
+- `src/lib/ai/` cliente Anthropic com prompt caching, doutrina das skills, e os papeis (interprete, analise, sintese, verificacao, redacao).
+- `src/lib/collectors/` Apify (Instagram) com webhook + waitpoint e Firecrawl (Reclame Aqui) com retomada.
+- `src/lib/transcribe/` transcricao de Reels (OpenAI) e OCR de carrosseis (Claude).
+- `src/lib/charts/` graficos indigo em PNG (SVG rasterizado), sem dependencia nativa.
+- `src/lib/cost.ts` estimador, medidor (CostEvent) e contexto de custo por projeto.
+- `src/lib/docx/adapter.ts` ponte para a skill soulstory-docx. Ver `src/lib/docx/README.md`.
+- `scripts/soulstory-docx-build.js` build script Node sobre o helper `soulstory.js`.
 - `src/trigger/orchestrator.ts` orquestrador Trigger.dev com waitpoints (HITL).
-- `src/app/` UI: login, lista, novo diagnostico, painel de checkpoints e custo.
-- `.claude/agents/` e `.claude/skills/` scaffolds dos agentes e skills do PRD.
+- `.claude/skills/` doutrina (visao-externa-metodo, evidence-ledger, fact-check-ve, coletor-protocolos) lida em runtime, e a skill soulstory-docx.
 
 ## Segredos
 

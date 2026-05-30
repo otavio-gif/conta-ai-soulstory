@@ -12,12 +12,17 @@ skill. O adaptador chama:
 <SOULSTORY_DOCX_CMD> <caminho-do-report-spec.json> <caminho-de-saida.docx>
 ```
 
-A skill le o JSON de entrada, gera o documento no padrao indigo Soulstory e
-grava no caminho de saida. Exemplo:
+O build script le o JSON de entrada, gera o documento no padrao indigo
+Soulstory (reusando o helper `.claude/skills/soulstory-docx/scripts/soulstory.js`,
+instalado no repo) e grava no caminho de saida. Na Fase 1:
 
 ```
-SOULSTORY_DOCX_CMD="python .claude/skills/soulstory-docx/build.py"
+SOULSTORY_DOCX_CMD="node scripts/soulstory-docx-build.js"
 ```
+
+O `ReportSpec` agora carrega elementos visuais (callouts, cards, tabelas,
+graficos e glossario) e o build script os mapeia para os componentes do helper.
+Os graficos vem como PNG referenciados por caminho no campo `graficos`.
 
 ## Caminho 2 (fallback): gerador embutido
 

@@ -1,15 +1,28 @@
-// Os 7 estagios do pipeline de Visao Externa, como funcoes puras sobre dados
-// mock (PRD secao 8 e 10). Reusados pelo orquestrador Trigger.dev (com
-// checkpoints e persistencia) e pelo script scripts/mock-pipeline.ts.
+// Os 7 estagios do pipeline de Visao Externa, agora REAIS (Fase 1). Cada estagio
+// e uma funcao assincrona que recebe os insumos do anterior (o corpus atravessa
+// a cadeia) e devolve a saida do checkpoint. A persistencia e os checkpoints
+// ficam no orquestrador; os estagios em si nao leem o banco, o que permite
+// rodar o pipeline real sobre fixtures (MOCK_EXTERNAL=1) sem credenciais.
 
+import { bloco, blocoCacheavel, chamarClaude } from "@/lib/ai/anthropic";
+import { doutrina } from "@/lib/ai/doctrine";
+import { analisar as analisarOticas } from "@/lib/ai/analise";
+import { PROMPT_INTERPRETE } from "@/lib/ai/prompts";
+import { sintetizar } from "@/lib/ai/sintese";
+import { verificar as verificarClaims } from "@/lib/ai/verificacao";
+import { coletarInstagram } from "@/lib/collectors/instagram";
+import { coletarReclameAqui } from "@/lib/collectors/reclame-aqui";
+import { transcreverReel } from "@/lib/transcribe/whisper";
+import { ocrCarrossel } from "@/lib/transcribe/ocr";
+import { baseUrl } from "@/lib/env";
 import { estimarCusto } from "@/lib/cost";
-import { MOCK_BRAND } from "@/lib/pipeline/mock-data";
 import type {
+  AmostraItem,
   AmostraTranscricao,
+  Corpus,
   Inventario,
   Outline,
   PlanoColeta,
-  ReportSpec,
   ResultadoVerificacao,
   SaidaAnalise,
 } from "@/lib/pipeline/types";
@@ -17,245 +30,246 @@ import type {
 export interface BriefingInput {
   briefing: string;
   janela: { inicio: string; fim: string };
+  orcamentoBRL?: number | null;
 }
 
 // 1. Interprete de briefing e escopo -> plano de coleta com custo estimado.
-export function interpretarBriefing(input: BriefingInput): PlanoColeta {
-  const b = MOCK_BRAND;
+interface SaidaInterprete {
+  marca: string;
+  tipo: "marca" | "influenciador";
+  instagramHandle?: string;
+  reclameAquiUrl?: string;
+  palavrasChave: string[];
+  volumeInstagram: number;
+  volumeReclameAqui: number;
+}
+
+export async function interpretarBriefing(
+  input: BriefingInput,
+): Promise<PlanoColeta> {
+  const resp = await chamarClaude<SaidaInterprete>({
+    papel: "interprete",
+    fixtureKey: "interprete",
+    system: [bloco(PROMPT_INTERPRETE), await doutrina("coletor-protocolos")],
+    conteudo: [
+      blocoCacheavel(
+        `Briefing:\n${input.briefing}\n\nJanela: ${input.janela.inicio} a ${input.janela.fim}.`,
+      ),
+      bloco(
+        "Extraia o plano de coleta para Instagram e Reclame Aqui. Estime o volume por fonte.",
+      ),
+    ],
+    ferramenta: {
+      nome: "registrar_plano",
+      descricao: "Registra o plano de coleta interpretado do briefing.",
+      schema: {
+        type: "object",
+        properties: {
+          marca: { type: "string" },
+          tipo: { type: "string", enum: ["marca", "influenciador"] },
+          instagramHandle: { type: "string" },
+          reclameAquiUrl: { type: "string" },
+          palavrasChave: { type: "array", items: { type: "string" } },
+          volumeInstagram: { type: "number" },
+          volumeReclameAqui: { type: "number" },
+        },
+        required: ["marca", "tipo", "palavrasChave", "volumeInstagram", "volumeReclameAqui"],
+      },
+      parse: (e) => e as SaidaInterprete,
+    },
+  });
+
+  const d = resp.dados;
+  if (!d) throw new Error("Interprete nao devolveu o plano de coleta.");
+
   const fontes = [
     {
       kind: "instagram" as const,
-      handle: b.handles.instagram,
-      volumeEstimado: b.posts.length + b.comments.length,
+      handle: d.instagramHandle,
+      volumeEstimado: d.volumeInstagram,
     },
-    {
-      kind: "reclame_aqui" as const,
-      url: `${b.site}/reclame-aqui`,
-      volumeEstimado: b.complaints.length,
-    },
-    {
-      kind: "seo_serp" as const,
-      volumeEstimado: b.serp.length,
-    },
+    ...(d.reclameAquiUrl
+      ? [
+          {
+            kind: "reclame_aqui" as const,
+            url: d.reclameAquiUrl,
+            volumeEstimado: d.volumeReclameAqui,
+          },
+        ]
+      : []),
   ];
 
   return {
-    marca: b.nome,
-    tipo: b.tipo,
+    marca: d.marca,
+    tipo: d.tipo,
     janela: input.janela,
-    palavrasChave: b.palavrasChave,
+    palavrasChave: d.palavrasChave,
+    instagramHandle: d.instagramHandle,
+    reclameAquiUrl: d.reclameAquiUrl,
     fontes,
-    custo: estimarCusto({ fontes, janela: input.janela }),
+    custo: estimarCusto({ fontes, janela: input.janela, orcamentoBRL: input.orcamentoBRL }),
   };
 }
 
-// 2. Coletores -> inventario do que foi coletado e lacunas declaradas.
-export function coletar(): Inventario {
-  const b = MOCK_BRAND;
-  const porFonte = [
-    {
-      fonte: "instagram" as const,
-      posts: b.posts.length,
-      comentarios: b.comments.length,
-      videos: 0,
-      reclamacoes: 0,
-      artefatosBrutos: b.posts.length + b.comments.length,
-    },
-    {
-      fonte: "reclame_aqui" as const,
-      posts: 0,
-      comentarios: 0,
-      videos: 0,
-      reclamacoes: b.complaints.length,
-      artefatosBrutos: b.complaints.length,
-    },
-    {
-      fonte: "seo_serp" as const,
-      posts: 0,
-      comentarios: 0,
-      videos: 0,
-      reclamacoes: 0,
-      artefatosBrutos: b.serp.length,
-    },
-  ];
+// 2. Coletores -> corpus normalizado + inventario com lacunas declaradas.
+export async function coletar(
+  plano: PlanoColeta,
+  projectId: string,
+): Promise<{ inventario: Inventario; corpus: Corpus }> {
+  const ig = await coletarInstagram({
+    projectId,
+    handle: plano.instagramHandle ?? "",
+    palavrasChave: plano.palavrasChave,
+    janela: plano.janela,
+    webhookBase: baseUrl(),
+  });
 
-  return {
-    porFonte,
-    totalArtefatos: porFonte.reduce((a, f) => a + f.artefatosBrutos, 0),
-    lacunas: [
+  const ra = plano.reclameAquiUrl
+    ? await coletarReclameAqui({
+        projectId,
+        url: plano.reclameAquiUrl,
+        janela: plano.janela,
+      })
+    : { reclamacoes: [], indicadores: null, lacunas: [], paginasBrutas: [] };
+
+  const corpus: Corpus = {
+    marca: plano.marca,
+    tipo: plano.tipo,
+    janela: plano.janela,
+    instagramHandle: plano.instagramHandle,
+    bio: ig.bio,
+    posts: ig.posts,
+    reclamacoes: ra.reclamacoes,
+    indicadoresRA: ra.indicadores,
+    transcricoes: [],
+    ocr: [],
+    lacunas: [...ig.lacunas, ...ra.lacunas],
+    metricasIndisponiveis: ig.metricasIndisponiveis,
+  };
+
+  const comentariosIg = corpus.posts.reduce((a, p) => a + p.comentarios.length, 0);
+  const inventario: Inventario = {
+    porFonte: [
       {
         fonte: "instagram",
-        motivo:
-          "Salvamentos e compartilhamentos nao sao publicos. Reportados como indisponiveis, sem estimativa.",
+        posts: corpus.posts.length,
+        comentarios: comentariosIg,
+        videos: corpus.posts.filter((p) => p.tipoMidia === "reel").length,
+        reclamacoes: 0,
+        artefatosBrutos: corpus.posts.length + comentariosIg,
+      },
+      {
+        fonte: "reclame_aqui",
+        posts: 0,
+        comentarios: 0,
+        videos: 0,
+        reclamacoes: corpus.reclamacoes.length,
+        artefatosBrutos: corpus.reclamacoes.length,
       },
     ],
-    metricasIndisponiveis: [
-      "instagram.salvamentos",
-      "instagram.compartilhamentos",
-    ],
+    totalArtefatos: corpus.posts.length + comentariosIg + corpus.reclamacoes.length,
+    lacunas: corpus.lacunas,
+    metricasIndisponiveis: corpus.metricasIndisponiveis,
   };
+
+  return { inventario, corpus };
 }
 
-// 3. Transcritor e OCR -> amostra de qualidade.
-export function transcreverOcr(): AmostraTranscricao {
-  return {
-    totalTranscricoes: 1,
-    totalOcr: 1,
-    amostras: [
-      {
-        origem: "ig_002 (Reel)",
-        tipo: "transcricao",
-        trecho:
-          "Comece com agua a noventa e dois graus e despeje em movimentos circulares.",
-      },
-      {
-        origem: "ig_003 (carrossel)",
-        tipo: "ocr",
-        trecho: "Edicao limitada de inverno. Pre-venda ate 10 de marco.",
-      },
-    ],
-  };
-}
+// 3. Transcritor e OCR -> corpus enriquecido + amostra de qualidade.
+export async function transcreverOcr(
+  corpus: Corpus,
+): Promise<{ amostra: AmostraTranscricao; corpus: Corpus }> {
+  const transcricoes = [];
+  const ocr = [];
+  for (const post of corpus.posts) {
+    if (post.tipoMidia === "reel") {
+      const t = await transcreverReel(post);
+      if (t) transcricoes.push(t);
+    }
+    if (post.tipoMidia === "carrossel") {
+      const o = await ocrCarrossel(post);
+      if (o) ocr.push(o);
+    }
+  }
 
-// 4. Cientista de dados + analista senior de conteudo -> insights e graficos.
-export function analisar(): SaidaAnalise {
-  return {
-    insights: [
-      {
-        otica: "cientista_dados",
-        titulo: "Reels concentram o engajamento",
-        conteudo:
-          "O Reel de metodo (ig_002) teve 138 comentarios contra a media de 80 dos demais posts da janela.",
-      },
-      {
-        otica: "analista_conteudo",
-        titulo: "Narrativa de origem como promotor",
-        conteudo:
-          "O publico associa a marca a torra artesanal e a procedencia da Mantiqueira, citadas espontaneamente nos comentarios.",
-      },
-    ],
-    graficos: [
-      {
-        titulo: "Engajamento por post",
-        descricao: "Curtidas e comentarios dos posts da janela.",
-      },
-    ],
-  };
-}
+  const enriquecido: Corpus = { ...corpus, transcricoes, ocr };
 
-// 5. Outline do relatorio (Parte I descritiva, Parte II sintese estrategica).
-export function montarOutline(): Outline {
-  return {
-    parteI: [
-      { titulo: "Como a marca e vista", bullets: ["Tom", "Temas", "Viralizacao"] },
-      { titulo: "Linguagem nativa do publico", bullets: ["Glossario"] },
-    ],
-    parteII: [
-      { titulo: "Gap de percepcao", bullets: ["Abertura da Parte II"] },
-      {
-        titulo: "Promotores, detratores e aceleradores",
-        bullets: ["Promotores", "Detratores", "Aceleradores"],
-      },
-      { titulo: "Insumo para o DE/PARA", bullets: ["Fechamento"] },
-    ],
-  };
-}
-
-// 6. Verificadores de fato -> auditoria do evidence ledger (PRD secao 9).
-export function verificar(): ResultadoVerificacao {
-  const claims = [
-    {
-      texto:
-        "O Reel de metodo recebeu 138 comentarios, acima da media da janela.",
-      tipoSuporte: "contagem",
-      suportes: ["ig_002"],
-      status: "confirmada" as const,
-    },
-    {
-      texto: "O publico cita espontaneamente a procedencia da Mantiqueira.",
-      tipoSuporte: "citacao_direta",
-      suportes: ["ig_001"],
-      status: "confirmada" as const,
-    },
-    {
-      texto: "A marca tem alto indice de salvamentos no Instagram.",
-      tipoSuporte: "agregacao",
-      suportes: [],
-      status: "nao_sustentada" as const,
-      nota: "Salvamentos nao sao publicos. Afirmacao descartada por falta de lastro.",
-    },
+  const amostras: AmostraItem[] = [
+    ...transcricoes.slice(0, 2).map((t) => ({
+      origem: `${t.postExternalId} (Reel)`,
+      tipo: "transcricao" as const,
+      trecho: t.texto.slice(0, 280),
+    })),
+    ...ocr.slice(0, 2).map((o) => ({
+      origem: `${o.postExternalId} (carrossel)`,
+      tipo: "ocr" as const,
+      trecho: o.texto.slice(0, 280),
+    })),
   ];
 
   return {
-    claims,
-    confirmadas: claims.filter((c) => c.status === "confirmada").length,
-    descartadas: claims.filter((c) => c.status === "nao_sustentada").length,
+    corpus: enriquecido,
+    amostra: {
+      totalTranscricoes: transcricoes.length,
+      totalOcr: ocr.length,
+      amostras,
+    },
   };
 }
 
-// 7. Compositor de relatorio -> ReportSpec (entrada da skill soulstory-docx).
-export function comporReportSpec(params: {
-  plano: PlanoColeta;
-  inventario: Inventario;
-  amostra: AmostraTranscricao;
-  analise: SaidaAnalise;
-  outline: Outline;
-  verificacao: ResultadoVerificacao;
-}): ReportSpec {
-  const { plano, inventario, analise, outline, verificacao } = params;
+// 4. Cientista de dados + analista de conteudo + sintetizador metodologico.
+export async function analisar(
+  corpus: Corpus,
+  projectId: string,
+): Promise<SaidaAnalise> {
+  const base = await analisarOticas(corpus, projectId);
+  const sintese = await sintetizar(corpus, base);
+  return {
+    insights: base.insights,
+    graficos: base.graficos,
+    claims: [...base.claims, ...sintese.claims],
+    findings: [...base.findings, ...sintese.findings],
+  };
+}
+
+// 5. Outline do relatorio, derivado do mapa metodologico e dos achados.
+const ROTULO_CONSTRUTO: Record<string, string> = {
+  gap_percepcao: "Gap de percepcao",
+  promotores: "Promotores",
+  detratores: "Detratores",
+  aceleradores: "Aceleradores",
+  persona: "Insights de persona",
+  ondas_valor: "Ondas de valor",
+  depara: "Insumo para o DE/PARA",
+};
+
+export function montarOutline(analise: SaidaAnalise): Outline {
+  const construtosII = ["gap_percepcao", "promotores", "detratores", "aceleradores", "persona", "ondas_valor", "depara"];
+  const presentes = construtosII.filter((c) =>
+    analise.findings.some((f) => f.parte === "II" && f.construto === c),
+  );
+  const ordem = presentes.length > 0 ? presentes : construtosII;
 
   return {
-    projeto: {
-      nome: plano.marca,
-      tipo: plano.tipo,
-      janela: plano.janela,
-    },
-    geradoEm: new Date().toISOString(),
-    resumoCheckpoints: [
-      {
-        numero: 1,
-        titulo: "Plano de coleta",
-        resumo: `${plano.fontes.length} fontes, custo estimado de R$ ${plano.custo.totalBRL.toFixed(2)}.`,
-      },
-      {
-        numero: 2,
-        titulo: "Inventario de coleta",
-        resumo: `${inventario.totalArtefatos} artefatos brutos, ${inventario.lacunas.length} lacuna(s) declarada(s).`,
-      },
-      {
-        numero: 6,
-        titulo: "Verificacao factual",
-        resumo: `${verificacao.confirmadas} afirmacoes confirmadas, ${verificacao.descartadas} descartada(s).`,
-      },
+    parteI: [
+      { titulo: "Como a marca e vista", bullets: ["Tom percebido", "Temas recorrentes"] },
+      { titulo: "Viralizacao e desempenho publico", bullets: ["Fatores de destaque"] },
+      { titulo: "Linguagem nativa do publico", bullets: ["Glossario"] },
+      { titulo: "Linha do tempo da conversa", bullets: ["Marcos na janela"] },
     ],
-    parteI: {
-      titulo: "Parte I. Retrato descritivo e exploratorio",
-      secoes: outline.parteI.map((s) => ({
-        titulo: s.titulo,
-        paragrafos: analise.insights
-          .filter((i) => i.otica === "analista_conteudo")
-          .map((i) => i.conteudo),
-      })),
-    },
-    parteII: {
-      titulo: "Parte II. Sintese estrategica formal",
-      secoes: outline.parteII.map((s) => ({
-        titulo: s.titulo,
-        paragrafos: analise.insights
-          .filter((i) => i.otica === "cientista_dados")
-          .map((i) => i.conteudo),
-      })),
-    },
-    evidencias: verificacao.claims.map((c) => ({
-      afirmacao: c.texto,
-      status: c.status,
-      suporte: c.suportes.length ? c.suportes.join(", ") : "sem lastro",
+    parteII: ordem.map((c) => ({
+      titulo: ROTULO_CONSTRUTO[c] ?? c,
+      bullets: analise.findings
+        .filter((f) => f.parte === "II" && f.construto === c)
+        .map((f) => f.titulo),
     })),
-    anexos: [
-      {
-        titulo: "Anexo A. Inventario de coleta",
-        descricao: `${inventario.totalArtefatos} artefatos brutos por fonte.`,
-      },
-    ],
   };
+}
+
+// 6. Verificadores de fato -> auditoria do evidence ledger (BLOQUEANTE).
+export async function verificar(
+  corpus: Corpus,
+  analise: SaidaAnalise,
+): Promise<ResultadoVerificacao> {
+  return verificarClaims(corpus, analise.claims);
 }

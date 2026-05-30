@@ -2,15 +2,18 @@ import { logger, task, wait } from "@trigger.dev/sdk";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { comporDocx } from "@/lib/docx/adapter";
+import { comContextoDeCusto } from "@/lib/cost";
+import { comporRelatorio } from "@/lib/ai/redacao";
 import {
+  persistirAnalise,
   persistirColeta,
   persistirPlano,
+  persistirTranscricoes,
   persistirVerificacao,
 } from "@/lib/pipeline/persist";
 import {
   analisar,
   coletar,
-  comporReportSpec,
   interpretarBriefing,
   montarOutline,
   transcreverOcr,
@@ -149,106 +152,113 @@ export const orchestrator = task({
   run: async (payload: { projectId: string }) => {
     const { projectId } = payload;
 
-    const project = await prisma.project.findUniqueOrThrow({
-      where: { id: projectId },
+    // Todo o run roda dentro do contexto de custo, para que cada chamada paga
+    // (Anthropic, OpenAI, Apify, Firecrawl) grave um CostEvent neste projeto.
+    return comContextoDeCusto(projectId, async () => {
+      const project = await prisma.project.findUniqueOrThrow({
+        where: { id: projectId },
+      });
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { status: "em_andamento", triggerRunId: payload.projectId },
+      });
+
+      const janela = {
+        inicio: project.janelaInicio.toISOString(),
+        fim: project.janelaFim.toISOString(),
+      };
+      const briefingInput = { briefing: project.briefing, janela };
+
+      // Checkpoint 1: Plano de coleta (com custo estimado e orcamento do projeto).
+      const plano = await comCheckpoint(
+        projectId,
+        1,
+        () => interpretarBriefing(briefingInput),
+        (p) => ({ id: "plano_coleta", plano: p }),
+        (p) => persistirPlano(projectId, p),
+      );
+      if (!plano) return abortar(projectId);
+
+      // Checkpoint 2: Inventario de coleta (corpus real coletado).
+      const coleta = await comCheckpoint(
+        projectId,
+        2,
+        () => coletar(plano, projectId),
+        (r) => ({ id: "inventario_coleta", inventario: r.inventario }),
+        (r) => persistirColeta(projectId, r.corpus),
+      );
+      if (!coleta) return abortar(projectId);
+
+      // Checkpoint 3: Transcricoes e OCR (enriquece o corpus).
+      const transc = await comCheckpoint(
+        projectId,
+        3,
+        () => transcreverOcr(coleta.corpus),
+        (r) => ({ id: "transcricoes_ocr", amostra: r.amostra }),
+        (r) => persistirTranscricoes(projectId, r.corpus),
+      );
+      if (!transc) return abortar(projectId);
+
+      // Checkpoint 4: Analises (duas oticas e sintese metodologica).
+      const analise = await comCheckpoint(
+        projectId,
+        4,
+        () => analisar(transc.corpus, projectId),
+        (a) => ({ id: "analises", analise: a }),
+        (a) => persistirAnalise(projectId, a),
+      );
+      if (!analise) return abortar(projectId);
+
+      // Checkpoint 5: Outline do relatorio.
+      const outline = await comCheckpoint(
+        projectId,
+        5,
+        () => montarOutline(analise),
+        (o) => ({ id: "outline", outline: o }),
+      );
+      if (!outline) return abortar(projectId);
+
+      // Checkpoint 6: Verificacao factual (evidence ledger, bloqueante).
+      const verificacao = await comCheckpoint(
+        projectId,
+        6,
+        () => verificar(transc.corpus, analise),
+        (v) => ({ id: "verificacao_factual", verificacao: v }),
+        (v) => persistirVerificacao(projectId, v),
+      );
+      if (!verificacao) return abortar(projectId);
+
+      // Checkpoint 7: Draft final (redige, compoe e armazena o docx).
+      const spec = await comporRelatorio({
+        plano,
+        corpus: transc.corpus,
+        inventario: coleta.inventario,
+        amostra: transc.amostra,
+        analise,
+        outline,
+        verificacao,
+      });
+      const docx = await comporDocx(spec);
+      const { storagePath } = await persistirRelatorio({
+        projectId,
+        nome: plano.marca,
+        docx,
+      });
+
+      const decisaoFinal = await solicitarCheckpoint(projectId, 7, {
+        id: "draft_final",
+        spec,
+        storagePath,
+      });
+      if (decisaoFinal !== "aprovado") return abortar(projectId);
+
+      await prisma.project.update({
+        where: { id: projectId },
+        data: { status: "concluido" },
+      });
+
+      logger.info("Diagnostico concluido", { projectId, storagePath });
+      return { status: "concluido", storagePath };
     });
-    await prisma.project.update({
-      where: { id: projectId },
-      data: { status: "em_andamento", triggerRunId: payload.projectId },
-    });
-
-    const janela = {
-      inicio: project.janelaInicio.toISOString(),
-      fim: project.janelaFim.toISOString(),
-    };
-    const briefingInput = { briefing: project.briefing, janela };
-
-    // Checkpoint 1: Plano de coleta (com custo estimado).
-    const plano = await comCheckpoint(
-      projectId,
-      1,
-      () => interpretarBriefing(briefingInput),
-      (p) => ({ id: "plano_coleta", plano: p }),
-      (p) => persistirPlano(projectId, p),
-    );
-    if (!plano) return abortar(projectId);
-
-    // Checkpoint 2: Inventario de coleta.
-    const inventario = await comCheckpoint(
-      projectId,
-      2,
-      () => coletar(),
-      (inv) => ({ id: "inventario_coleta", inventario: inv }),
-      () => persistirColeta(projectId),
-    );
-    if (!inventario) return abortar(projectId);
-
-    // Checkpoint 3: Transcricoes e OCR.
-    const amostra = await comCheckpoint(
-      projectId,
-      3,
-      () => transcreverOcr(),
-      (a) => ({ id: "transcricoes_ocr", amostra: a }),
-    );
-    if (!amostra) return abortar(projectId);
-
-    // Checkpoint 4: Analises.
-    const analise = await comCheckpoint(
-      projectId,
-      4,
-      () => analisar(),
-      (a) => ({ id: "analises", analise: a }),
-    );
-    if (!analise) return abortar(projectId);
-
-    // Checkpoint 5: Outline do relatorio.
-    const outline = await comCheckpoint(
-      projectId,
-      5,
-      () => montarOutline(),
-      (o) => ({ id: "outline", outline: o }),
-    );
-    if (!outline) return abortar(projectId);
-
-    // Checkpoint 6: Verificacao factual (evidence ledger).
-    const verificacao = await comCheckpoint(
-      projectId,
-      6,
-      () => verificar(),
-      (v) => ({ id: "verificacao_factual", verificacao: v }),
-      (v) => persistirVerificacao(projectId, v),
-    );
-    if (!verificacao) return abortar(projectId);
-
-    // Checkpoint 7: Draft final (compoe e armazena o docx antes de aprovar).
-    const spec = comporReportSpec({
-      plano,
-      inventario,
-      amostra,
-      analise,
-      outline,
-      verificacao,
-    });
-    const docx = await comporDocx(spec);
-    const { storagePath } = await persistirRelatorio({
-      projectId,
-      nome: plano.marca,
-      docx,
-    });
-
-    const decisaoFinal = await solicitarCheckpoint(projectId, 7, {
-      id: "draft_final",
-      spec,
-      storagePath,
-    });
-    if (decisaoFinal !== "aprovado") return abortar(projectId);
-
-    await prisma.project.update({
-      where: { id: projectId },
-      data: { status: "concluido" },
-    });
-
-    logger.info("Diagnostico concluido", { projectId, storagePath });
-    return { status: "concluido", storagePath };
   },
 });
