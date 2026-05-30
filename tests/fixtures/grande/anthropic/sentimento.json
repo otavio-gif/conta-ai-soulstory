@@ -1,0 +1,886 @@
+{
+  "dados": {
+    "classificacoes": [
+      {
+        "externalId": "ig_g_0001",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0002",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0003",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0004",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0005",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0006",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0007",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0008",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0009",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0010",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0011",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0012",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0013",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0014",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0015",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0016",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0017",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0018",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0019",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0020",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0021",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0022",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0023",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0024",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0025",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0026",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0027",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0028",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0029",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0030",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0031",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0032",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0033",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0034",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0035",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0036",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0037",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0038",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0039",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0040",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0041",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0042",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0043",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0044",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0045",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0046",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0047",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0048",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0049",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0050",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0051",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0052",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0053",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0054",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0055",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0056",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0057",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0058",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0059",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0060",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0061",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0062",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0063",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0064",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0065",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0066",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "ig_g_0067",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "ig_g_0068",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0069",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "ig_g_0070",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0001",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0002",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0003",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0004",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0005",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0006",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0007",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0008",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0009",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0010",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0011",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0012",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0013",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0014",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0015",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0016",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0017",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0018",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0019",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0020",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0021",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0022",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0023",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0024",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0025",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0026",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0027",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0028",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0029",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0030",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0031",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0032",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0033",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0034",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0035",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0036",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0037",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0038",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0039",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0040",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0041",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0042",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0043",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0044",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0045",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0046",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0047",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0048",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0049",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0050",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0051",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tt_g_0052",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0053",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tt_g_0054",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tt_g_0055",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0001",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0002",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0003",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0004",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0005",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0006",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0007",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0008",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0009",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0010",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0011",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0012",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0013",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0014",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0015",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0016",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0017",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0018",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0019",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0020",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0021",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0022",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0023",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0024",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0025",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0026",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "yt_g_0027",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0028",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "yt_g_0029",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "yt_g_0030",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-1",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-2",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-3",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-4",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-5",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-6",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-7",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-8",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-9",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-10",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-11",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "web:https://portal-noticias.exemplo/materia-12",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_001",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_002",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tiktok:tt_m_003",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_004",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tiktok:tt_m_005",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tiktok:tt_m_006",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_007",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_008",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tiktok:tt_m_009",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tiktok:tt_m_010",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_011",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tiktok:tt_m_012",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_013",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_014",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "tiktok:tt_m_015",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_016",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "tiktok:tt_m_017",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "tiktok:tt_m_018",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_001",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "youtube:yt_m_002",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "youtube:yt_m_003",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_004",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_005",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "youtube:yt_m_006",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "youtube:yt_m_007",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_008",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "youtube:yt_m_009",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_010",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_011",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "youtube:yt_m_012",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_013",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "youtube:yt_m_014",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "youtube:yt_m_015",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_001",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "instagram:ig_m_002",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "instagram:ig_m_003",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_004",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_005",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "instagram:ig_m_006",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "instagram:ig_m_007",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_008",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "instagram:ig_m_009",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_010",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_011",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "instagram:ig_m_012",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_013",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_014",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "instagram:ig_m_015",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_016",
+        "sentimento": "negativo"
+      },
+      {
+        "externalId": "instagram:ig_m_017",
+        "sentimento": "neutro"
+      },
+      {
+        "externalId": "instagram:ig_m_018",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_019",
+        "sentimento": "positivo"
+      },
+      {
+        "externalId": "instagram:ig_m_020",
+        "sentimento": "neutro"
+      }
+    ]
+  }
+}

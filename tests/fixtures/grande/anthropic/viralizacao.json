@@ -1,0 +1,26 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Origem e bastidores puxam o alcance",
+        "conteudo": "Os itens que mostram fazenda e torra se destacam em visualizacoes.",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "Os itens de bastidores de torra estao entre os de maior visualizacao publica.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003"
+        ]
+      }
+    ]
+  }
+}

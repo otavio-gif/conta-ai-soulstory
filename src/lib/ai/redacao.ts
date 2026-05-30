@@ -142,10 +142,10 @@ async function redigirParte(params: {
     conteudo: [
       blocoCacheavel(JSON.stringify(material, null, 2)),
       bloco(
-        `Escreva a Parte ${parte} em profundidade de consultoria. Use apenas as afirmacoes verificadas. Marque metricas indisponiveis. Referencie os graficos pelo id quando ajudarem.`,
+        `Escreva a Parte ${parte} em profundidade de consultoria de elite, uma secao por construto, com varios paragrafos densos, callouts para principios e cards para listas. Use apenas as afirmacoes verificadas. Marque metricas indisponiveis. Referencie os graficos pelo id quando ajudarem.`,
       ),
     ],
-    maxTokens: 16000,
+    maxTokens: 24000,
     ferramenta: {
       nome: "registrar_secoes",
       descricao: "Registra as secoes redigidas da parte do relatorio.",
@@ -205,10 +205,94 @@ function anexoDesempenho(desempenho: DesempenhoResumo): ReportSpecAnexo {
   };
 }
 
+const ROTULO_FONTE_ANEXO: Record<string, string> = {
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  mencoes: "Mencoes",
+};
+
+/**
+ * Anexo de comentarios ilustrativos por fonte (Fase 4). Amostra de vozes reais
+ * do publico, com o autor ja pseudonimizado por hash (LGPD). Da profundidade e
+ * volume ao relatorio sem nenhuma estimativa: e dado bruto coletado.
+ */
+function anexoComentariosIlustrativos(corpus: Corpus): ReportSpecAnexo | null {
+  const fontes = ["instagram", "tiktok", "youtube", "mencoes"] as const;
+  const elementos: ElementoSecao[] = [];
+  for (const fonte of fontes) {
+    const comentarios = corpus.posts
+      .filter((p) => p.fonte === fonte)
+      .flatMap((p) => p.comentarios.map((c) => ({ peca: p.externalId, c })))
+      .filter((x) => x.c.texto.trim().length > 0)
+      .slice(0, 15);
+    if (comentarios.length === 0) continue;
+    elementos.push({
+      tipo: "tabela",
+      titulo: `Comentarios ilustrativos no ${ROTULO_FONTE_ANEXO[fonte]}`,
+      cabecalho: ["Peca", "Autor", "Comentario"],
+      linhas: comentarios.map((x) => [x.peca, x.c.autor, x.c.texto.slice(0, 240)]),
+    });
+  }
+  if (elementos.length === 0) return null;
+  return {
+    titulo: "Comentarios ilustrativos por fonte",
+    descricao:
+      "Amostra de vozes do publico por fonte, com autores pseudonimizados por hash (LGPD). Dado bruto coletado, nunca estimado.",
+    elementos,
+  };
+}
+
+/** Anexo de sentimento longitudinal (Fase 4), a partir dos achados verificaveis. */
+function anexoSentimento(analise: SaidaAnalise): ReportSpecAnexo | null {
+  const sentimento = analise.findings.filter((f) => f.construto === "sentimento");
+  if (sentimento.length === 0) return null;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "callout",
+      eyebrow: "Sentimento longitudinal",
+      paragrafos: sentimento.map((f) => `${f.titulo}: ${f.conteudo}`),
+    },
+  ];
+  if (analise.graficos.some((g) => g.id === "linha-tempo-sentimento")) {
+    elementos.push({ tipo: "grafico", graficoId: "linha-tempo-sentimento" });
+  }
+  return {
+    titulo: "Sentimento longitudinal",
+    descricao:
+      "Evolucao do sentimento das pecas sobre a marca por mes na janela. Cada ponto e lastreado nas pecas que o sustentam.",
+    elementos,
+  };
+}
+
+/** Anexo do mapa de temas (Fase 4), a partir dos achados de tema. */
+function anexoTemas(analise: SaidaAnalise): ReportSpecAnexo | null {
+  const temas = analise.findings.filter((f) => f.construto === "temas");
+  if (temas.length === 0) return null;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "tabela",
+      titulo: "Temas que orbitam a marca",
+      cabecalho: ["Tema", "Leitura"],
+      linhas: temas.map((f) => [f.titulo, f.conteudo.slice(0, 280)]),
+    },
+  ];
+  if (analise.graficos.some((g) => g.id === "mapa-temas")) {
+    elementos.push({ tipo: "grafico", graficoId: "mapa-temas" });
+  }
+  return {
+    titulo: "Mapa de temas",
+    descricao:
+      "Os temas recorrentes na conversa publica sobre a marca, com o numero de pecas que sustenta cada um.",
+    elementos,
+  };
+}
+
 function anexos(
   corpus: Corpus,
   inventario: Inventario,
   verificacao: ResultadoVerificacao,
+  analise: SaidaAnalise,
   desempenho?: DesempenhoResumo,
 ): ReportSpecAnexo[] {
   const lista: ReportSpecAnexo[] = [];
@@ -427,6 +511,14 @@ function anexos(
     });
   }
 
+  // Anexos de profundidade (Fase 4): vozes do publico, sentimento e temas.
+  const comentarios = anexoComentariosIlustrativos(corpus);
+  if (comentarios) lista.push(comentarios);
+  const sentimento = anexoSentimento(analise);
+  if (sentimento) lista.push(sentimento);
+  const temas = anexoTemas(analise);
+  if (temas) lista.push(temas);
+
   lista.push({
     titulo: "Registro de evidencias",
     descricao: "Todas as afirmacoes candidatas e o resultado da verificacao factual.",
@@ -511,7 +603,7 @@ export async function comporRelatorio(params: {
       status: c.status,
       suporte: c.suportes.length ? c.suportes.join(", ") : "sem lastro",
     })),
-    anexos: anexos(corpus, inventario, verificacao, params.desempenho),
+    anexos: anexos(corpus, inventario, verificacao, analise, params.desempenho),
     graficos: analise.graficos,
     desempenho: params.desempenho,
   };
