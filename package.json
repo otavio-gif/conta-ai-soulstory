@@ -13,6 +13,9 @@
     "db:seed": "tsx prisma/seed.ts",
     "trigger:dev": "npx trigger.dev@latest dev",
     "fixtures:pipeline": "MOCK_EXTERNAL=1 SOULSTORY_DOCX_CMD=\"node scripts/soulstory-docx-build.js\" tsx scripts/fixtures-pipeline.ts",
+    "fixtures:pipeline:grande": "MOCK_EXTERNAL=1 FIXTURE_SET=grande SOULSTORY_DOCX_CMD=\"node scripts/soulstory-docx-build.js\" tsx scripts/fixtures-pipeline.ts",
+    "fixtures:gerar:grande": "tsx scripts/gerar-fixtures-larga-escala.ts",
+    "robustez:sim": "tsx scripts/robustez-sim.ts",
     "mock:pipeline": "pnpm fixtures:pipeline"
   },
   "prisma": {

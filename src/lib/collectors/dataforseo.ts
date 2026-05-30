@@ -9,6 +9,7 @@
 
 import { requireEnv } from "@/lib/env";
 import { custoDataForSeo, registrarCustoEvent } from "@/lib/cost";
+import { fetchComRetry } from "@/lib/collectors/retry";
 
 const BASE = "https://api.dataforseo.com/v3";
 
@@ -26,7 +27,7 @@ async function chamar(
   caminho: string,
   corpo: unknown,
 ): Promise<Record<string, unknown>> {
-  const resp = await fetch(`${BASE}/${caminho}`, {
+  const resp = await fetchComRetry(`${BASE}/${caminho}`, {
     method: "POST",
     headers: {
       "content-type": "application/json",

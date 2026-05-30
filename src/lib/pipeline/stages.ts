@@ -183,6 +183,8 @@ export async function coletar(
   projectId: string,
 ): Promise<{ inventario: Inventario; corpus: Corpus }> {
   const webhookBase = baseUrl();
+  const volumeDe = (kind: string) =>
+    plano.fontes.find((f) => f.kind === kind)?.volumeEstimado ?? 0;
 
   const ig = plano.instagramHandle
     ? await coletarInstagram({
@@ -191,6 +193,7 @@ export async function coletar(
         palavrasChave: plano.palavrasChave,
         janela: plano.janela,
         webhookBase,
+        volumeEstimado: volumeDe("instagram"),
       })
     : { bio: "", posts: [], lacunas: [], metricasIndisponiveis: [] };
 
@@ -200,6 +203,7 @@ export async function coletar(
         handle: plano.tiktokHandle,
         janela: plano.janela,
         webhookBase,
+        volumeEstimado: volumeDe("tiktok"),
       })
     : { bio: "", posts: [], lacunas: [], metricasIndisponiveis: [] };
 

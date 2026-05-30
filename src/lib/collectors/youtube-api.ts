@@ -7,6 +7,7 @@
 
 import { requireEnv } from "@/lib/env";
 import { custoYoutubeApi, registrarCustoEvent } from "@/lib/cost";
+import { fetchComRetry } from "@/lib/collectors/retry";
 
 const BASE = "https://www.googleapis.com/youtube/v3";
 
@@ -17,7 +18,7 @@ async function chamarApi(
 ): Promise<Record<string, unknown>> {
   const token = requireEnv("YOUTUBE_API_KEY");
   const query = new URLSearchParams({ ...params, key: token }).toString();
-  const resp = await fetch(`${BASE}/${recurso}?${query}`);
+  const resp = await fetchComRetry(`${BASE}/${recurso}?${query}`, {});
   if (!resp.ok) {
     throw new Error(`YouTube Data API ${recurso} falhou: ${resp.status}`);
   }

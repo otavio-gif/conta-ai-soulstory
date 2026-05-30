@@ -3,6 +3,7 @@
 // declarada pelo coletor, sem nunca cair em estimativa.
 
 import { requireEnv } from "@/lib/env";
+import { fetchComRetry } from "@/lib/collectors/retry";
 
 const BASE = "https://api.firecrawl.dev/v1";
 
@@ -12,33 +13,31 @@ export interface ScrapeFirecrawl {
   bloqueado: boolean;
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-/** Scrape de uma URL em markdown, com ate `tentativas` e backoff (2s, 4s, 8s). */
+/**
+ * Scrape de uma URL em markdown, com retry e backoff compartilhados (Fase 4).
+ * Bloqueio persistente (429, 5xx ou 403) vira `bloqueado=true`, que o coletor
+ * trata como lacuna, sem nunca cair em estimativa.
+ */
 export async function scrape(
   url: string,
   tentativas = 4,
 ): Promise<ScrapeFirecrawl> {
   const apiKey = requireEnv("FIRECRAWL_API_KEY");
-  for (let i = 0; i < tentativas; i++) {
-    const resp = await fetch(`${BASE}/scrape`, {
+  const resp = await fetchComRetry(
+    `${BASE}/scrape`,
+    {
       method: "POST",
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ url, formats: ["markdown"], onlyMainContent: true }),
-    });
-    if (resp.ok) {
-      const json = (await resp.json()) as { data?: { markdown?: string } };
-      return { url, markdown: json.data?.markdown ?? "", bloqueado: false };
-    }
-    // 429 (limite) e 403 (bloqueio) sao retentaveis com backoff.
-    if (resp.status === 429 || resp.status === 403 || resp.status >= 500) {
-      await sleep(2000 * 2 ** i);
-      continue;
-    }
-    break;
+    },
+    { tentativas },
+  );
+  if (resp.ok) {
+    const json = (await resp.json()) as { data?: { markdown?: string } };
+    return { url, markdown: json.data?.markdown ?? "", bloqueado: false };
   }
   return { url, markdown: "", bloqueado: true };
 }
