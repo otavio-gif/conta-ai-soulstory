@@ -1,7 +1,10 @@
-// Mapa de modelos Claude por papel (preset Equilibrio aprovado no CP1 da Fase 1).
-// A verificacao factual usa Opus por ser a guardia da fidelidade: poucas
-// chamadas e alto risco de um falso confirmado. Sintese e redacao tambem em
-// Opus pela qualidade. OCR e analise em Sonnet. Tarefas mecanicas em Haiku.
+// Mapa de modelos Claude por papel. Preset elevado ao padrao cliente seis
+// digitos (Fase 4): a analise de conteudo por post e o cientista de dados (que a
+// viralizacao herda) sobem para Opus, alem da sintese, verificacao e redacao que
+// ja eram Opus. O custo maior na camada de maior volume fica contido pelo
+// Message Batches (50% off) e pelo prompt caching, e visivel no CP1. Sentimento,
+// temas, OCR e interprete seguem em Sonnet (passada unica ou batelada); tarefas
+// mecanicas e o editor de voz em Haiku.
 
 export const MODELOS = {
   opus: "claude-opus-4-8",
@@ -27,8 +30,9 @@ export type PapelIA =
 export const MODELO_POR_PAPEL: Record<PapelIA, ModeloId> = {
   interprete: MODELOS.sonnet,
   ocr: MODELOS.sonnet,
-  analista_conteudo: MODELOS.sonnet,
-  cientista_dados: MODELOS.sonnet,
+  // Analise por post e cientista de dados em Opus (preset seis digitos, Fase 4).
+  analista_conteudo: MODELOS.opus,
+  cientista_dados: MODELOS.opus,
   // Sentimento e mapa de temas (Fase 3): Sonnet, leitura qualitativa estruturada.
   sentimento: MODELOS.sonnet,
   temas: MODELOS.sonnet,

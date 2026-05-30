@@ -13,6 +13,7 @@ import type {
   AmostraTranscricao,
   ClaimVerificada,
   Corpus,
+  DesempenhoResumo,
   ElementoSecao,
   Inventario,
   Outline,
@@ -166,10 +167,48 @@ function metrica(corpus: Corpus, externalId: string, nome: string): string {
   return m.disponivel ? String(m.valor) : "indisponivel";
 }
 
+function anexoDesempenho(desempenho: DesempenhoResumo): ReportSpecAnexo {
+  const segundos = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "tabela",
+      titulo: "Tempo por estagio",
+      cabecalho: ["Estagio", "Tempo"],
+      linhas: [
+        ...desempenho.estagios.map((e) => [e.estagio, segundos(e.ms)]),
+        ["Total", segundos(desempenho.totalMs)],
+      ],
+    },
+  ];
+  if (desempenho.custoPorFonte.length > 0) {
+    elementos.push({
+      tipo: "tabela",
+      titulo: "Custo por fonte (medido)",
+      cabecalho: ["Fonte", "Custo"],
+      linhas: desempenho.custoPorFonte.map((c) => [c.fonte, formatBRL(c.custoBRL)]),
+    });
+  } else {
+    elementos.push({
+      tipo: "callout",
+      eyebrow: "Custo por fonte",
+      paragrafos: [
+        "O custo por fonte e medido por CostEvent em runs reais. Nesta validacao sem credenciais nao ha chamada paga.",
+      ],
+    });
+  }
+  return {
+    titulo: "Desempenho e custo",
+    descricao:
+      "Tempo de parede por estagio e custo medido por fonte. A medicao serve a visibilidade e ao guardrail de custo do checkpoint 1, nunca como teto de tempo.",
+    elementos,
+  };
+}
+
 function anexos(
   corpus: Corpus,
   inventario: Inventario,
   verificacao: ResultadoVerificacao,
+  desempenho?: DesempenhoResumo,
 ): ReportSpecAnexo[] {
   const lista: ReportSpecAnexo[] = [];
 
@@ -404,6 +443,9 @@ function anexos(
     ],
   });
 
+  // Anexo de desempenho e custo (Fase 4), quando o run foi instrumentado.
+  if (desempenho) lista.push(anexoDesempenho(desempenho));
+
   // Numera os anexos sequencialmente (Anexo A, B, C, ...) na ordem montada.
   return lista.map((anexo, i) => ({
     ...anexo,
@@ -419,6 +461,7 @@ export async function comporRelatorio(params: {
   analise: SaidaAnalise;
   outline: Outline;
   verificacao: ResultadoVerificacao;
+  desempenho?: DesempenhoResumo;
 }): Promise<ReportSpec> {
   const { plano, corpus, inventario, amostra, analise, outline, verificacao } =
     params;
@@ -467,8 +510,9 @@ export async function comporRelatorio(params: {
       status: c.status,
       suporte: c.suportes.length ? c.suportes.join(", ") : "sem lastro",
     })),
-    anexos: anexos(corpus, inventario, verificacao),
+    anexos: anexos(corpus, inventario, verificacao, params.desempenho),
     graficos: analise.graficos,
+    desempenho: params.desempenho,
   };
 
   return aplicarVozSoulstory(spec);

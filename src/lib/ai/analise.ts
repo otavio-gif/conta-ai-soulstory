@@ -4,8 +4,10 @@
 // sao construidos de forma deterministica a partir das metricas reais, nunca
 // calculados pelo modelo, para preservar a fidelidade factual.
 
-import { bloco, blocoCacheavel, chamarClaude } from "@/lib/ai/anthropic";
+import { bloco, blocoCacheavel, chamarClaude, type ChamadaClaude } from "@/lib/ai/anthropic";
+import { chamarClaudeEmLote } from "@/lib/ai/batch";
 import { doutrina } from "@/lib/ai/doctrine";
+import { mapearComConcorrencia } from "@/lib/collectors/util";
 import { renderizarGraficos } from "@/lib/charts";
 import { calcularShareOfVoice } from "@/lib/analytics/share-of-voice";
 import { calcularPicoTimeline } from "@/lib/analytics/pico-timeline";
@@ -171,6 +173,55 @@ function corpoDoPost(post: PostColetado, corpus: Corpus): string {
   );
 }
 
+// Performance (Fase 4): a analise por post sao centenas de chamadas
+// independentes em marca grande. Abaixo do limiar roda com concorrencia (cache de
+// prompt quente entre as chamadas); acima, vai para o lote (Message Batches),
+// assincrono e 50% mais barato. O prefixo cacheado (system + bloco da marca) e
+// identico entre os posts para maximizar cache_read.
+const CONCORRENCIA_ANALISE = 6;
+const LIMIAR_LOTE = 80;
+
+function requisicaoAnalistaPost(
+  post: PostColetado,
+  corpus: Corpus,
+  system: ReturnType<typeof bloco>[],
+): ChamadaClaude<SaidaAnalistaPost> {
+  return {
+    papel: "analista_conteudo",
+    fixtureKey: `analista-${post.externalId}`,
+    system,
+    conteudo: [
+      blocoCacheavel(`Marca analisada: ${corpus.marca}. Bio: ${corpus.bio ?? ""}`),
+      bloco(`Analise o post a seguir junto com os seus comentarios.\n\n${corpoDoPost(post, corpus)}`),
+    ],
+    ferramenta: {
+      nome: "registrar_analise_post",
+      descricao:
+        "Registra insights, afirmacoes com suportes e termos de linguagem nativa do post.",
+      schema: {
+        type: "object",
+        properties: {
+          insights: { type: "array", items: SCHEMA_INSIGHT },
+          claims: { type: "array", items: SCHEMA_CLAIM },
+          termosNativos: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                termo: { type: "string" },
+                definicao: { type: "string" },
+              },
+              required: ["termo", "definicao"],
+            },
+          },
+        },
+        required: ["insights", "claims", "termosNativos"],
+      },
+      parse: (e) => e as SaidaAnalistaPost,
+    },
+  };
+}
+
 async function analisarPorPost(corpus: Corpus): Promise<{
   insights: InsightAnalise[];
   claims: ClaimCandidato[];
@@ -184,41 +235,16 @@ async function analisarPorPost(corpus: Corpus): Promise<{
   const claims: ClaimCandidato[] = [];
   const findings: FindingItem[] = [];
 
-  for (const post of corpus.posts.filter((p) => !p.ehMencao)) {
-    const resp = await chamarClaude<SaidaAnalistaPost>({
-      papel: "analista_conteudo",
-      fixtureKey: `analista-${post.externalId}`,
-      system,
-      conteudo: [
-        blocoCacheavel(`Marca analisada: ${corpus.marca}. Bio: ${corpus.bio ?? ""}`),
-        bloco(`Analise o post a seguir junto com os seus comentarios.\n\n${corpoDoPost(post, corpus)}`),
-      ],
-      ferramenta: {
-        nome: "registrar_analise_post",
-        descricao:
-          "Registra insights, afirmacoes com suportes e termos de linguagem nativa do post.",
-        schema: {
-          type: "object",
-          properties: {
-            insights: { type: "array", items: SCHEMA_INSIGHT },
-            claims: { type: "array", items: SCHEMA_CLAIM },
-            termosNativos: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  termo: { type: "string" },
-                  definicao: { type: "string" },
-                },
-                required: ["termo", "definicao"],
-              },
-            },
-          },
-          required: ["insights", "claims", "termosNativos"],
-        },
-        parse: (e) => e as SaidaAnalistaPost,
-      },
-    });
+  const posts = corpus.posts.filter((p) => !p.ehMencao);
+  const requisicoes = posts.map((p) => requisicaoAnalistaPost(p, corpus, system));
+  const respostas =
+    posts.length >= LIMIAR_LOTE
+      ? await chamarClaudeEmLote(requisicoes)
+      : await mapearComConcorrencia(requisicoes, CONCORRENCIA_ANALISE, (req) =>
+          chamarClaude(req),
+        );
+
+  for (const resp of respostas) {
     const d = resp.dados;
     if (!d) continue;
     for (const i of d.insights ?? []) {

@@ -22,6 +22,7 @@ import {
   verificar,
 } from "@/lib/pipeline/stages";
 import { CHECKPOINTS } from "@/lib/pipeline/types";
+import { Cronometro } from "@/lib/pipeline/perf";
 import { formatBRL } from "@/lib/utils";
 
 const PROJECT_ID = "fixtures";
@@ -42,29 +43,37 @@ async function main() {
     fim: "2026-03-31T23:59:59.000Z",
   };
 
-  const plano = await interpretarBriefing({
-    briefing:
-      "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google e mencoes de terceiros, com foco em torra artesanal e cafe especial.",
-    janela,
-  });
+  const cron = new Cronometro();
+
+  const plano = await cron.medir("Plano de coleta", () =>
+    interpretarBriefing({
+      briefing:
+        "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google e mencoes de terceiros, com foco em torra artesanal e cafe especial.",
+      janela,
+    }),
+  );
   checkpoint(
     1,
     `${plano.fontes.length} fontes (${plano.fontes.map((f) => f.kind).join(", ")}). Custo estimado ${formatBRL(plano.custo.totalBRL)}, orcamento ${formatBRL(plano.custo.orcamentoBRL)} para ${plano.custo.mesesJanela} mes(es).`,
   );
 
-  const { inventario, corpus } = await coletar(plano, PROJECT_ID);
+  const { inventario, corpus } = await cron.medir("Coleta", () =>
+    coletar(plano, PROJECT_ID),
+  );
   checkpoint(
     2,
     `${inventario.totalArtefatos} artefatos brutos. Lacunas: ${inventario.lacunas.length}. Metricas indisponiveis: ${inventario.metricasIndisponiveis.join(", ")}.`,
   );
 
-  const { amostra, corpus: corpusTr } = await transcreverOcr(corpus);
+  const { amostra, corpus: corpusTr } = await cron.medir("Transcricoes e OCR", () =>
+    transcreverOcr(corpus),
+  );
   checkpoint(
     3,
     `${amostra.totalTranscricoes} transcricao(oes), ${amostra.totalOcr} OCR, ${amostra.amostras.length} amostra(s).`,
   );
 
-  const analise = await analisar(corpusTr, PROJECT_ID);
+  const analise = await cron.medir("Analises", () => analisar(corpusTr, PROJECT_ID));
   checkpoint(
     4,
     `${analise.insights.length} insights, ${analise.graficos.length} grafico(s), ${analise.claims.length} afirmacoes candidatas, ${analise.findings.length} achados.`,
@@ -76,7 +85,9 @@ async function main() {
     `Parte I com ${outline.parteI.length} secoes, Parte II com ${outline.parteII.length} secoes.`,
   );
 
-  const verificacao = await verificar(corpusTr, analise);
+  const verificacao = await cron.medir("Verificacao factual", () =>
+    verificar(corpusTr, analise),
+  );
   checkpoint(
     6,
     `${verificacao.confirmadas} afirmacoes validadas, ${verificacao.descartadas} descartada(s) por falta de lastro.`,
@@ -90,6 +101,8 @@ async function main() {
     analise,
     outline,
     verificacao,
+    // Sem banco nas fixtures: custo por fonte vazio, so o tempo por estagio.
+    desempenho: cron.resumo([]),
   });
   const docx = await comporDocx(spec);
 
