@@ -1,31 +1,48 @@
 /*
- * Tokens visuais Soulstory (ponto de partida).
- * Derivados do padrao soulstory-docx (PRD secao 7): paleta indigo,
- * Cabin no corpo, EB Garamond nos titulos, Consolas no mono.
- * Placeholder ate o design system oficial do Otavio subir ao projeto.
+ * Tokens visuais Soulstory.
+ * Fonte de verdade: Soulstory Design System 2.0 ("editorial-mystical,
+ * Parchment ↔ Void"). Documentacao oficial em docs/design-system/
+ * (colors_and_type.css e DESIGN.md).
+ *
+ * Os nomes --soul-* sao consumidos por src/app/globals.css. Os nomes --ss-*
+ * sao os nomes canonicos do design system, expostos aqui para uso direto.
  */
 
 :root {
-  /* Paleta indigo Soulstory */
-  --soul-indigo-50: #eef0ff;
-  --soul-indigo-100: #e0e3ff;
-  --soul-indigo-200: #c7cdfe;
-  --soul-indigo-300: #a5acfb;
-  --soul-indigo-500: #6366f1;
-  --soul-indigo-600: #4f46e5;
-  --soul-indigo-700: #4338ca;
-  --soul-indigo-900: #312e81;
-  --soul-indigo-950: #1e1b4b;
+  /* ===== Cores canonicas do Design System 2.0 ===== */
+  --ss-indigo: #3d396e; /* Indigo Authority, cor de marca principal */
+  --ss-indigo-press: #2d2a52; /* Indigo pressionado */
+  --ss-periwinkle: #8e9fee; /* Lavender Insight */
+  --ss-sky: #8cc6ff; /* Sky Awakening */
+  --ss-lavender: #e1e4f6; /* Mist Lavender */
+  --ss-cream: #faf8f5; /* Parchment Canvas */
+  --ss-warm-veil: #f1efec; /* Warm Veil */
+  --ss-ink: #0c0b14; /* Deep Indigo Void */
+  --ss-elevated: #15131f; /* Elevated Void */
+  --ss-surface-indigo: #1f1b2e; /* Surface Indigo */
+  --ss-white: #ffffff;
 
-  /* Neutros */
-  --soul-ink: #1c1a2e;
-  --soul-paper: #faf9fc;
+  /* ===== Escala indigo (ancorada em #3d396e) ===== */
+  --soul-indigo-50: #f2f3fb;
+  --soul-indigo-100: #e1e4f6; /* Mist Lavender */
+  --soul-indigo-200: #c5cbef;
+  --soul-indigo-300: #8e9fee; /* Lavender Insight */
+  --soul-indigo-500: #5c6fcf; /* Indigo Bright */
+  --soul-indigo-600: #4a4686;
+  --soul-indigo-700: #3d396e; /* Indigo Authority, marca */
+  --soul-indigo-900: #2d2a52; /* Indigo Press */
+  --soul-indigo-950: #1f1b2e; /* Surface Indigo */
+
+  /* ===== Neutros ===== */
+  --soul-ink: #0c0b14; /* Deep Indigo Void */
+  --soul-paper: #faf8f5; /* Parchment Canvas */
   --soul-white: #ffffff;
-  --soul-muted: #6b7280;
-  --soul-border: #e6e3f0;
+  --soul-muted: rgba(12, 11, 20, 0.62); /* texto secundario */
+  --soul-border: rgba(60, 57, 110, 0.18); /* line-default */
 
-  /* Sinalizacao */
-  --soul-success: #15803d;
-  --soul-warning: #b45309;
-  --soul-danger: #b91c1c;
+  /* ===== Sinalizacao (status dessaturado do DS 2.0) ===== */
+  --soul-success: #5c8b7a;
+  --soul-warning: #9b7c44;
+  --soul-danger: #9b4444;
+  --soul-info: #8cc6ff;
 }
