@@ -1,6 +1,8 @@
-// Transcricao de audio dos Reels via API OpenAI (gpt-4o-transcribe), PRD secao
-// 6. Baixa o mp4 do payload do Apify e transcreve. Com MOCK_EXTERNAL=1 le a
-// transcricao de uma fixture, sem chamada paga.
+// Transcricao de audio de Reels e videos via API OpenAI (gpt-4o-transcribe),
+// PRD secao 6. Baixa o video do videoUrl e transcreve, para qualquer fonte de
+// video (Instagram, TikTok, YouTube). No YouTube e o fallback quando nao ha
+// legenda oficial. Com MOCK_EXTERNAL=1 le a transcricao de uma fixture, sem
+// chamada paga.
 
 import OpenAI from "openai";
 import { toFile } from "openai/uploads";
@@ -18,10 +20,11 @@ function cliente(): OpenAI {
   return clienteSingleton;
 }
 
-export async function transcreverReel(
+export async function transcreverAudio(
   post: PostColetado,
 ): Promise<TranscricaoItem | null> {
-  if (post.tipoMidia !== "reel" || !post.videoUrl) return null;
+  if (post.tipoMidia !== "reel" && post.tipoMidia !== "video") return null;
+  if (!post.videoUrl) return null;
 
   if (MOCK_EXTERNAL) {
     const mapa = await lerFixture<
@@ -31,6 +34,7 @@ export async function transcreverReel(
     if (!t) return null;
     return {
       postExternalId: post.externalId,
+      fonte: post.fonte,
       texto: t.texto,
       idioma: t.idioma ?? "pt",
       modelo: MODELO,
@@ -50,15 +54,16 @@ export async function transcreverReel(
   });
   const duracao = (resposta as { duration?: number }).duration ?? 60;
   await registrarCustoEvent({
-    fonte: "instagram",
-    descricao: `Transcricao Reel ${post.externalId} (${MODELO})`,
+    fonte: post.fonte,
+    descricao: `Transcricao ${post.externalId} (${MODELO})`,
     custoBRL: custoTranscricao(duracao),
   });
 
   return {
     postExternalId: post.externalId,
+    fonte: post.fonte,
     texto: resposta.text,
-    idioma: "pt",
+    idioma: resposta.text ? "pt" : null,
     modelo: MODELO,
   };
 }

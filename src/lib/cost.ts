@@ -137,6 +137,16 @@ export function custoApifyRun(usd: number): number {
   return Number((usd * USD_BRL).toFixed(4));
 }
 
+/**
+ * Custo aproximado de chamadas a YouTube Data API v3. A quota e gratuita ate o
+ * teto diario (unidades), mas registramos um CostEvent simbolico por unidade
+ * para que a medicao reflita o consumo de quota do projeto.
+ */
+export function custoYoutubeApi(unidades: number): number {
+  const usd = unidades * 0.00001;
+  return Number((usd * USD_BRL).toFixed(4));
+}
+
 /** Custo aproximado de scrapes Firecrawl (creditos consumidos x preco do credito). */
 export function custoFirecrawl(creditos: number): number {
   const usd = creditos * 0.0008;

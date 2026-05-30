@@ -4,8 +4,12 @@
     "tipo": "marca",
     "instagramHandle": "@cafesserraazul",
     "reclameAquiUrl": "https://www.reclameaqui.com.br/empresa/cafes-serra-azul/",
+    "tiktokHandle": "@cafesserraazul",
+    "youtubeHandle": "@cafesserraazul",
     "palavrasChave": ["cafe especial", "serra azul", "torra artesanal"],
     "volumeInstagram": 4,
-    "volumeReclameAqui": 2
+    "volumeReclameAqui": 2,
+    "volumeTiktok": 2,
+    "volumeYoutube": 2
   }
 }

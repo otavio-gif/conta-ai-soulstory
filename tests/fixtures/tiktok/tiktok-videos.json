@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tt_001",
+    "text": "Tres erros que estragam o seu cafe coado em casa. O terceiro quase todo mundo comete. #cafe #cafeespecial",
+    "createTimeISO": "2026-02-12T18:00:00.000Z",
+    "webVideoUrl": "https://www.tiktok.com/@cafesserraazul/video/tt_001",
+    "videoUrl": "https://cdn.example/tt_001.mp4",
+    "authorMeta": { "name": "cafesserraazul", "signature": "Torra artesanal na Mantiqueira." },
+    "diggCount": 18400,
+    "commentCount": 642,
+    "playCount": 512000,
+    "shareCount": 3120
+  },
+  {
+    "id": "tt_002",
+    "text": "Como a gente escolhe os graos no sitio do produtor. Bastidores da torra de inverno.",
+    "createTimeISO": "2026-03-08T14:30:00.000Z",
+    "webVideoUrl": "https://www.tiktok.com/@cafesserraazul/video/tt_002",
+    "videoUrl": "https://cdn.example/tt_002.mp4",
+    "authorMeta": { "name": "cafesserraazul", "signature": "Torra artesanal na Mantiqueira." },
+    "diggCount": 5210,
+    "commentCount": 188,
+    "playCount": 96400,
+    "shareCount": 410
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Formato de erro e correcao prende a atencao",
+        "conteudo": "O video de tres erros do coado e tratado como conteudo util de guardar e repassar, o que sustenta o maior alcance da marca no TikTok.",
+        "suportes": ["tt_001", "tt_c_001_2"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O video tt_001 foi compartilhado 3120 vezes no TikTok, metrica publica na plataforma.",
+        "tipoSuporte": "contagem",
+        "suportes": ["tt_001"],
+        "construto": "aceleradores"
+      }
+    ],
+    "termosNativos": [
+      {
+        "termo": "florada",
+        "definicao": "Termo que o publico usa para o incho inicial do po ao receber a primeira agua no coado."
+      }
+    ]
+  }
+}

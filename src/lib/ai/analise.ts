@@ -79,6 +79,28 @@ function construirGraficos(corpus: Corpus): GraficoRef[] {
       dados: linha,
     });
   }
+
+  // Viralizacao cross-fonte: top itens por visualizacoes publicas, rotulados
+  // com a fonte. So entra quando ha video (TikTok ou YouTube ou Reel).
+  const viral = posts
+    .map((p) => ({
+      rotulo: `${p.fonte.slice(0, 2)}:${p.externalId}`,
+      valor: metricaValor(p, "visualizacoes") ?? 0,
+    }))
+    .filter((d) => d.valor > 0)
+    .sort((a, b) => b.valor - a.valor)
+    .slice(0, 10);
+  const fontesComViral = new Set(posts.map((p) => p.fonte));
+  if (viral.length > 1 && fontesComViral.size > 1) {
+    graficos.push({
+      id: "viralizacao-cross-fonte",
+      titulo: "Viralizacao cross-fonte por visualizacoes",
+      descricao:
+        "Itens de maior alcance publico por visualizacoes, comparados entre as fontes.",
+      tipo: "barras",
+      dados: viral,
+    });
+  }
   return graficos;
 }
 
@@ -124,6 +146,7 @@ function corpoDoPost(post: PostColetado, corpus: Corpus): string {
   return JSON.stringify(
     {
       externalId: post.externalId,
+      fonte: post.fonte,
       tipoMidia: post.tipoMidia,
       publicadoEm: post.publicadoEm,
       legenda: post.legenda,
@@ -226,10 +249,11 @@ function resumoMetricas(corpus: Corpus): string {
     .map((p) => {
       const curtidas = metricaValor(p, "curtidas");
       const vis = metricaValor(p, "visualizacoes");
-      return `${p.externalId} | ${p.tipoMidia} | ${p.publicadoEm.slice(0, 10)} | curtidas=${curtidas ?? "n/d"} | comentarios=${p.comentarios.length} | visualizacoes=${vis ?? "n/d"}`;
+      const comp = metricaValor(p, "compartilhamentos");
+      return `${p.externalId} | ${p.fonte} | ${p.tipoMidia} | ${p.publicadoEm.slice(0, 10)} | curtidas=${curtidas ?? "n/d"} | comentarios=${p.comentarios.length} | visualizacoes=${vis ?? "n/d"} | compartilhamentos=${comp ?? "n/d"}`;
     })
     .join("\n");
-  return `Posts da marca (externalId | tipo | data | metricas):\n${linhas}\n\nMetricas nao publicas (sempre indisponiveis): ${corpus.metricasIndisponiveis.join(", ")}.`;
+  return `Itens da marca por fonte (externalId | fonte | tipo | data | metricas):\n${linhas}\n\nMetricas nao publicas (sempre indisponiveis): ${corpus.metricasIndisponiveis.join(", ")}.`;
 }
 
 interface SaidaCientista {
@@ -307,6 +331,103 @@ async function analisarCientista(
   return { insights, claims };
 }
 
+/** Resumo das transcricoes e legendas por item, para a leitura de viralizacao. */
+function resumoTranscricoes(corpus: Corpus): string {
+  const linhas = corpus.posts
+    .filter((p) => !p.ehMencao)
+    .map((p) => {
+      const t = corpus.transcricoes.find((x) => x.postExternalId === p.externalId);
+      const o = corpus.ocr.find((x) => x.postExternalId === p.externalId);
+      const conteudo = t?.texto ?? o?.texto ?? "";
+      if (!conteudo) return null;
+      return `${p.externalId} (${p.fonte}): ${conteudo.slice(0, 400)}`;
+    })
+    .filter((l): l is string => l !== null)
+    .join("\n");
+  return linhas || "Sem transcricoes ou legendas disponiveis.";
+}
+
+/**
+ * Analise de viralizacao cross-fonte (PRD secao 3.2): le a tabela multi-fonte e
+ * o conteudo transcrito e identifica os fatores que explicam o desempenho dos
+ * itens de maior destaque, comparando entre Instagram, TikTok e YouTube. Cada
+ * afirmacao nasce como Claim parte I, construto viralizacao, lastreada nos
+ * externalIds. Nao ranqueia por metrica nao publica.
+ */
+async function analisarViralizacao(
+  corpus: Corpus,
+  graficos: GraficoRef[],
+): Promise<{ insights: InsightAnalise[]; claims: ClaimCandidato[]; findings: FindingItem[] }> {
+  const fontes = [...new Set(corpus.posts.filter((p) => !p.ehMencao).map((p) => p.fonte))];
+  if (corpus.posts.filter((p) => !p.ehMencao).length === 0) {
+    return { insights: [], claims: [], findings: [] };
+  }
+
+  const resp = await chamarClaude<SaidaCientista>({
+    papel: "cientista_dados",
+    fixtureKey: "viralizacao",
+    system: [
+      bloco(PROMPT_CIENTISTA_DADOS),
+      await doutrina("visao-externa-metodo", "evidence-ledger"),
+    ],
+    conteudo: [
+      blocoCacheavel(`${resumoMetricas(corpus)}\n\nConteudo transcrito por item:\n${resumoTranscricoes(corpus)}`),
+      bloco(
+        `Fontes presentes: ${fontes.join(", ")}. Graficos disponiveis: ${graficos
+          .map((g) => g.id)
+          .join(", ")}.\n\nAnalise a viralizacao cross-fonte: por que os itens de maior alcance publico se destacaram, comparando o comportamento entre as fontes. Use apenas metricas publicas. Cada afirmacao lastreada nos externalIds, parte I.`,
+      ),
+    ],
+    ferramenta: {
+      nome: "registrar_viralizacao",
+      descricao: "Registra insights e afirmacoes sobre a viralizacao cross-fonte.",
+      schema: {
+        type: "object",
+        properties: {
+          insights: { type: "array", items: SCHEMA_INSIGHT },
+          claims: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                texto: { type: "string" },
+                tipoSuporte: { type: "string", enum: TIPO_SUPORTE },
+                suportes: { type: "array", items: { type: "string" } },
+              },
+              required: ["texto", "tipoSuporte", "suportes"],
+            },
+          },
+        },
+        required: ["insights", "claims"],
+      },
+      parse: (e) => e as SaidaCientista,
+    },
+  });
+
+  const insights: InsightAnalise[] = (resp.dados?.insights ?? []).map((i) => ({
+    otica: "cientista_dados",
+    titulo: i.titulo,
+    conteudo: i.conteudo,
+    suportes: i.suportes ?? [],
+  }));
+  const claims: ClaimCandidato[] = (resp.dados?.claims ?? []).map((c) => ({
+    otica: "cientista_dados",
+    parte: "I",
+    texto: c.texto,
+    tipoSuporte: c.tipoSuporte,
+    suportes: c.suportes ?? [],
+    construto: "viralizacao",
+  }));
+  const findings: FindingItem[] = insights.map((i) => ({
+    otica: "cientista_dados",
+    construto: "viralizacao",
+    parte: "I",
+    titulo: i.titulo,
+    conteudo: i.conteudo,
+  }));
+  return { insights, claims, findings };
+}
+
 /** Roda as duas oticas e devolve a saida consolidada com os graficos renderizados. */
 export async function analisar(
   corpus: Corpus,
@@ -315,11 +436,12 @@ export async function analisar(
   const graficos = await renderizarGraficos(construirGraficos(corpus), projectId);
   const porPost = await analisarPorPost(corpus);
   const cientista = await analisarCientista(corpus, graficos);
+  const viralizacao = await analisarViralizacao(corpus, graficos);
 
   return {
-    insights: [...cientista.insights, ...porPost.insights],
+    insights: [...cientista.insights, ...porPost.insights, ...viralizacao.insights],
     graficos,
-    claims: [...porPost.claims, ...cientista.claims],
-    findings: porPost.findings,
+    claims: [...porPost.claims, ...cientista.claims, ...viralizacao.claims],
+    findings: [...porPost.findings, ...viralizacao.findings],
   };
 }

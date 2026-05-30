@@ -1,0 +1,28 @@
+[
+  {
+    "id": "yt_001",
+    "snippet": {
+      "title": "Metodo coado passo a passo: o guia completo da Serra Azul",
+      "publishedAt": "2026-02-20T12:00:00.000Z",
+      "description": "Tutorial completo do metodo coado com a torra media da Serra Azul."
+    },
+    "statistics": {
+      "viewCount": "84300",
+      "likeCount": "6120",
+      "commentCount": "214"
+    }
+  },
+  {
+    "id": "yt_002",
+    "snippet": {
+      "title": "Visita ao produtor: a colheita do grao na Mantiqueira",
+      "publishedAt": "2026-03-14T17:00:00.000Z",
+      "description": "Bastidores da colheita manual no sitio parceiro da Serra Azul."
+    },
+    "statistics": {
+      "viewCount": "23700",
+      "likeCount": "1980",
+      "commentCount": "76"
+    }
+  }
+]

@@ -8,8 +8,8 @@ const VOZ =
 
 export const PROMPT_INTERPRETE = `Voce e o interprete de briefing e escopo do Diagnostico de Visao Externa.
 Recebe um briefing em texto livre e a janela temporal, e extrai um plano de coleta estruturado.
-Identifique: nome e variacoes da marca, tipo (marca ou influenciador), handle do Instagram, presenca e URL no Reclame Aqui, palavras-chave de mencao e o volume estimado por fonte.
-Considere apenas Instagram e Reclame Aqui nesta fase. Nao invente handles nem URLs: se o briefing nao informar, deixe vazio.
+Identifique: nome e variacoes da marca, tipo (marca ou influenciador), handle do Instagram, handle do TikTok, handle ou canal do YouTube, presenca e URL no Reclame Aqui, palavras-chave de mencao e o volume estimado por fonte.
+Considere Instagram, Reclame Aqui, TikTok e YouTube. Coleta apenas das contas da propria marca ou criador. Nao invente handles nem URLs: se o briefing nao informar, deixe vazio.
 ${VOZ}`;
 
 export const PROMPT_OCR = `Voce extrai o texto visivel em imagens de carrossel do Instagram (OCR por visao).

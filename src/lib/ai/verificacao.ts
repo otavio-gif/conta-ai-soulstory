@@ -26,9 +26,20 @@ function indiceEvidencias(corpus: Corpus): Map<string, string> {
       .filter((m) => !m.disponivel)
       .map((m) => m.nome)
       .join(", ");
+    // Transcricao de audio, legenda oficial ou OCR sustentam claims sobre o que
+    // foi dito ou escrito no item, sem precisar de um support-id novo.
+    const transcricao = corpus.transcricoes.find(
+      (t) => t.postExternalId === p.externalId,
+    );
+    const ocr = corpus.ocr.find((o) => o.postExternalId === p.externalId);
+    const conteudo = transcricao
+      ? ` Transcricao/legenda (${transcricao.modelo}): "${transcricao.texto.slice(0, 800)}".`
+      : ocr
+        ? ` OCR: "${ocr.texto.slice(0, 800)}".`
+        : "";
     idx.set(
       p.externalId,
-      `Post ${p.externalId} (${p.tipoMidia}, ${p.publicadoEm.slice(0, 10)}). Legenda: "${p.legenda}". Metricas publicas: ${pub || "n/d"}. Metricas indisponiveis: ${indisp}. Comentarios coletados: ${p.comentarios.length}.`,
+      `Item ${p.externalId} (${p.fonte}, ${p.tipoMidia}, ${p.publicadoEm.slice(0, 10)}). Legenda: "${p.legenda}". Metricas publicas: ${pub || "n/d"}. Metricas indisponiveis: ${indisp}. Comentarios coletados: ${p.comentarios.length}.${conteudo}`,
     );
     for (const c of p.comentarios) {
       idx.set(

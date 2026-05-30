@@ -174,7 +174,7 @@ function anexos(
   const lista: ReportSpecAnexo[] = [];
 
   lista.push({
-    titulo: "Anexo A. Inventario de coleta",
+    titulo: "Inventario de coleta",
     descricao: `${inventario.totalArtefatos} artefatos brutos por fonte, com lacunas e metricas indisponiveis declaradas.`,
     elementos: [
       {
@@ -201,34 +201,76 @@ function anexos(
     ],
   });
 
-  const ordenados = corpus.posts
-    .filter((p) => !p.ehMencao)
-    .sort((a, b) => {
-      const ca = a.metricas.find((m) => m.nome === "curtidas")?.valor ?? 0;
-      const cb = b.metricas.find((m) => m.nome === "curtidas")?.valor ?? 0;
-      return cb - ca;
-    })
-    .slice(0, 10);
+  // Anexo por fonte: top itens por eixo publico, uma tabela por fonte presente.
+  const rotuloFonte: Record<string, string> = {
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    youtube: "YouTube",
+  };
+  const fontesPresentes = (["instagram", "tiktok", "youtube"] as const).filter(
+    (f) => corpus.posts.some((p) => p.fonte === f && !p.ehMencao),
+  );
+  for (const fonte of fontesPresentes) {
+    const ordenados = corpus.posts
+      .filter((p) => !p.ehMencao && p.fonte === fonte)
+      .sort((a, b) => {
+        const ca = a.metricas.find((m) => m.nome === "curtidas")?.valor ?? 0;
+        const cb = b.metricas.find((m) => m.nome === "curtidas")?.valor ?? 0;
+        return cb - ca;
+      })
+      .slice(0, 10);
+    lista.push({
+      titulo: `Top itens no ${rotuloFonte[fonte]} por eixo publico`,
+      descricao:
+        "Ranking pelos eixos publicos disponiveis. Salvamentos (e compartilhamentos onde nao sao publicos) nao entram, por nao serem publicos.",
+      elementos: [
+        {
+          tipo: "tabela",
+          titulo: `Top itens no ${rotuloFonte[fonte]}`,
+          cabecalho: ["Item", "Tipo", "Data", "Curtidas", "Comentarios", "Visualizacoes", "Compartilhamentos"],
+          linhas: ordenados.map((p) => [
+            p.externalId,
+            p.tipoMidia,
+            p.publicadoEm.slice(0, 10),
+            metrica(corpus, p.externalId, "curtidas"),
+            metrica(corpus, p.externalId, "comentarios"),
+            metrica(corpus, p.externalId, "visualizacoes"),
+            metrica(corpus, p.externalId, "compartilhamentos"),
+          ]),
+        },
+      ],
+    });
+  }
 
-  lista.push({
-    titulo: "Anexo B. Top posts por eixo publico",
-    descricao: "Ranking pelos eixos publicos disponiveis. Salvamentos e compartilhamentos nao entram por nao serem publicos.",
-    elementos: [
-      {
-        tipo: "tabela",
-        titulo: "Top posts",
-        cabecalho: ["Post", "Tipo", "Data", "Curtidas", "Comentarios", "Visualizacoes"],
-        linhas: ordenados.map((p) => [
-          p.externalId,
-          p.tipoMidia,
-          p.publicadoEm.slice(0, 10),
-          metrica(corpus, p.externalId, "curtidas"),
-          metrica(corpus, p.externalId, "comentarios"),
-          metrica(corpus, p.externalId, "visualizacoes"),
-        ]),
-      },
-    ],
-  });
+  // Anexo de viralizacao cross-fonte: afirmacoes verificadas sobre os fatores de
+  // destaque, com os suportes (externalIds) que as sustentam.
+  const viraisVerificadas = verificacao.claims.filter(
+    (c) =>
+      c.construto === "viralizacao" &&
+      (c.status === "confirmada" || c.status === "imprecisa"),
+  );
+  if (fontesPresentes.length > 1 || viraisVerificadas.length > 0) {
+    lista.push({
+      titulo: "Viralizacao cross-fonte",
+      descricao:
+        "Fatores que explicam o desempenho dos itens de maior destaque, comparados entre as fontes. So entram afirmacoes verificadas.",
+      elementos: [
+        {
+          tipo: "tabela",
+          titulo: "Fatores de viralizacao verificados",
+          cabecalho: ["Afirmacao", "Status", "Suporte"],
+          linhas:
+            viraisVerificadas.length > 0
+              ? viraisVerificadas.map((c) => [
+                  c.texto,
+                  c.status,
+                  c.suportes.join(", "),
+                ])
+              : [["Sem afirmacoes de viralizacao verificadas na janela.", "n/d", "n/d"]],
+        },
+      ],
+    });
+  }
 
   if (corpus.reclamacoes.length > 0 || corpus.indicadoresRA) {
     const elementos: ElementoSecao[] = [];
@@ -254,14 +296,14 @@ function anexos(
       });
     }
     lista.push({
-      titulo: "Anexo C. Reclame Aqui",
+      titulo: "Reclame Aqui",
       descricao: "Reclamacoes, respostas da marca e indicadores publicos na janela.",
       elementos,
     });
   }
 
   lista.push({
-    titulo: "Anexo D. Registro de evidencias",
+    titulo: "Registro de evidencias",
     descricao: "Todas as afirmacoes candidatas e o resultado da verificacao factual.",
     elementos: [
       {
@@ -277,7 +319,11 @@ function anexos(
     ],
   });
 
-  return lista;
+  // Numera os anexos sequencialmente (Anexo A, B, C, ...) na ordem montada.
+  return lista.map((anexo, i) => ({
+    ...anexo,
+    titulo: `Anexo ${String.fromCharCode(65 + i)}. ${anexo.titulo}`,
+  }));
 }
 
 export async function comporRelatorio(params: {
