@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ig_001",
+    "shortCode": "ig_001",
+    "type": "Image",
+    "caption": "Nossa torra media nasce de graos colhidos a mao na Serra da Mantiqueira. Cada lote conta a historia de um produtor.",
+    "url": "https://instagram.com/p/ig_001",
+    "timestamp": "2026-02-04T13:00:00.000Z",
+    "ownerUsername": "cafesserraazul",
+    "likesCount": 1280,
+    "commentsCount": 64,
+    "displayUrl": "https://cdn.example/ig_001.jpg"
+  },
+  {
+    "id": "ig_002",
+    "shortCode": "ig_002",
+    "type": "Video",
+    "caption": "Reel: o passo a passo do nosso metodo de coar em casa, com agua a noventa e dois graus.",
+    "url": "https://instagram.com/p/ig_002",
+    "timestamp": "2026-02-18T18:30:00.000Z",
+    "ownerUsername": "cafesserraazul",
+    "likesCount": 2210,
+    "commentsCount": 138,
+    "videoViewCount": 41200,
+    "videoUrl": "https://cdn.example/ig_002.mp4",
+    "displayUrl": "https://cdn.example/ig_002.jpg"
+  },
+  {
+    "id": "ig_003",
+    "shortCode": "ig_003",
+    "type": "Sidecar",
+    "caption": "Lancamento da edicao limitada de inverno. Pre-venda aberta ate 10 de marco.",
+    "url": "https://instagram.com/p/ig_003",
+    "timestamp": "2026-03-02T12:15:00.000Z",
+    "ownerUsername": "cafesserraazul",
+    "likesCount": 1740,
+    "commentsCount": 95,
+    "images": [
+      "https://cdn.example/ig_003_1.jpg",
+      "https://cdn.example/ig_003_2.jpg",
+      "https://cdn.example/ig_003_3.jpg"
+    ],
+    "displayUrl": "https://cdn.example/ig_003_1.jpg"
+  },
+  {
+    "id": "ig_m01",
+    "shortCode": "ig_m01",
+    "type": "Image",
+    "caption": "Visitei a torrefacao da @cafesserraazul e o cafe da Serra Azul virou meu preferido da semana.",
+    "url": "https://instagram.com/p/ig_m01",
+    "timestamp": "2026-02-22T10:00:00.000Z",
+    "ownerUsername": "barista.curitiba",
+    "likesCount": 320,
+    "commentsCount": 12,
+    "displayUrl": "https://cdn.example/ig_m01.jpg"
+  }
+]
