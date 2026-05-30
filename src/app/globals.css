@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@import "../styles/soulstory-tokens.css";
+
+/*
+ * Mapeia os tokens Soulstory para as cores semanticas usadas pelos
+ * componentes (padrao shadcn/ui sobre Tailwind v4).
+ */
+@theme inline {
+  --color-background: var(--soul-paper);
+  --color-foreground: var(--soul-ink);
+
+  --color-card: var(--soul-white);
+  --color-card-foreground: var(--soul-ink);
+
+  --color-popover: var(--soul-white);
+  --color-popover-foreground: var(--soul-ink);
+
+  --color-primary: var(--soul-indigo-900);
+  --color-primary-foreground: var(--soul-white);
+
+  --color-secondary: var(--soul-indigo-50);
+  --color-secondary-foreground: var(--soul-indigo-900);
+
+  --color-muted: var(--soul-indigo-50);
+  --color-muted-foreground: var(--soul-muted);
+
+  --color-accent: var(--soul-indigo-100);
+  --color-accent-foreground: var(--soul-indigo-900);
+
+  --color-destructive: var(--soul-danger);
+  --color-destructive-foreground: var(--soul-white);
+
+  --color-success: var(--soul-success);
+  --color-warning: var(--soul-warning);
+
+  --color-border: var(--soul-border);
+  --color-input: var(--soul-border);
+  --color-ring: var(--soul-indigo-500);
+
+  --font-sans: var(--font-cabin), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-eb-garamond), ui-serif, Georgia, serif;
+  --font-mono: "Consolas", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius: 0.5rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+}

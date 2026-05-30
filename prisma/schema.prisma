@@ -1,0 +1,318 @@
+// Schema Prisma do Diagnostico de Visao Externa (PRD secao 11).
+// Postgres do Supabase: url pooled (runtime), directUrl direto (migrations).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum ProjectType {
+  marca
+  influenciador
+}
+
+enum ProjectStatus {
+  rascunho
+  em_andamento
+  aguardando_aprovacao
+  concluido
+  reprovado
+}
+
+enum CheckpointStatus {
+  pendente
+  aguardando
+  aprovado
+  reprovado
+  ajuste
+}
+
+enum CheckpointDecisao {
+  aprovado
+  reprovado
+  ajuste
+}
+
+enum ClaimStatus {
+  pendente
+  confirmada
+  imprecisa
+  nao_sustentada
+}
+
+enum SourceKind {
+  instagram
+  tiktok
+  youtube
+  reclame_aqui
+  seo_serp
+  mencoes
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  nome           String
+  tipo           ProjectType   @default(marca)
+  briefing       String
+  janelaInicio   DateTime
+  janelaFim      DateTime
+  status         ProjectStatus @default(rascunho)
+  custoAcumulado Float         @default(0)
+  triggerRunId   String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  sources         Source[]
+  rawArtifacts    RawArtifact[]
+  posts           Post[]
+  comments        Comment[]
+  videos          Video[]
+  complaints      Complaint[]
+  serpResults     SerpResult[]
+  transcripts     Transcript[]
+  ocrTexts        OcrText[]
+  metrics         Metric[]
+  claims          Claim[]
+  findings        Finding[]
+  reportArtifacts ReportArtifact[]
+  costEvents      CostEvent[]
+  checkpoints     Checkpoint[]
+}
+
+model Source {
+  id        String     @id @default(cuid())
+  projectId String
+  kind      SourceKind
+  handle    String?
+  url       String?
+  ativo     Boolean    @default(true)
+  createdAt DateTime   @default(now())
+
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  rawArtifacts RawArtifact[]
+
+  @@index([projectId])
+}
+
+/// Payload bruto imutavel, com proveniencia (PRD secao 9.1).
+model RawArtifact {
+  id          String     @id @default(cuid())
+  projectId   String
+  sourceId    String?
+  fonte       SourceKind
+  url         String
+  capturadoEm DateTime   @default(now())
+  payload     Json
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  source  Source? @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  projectId   String
+  externalId  String?
+  fonte       SourceKind
+  legenda     String?
+  url         String?
+  publicadoEm DateTime?
+  raw         Json?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  projectId   String
+  postId      String?
+  autor       String?
+  texto       String
+  publicadoEm DateTime?
+  raw         Json?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Video {
+  id          String     @id @default(cuid())
+  projectId   String
+  fonte       SourceKind
+  externalId  String?
+  titulo      String?
+  url         String?
+  publicadoEm DateTime?
+  raw         Json?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Complaint {
+  id        String  @id @default(cuid())
+  projectId String
+  titulo    String?
+  texto     String
+  resposta  String?
+  status    String?
+  avaliacao Float?
+  raw       Json?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model SerpResult {
+  id        String  @id @default(cuid())
+  projectId String
+  termo     String
+  posicao   Int?
+  titulo    String?
+  url       String?
+  snippet   String?
+  tipo      String?
+  raw       Json?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Transcript {
+  id            String     @id @default(cuid())
+  projectId     String
+  rawArtifactId String?
+  fonte         SourceKind
+  texto         String
+  idioma        String?
+  modelo        String?
+  createdAt     DateTime   @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model OcrText {
+  id            String   @id @default(cuid())
+  projectId     String
+  rawArtifactId String?
+  texto         String
+  createdAt     DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+/// Metrica publica por item. disponivel=false marca o que nao e publico
+/// (salvamentos e compartilhamentos), nunca estimado (PRD secao 9.5).
+model Metric {
+  id          String     @id @default(cuid())
+  projectId   String
+  itemTipo    String
+  itemId      String?
+  nome        String
+  valor       Int?
+  disponivel  Boolean    @default(true)
+  fonte       SourceKind
+  capturadoEm DateTime   @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+/// Evidence ledger (PRD secao 9.2). Nenhuma afirmacao entra sem suporte.
+model Claim {
+  id              String      @id @default(cuid())
+  projectId       String
+  texto           String
+  tipoSuporte     String
+  suportes        Json
+  status          ClaimStatus @default(pendente)
+  notaVerificacao String?
+  createdAt       DateTime    @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model Finding {
+  id        String   @id @default(cuid())
+  projectId String
+  otica     String
+  construto String?
+  parte     String
+  titulo    String
+  conteudo  String
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model ReportArtifact {
+  id          String   @id @default(cuid())
+  projectId   String
+  tipo        String
+  titulo      String
+  formato     String   @default("docx")
+  storagePath String?
+  bytes       Int?
+  createdAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+/// Cada chamada paga vira um cost_event para medicao e guardrail (PRD secao 13).
+model CostEvent {
+  id        String   @id @default(cuid())
+  projectId String
+  fonte     String
+  descricao String?
+  custoBRL  Float
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+/// Ponto de aprovacao humana (PRD secao 10). 7 por projeto.
+model Checkpoint {
+  id                String             @id @default(cuid())
+  projectId         String
+  numero            Int
+  titulo            String
+  status            CheckpointStatus   @default(pendente)
+  payload           Json?
+  decisao           CheckpointDecisao?
+  notas             String?
+  tokenId           String?
+  publicAccessToken String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  resolvedAt        DateTime?
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, numero])
+  @@index([projectId])
+}

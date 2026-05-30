@@ -1,0 +1,31 @@
+/*
+ * Tokens visuais Soulstory (ponto de partida).
+ * Derivados do padrao soulstory-docx (PRD secao 7): paleta indigo,
+ * Cabin no corpo, EB Garamond nos titulos, Consolas no mono.
+ * Placeholder ate o design system oficial do Otavio subir ao projeto.
+ */
+
+:root {
+  /* Paleta indigo Soulstory */
+  --soul-indigo-50: #eef0ff;
+  --soul-indigo-100: #e0e3ff;
+  --soul-indigo-200: #c7cdfe;
+  --soul-indigo-300: #a5acfb;
+  --soul-indigo-500: #6366f1;
+  --soul-indigo-600: #4f46e5;
+  --soul-indigo-700: #4338ca;
+  --soul-indigo-900: #312e81;
+  --soul-indigo-950: #1e1b4b;
+
+  /* Neutros */
+  --soul-ink: #1c1a2e;
+  --soul-paper: #faf9fc;
+  --soul-white: #ffffff;
+  --soul-muted: #6b7280;
+  --soul-border: #e6e3f0;
+
+  /* Sinalizacao */
+  --soul-success: #15803d;
+  --soul-warning: #b45309;
+  --soul-danger: #b91c1c;
+}
