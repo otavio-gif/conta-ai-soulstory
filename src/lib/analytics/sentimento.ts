@@ -154,7 +154,8 @@ export async function analisarSentimento(corpus: Corpus): Promise<SaidaSentiment
             id: "linha-tempo-sentimento",
             titulo: "Sentimento longitudinal",
             descricao: "Percentual de pecas com sentimento positivo por mes na janela.",
-            tipo: "linha",
+            tipo: "area",
+            unidade: "%",
             dados,
           },
         ]

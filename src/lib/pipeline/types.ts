@@ -298,8 +298,16 @@ export interface GraficoRef {
   id: string;
   titulo: string;
   descricao: string;
-  tipo: "barras" | "linha" | "distribuicao";
+  tipo:
+    | "barras"
+    | "barras_horizontais"
+    | "linha"
+    | "area"
+    | "donut"
+    | "distribuicao";
   caminhoPng?: string;
+  // Unidade dos valores, exibida no eixo e nos rotulos quando presente (Fase 4).
+  unidade?: string;
   // Dados que originaram o grafico, para anexo e fallback de tabela.
   dados: Array<{ rotulo: string; valor: number }>;
 }
