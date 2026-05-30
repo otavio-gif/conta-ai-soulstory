@@ -7,6 +7,7 @@ import { bloco, blocoCacheavel, chamarClaude } from "@/lib/ai/anthropic";
 import { doutrina } from "@/lib/ai/doctrine";
 import { PROMPT_REDATOR } from "@/lib/ai/prompts";
 import { afirmacoesValidas } from "@/lib/ai/verificacao";
+import { revisarVozReportSpec } from "@/lib/ai/editor-voz";
 import { aplicarVozSoulstory } from "@/lib/text";
 import { formatBRL } from "@/lib/utils";
 import type {
@@ -515,5 +516,8 @@ export async function comporRelatorio(params: {
     desempenho: params.desempenho,
   };
 
-  return aplicarVozSoulstory(spec);
+  // Passe de voz por modelo (editor_voz) com guarda de digitos, e so entao o
+  // sanitizador deterministico, por ultimo, para garantir a regra do travessao.
+  const revisado = await revisarVozReportSpec(spec);
+  return aplicarVozSoulstory(revisado);
 }
