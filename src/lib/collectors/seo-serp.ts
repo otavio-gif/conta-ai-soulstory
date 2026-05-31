@@ -221,7 +221,7 @@ export async function coletarSeoSerp(params: {
     const token = await wait.createToken({ timeout: "1h", tags: [params.projectId] });
     const taskId = await serpTaskPost(
       termoPrincipal,
-      `${base}/api/webhooks/dataforseo?token=${token.id}&id=__task_id__`,
+      `${base}/api/webhooks/dataforseo?token=${token.id}&id=$id`,
     );
     const ok = await wait.forToken<{ ok: boolean; taskId: string | null }>(token.id);
     if (ok.ok && ok.output.ok) {
