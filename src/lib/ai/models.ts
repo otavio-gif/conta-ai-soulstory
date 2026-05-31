@@ -30,9 +30,12 @@ export type PapelIA =
 export const MODELO_POR_PAPEL: Record<PapelIA, ModeloId> = {
   interprete: MODELOS.sonnet,
   ocr: MODELOS.sonnet,
-  // Analise por post e cientista de dados em Opus (preset seis digitos, Fase 4).
-  analista_conteudo: MODELOS.opus,
-  cientista_dados: MODELOS.opus,
+  // Analise por post e cientista de dados em Sonnet: alto volume (centenas de
+  // itens e comentarios), onde Sonnet da conta com custo muito menor. O Opus
+  // (raciocinio de alto valor) fica na sintese, verificacao e redacao. Em Opus
+  // a analise saiu ~5x mais cara no primeiro run real, sem ganho proporcional.
+  analista_conteudo: MODELOS.sonnet,
+  cientista_dados: MODELOS.sonnet,
   // Sentimento e mapa de temas (Fase 3): Sonnet, leitura qualitativa estruturada.
   sentimento: MODELOS.sonnet,
   temas: MODELOS.sonnet,
