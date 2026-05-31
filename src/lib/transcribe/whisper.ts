@@ -41,29 +41,37 @@ export async function transcreverAudio(
     };
   }
 
-  const audio = await fetch(post.videoUrl);
-  if (!audio.ok) return null;
-  const buffer = Buffer.from(await audio.arrayBuffer());
-  const file = await toFile(buffer, `${post.externalId}.mp4`, {
-    type: "video/mp4",
-  });
+  // Resiliencia (PRD secao 15): a URL de video de TikTok/Instagram pode estar
+  // ausente, ser uma pagina (nao midia) ou ter expirado entre a coleta e a
+  // transcricao. Um video que nao transcreve e pulado (null), sem derrubar o
+  // pipeline. A lacuna do que faltou e sinalizada no estagio de transcricao.
+  try {
+    const audio = await fetch(post.videoUrl);
+    if (!audio.ok) return null;
+    const buffer = Buffer.from(await audio.arrayBuffer());
+    const file = await toFile(buffer, `${post.externalId}.mp4`, {
+      type: "video/mp4",
+    });
 
-  const resposta = await cliente().audio.transcriptions.create({
-    model: MODELO,
-    file,
-  });
-  const duracao = (resposta as { duration?: number }).duration ?? 60;
-  await registrarCustoEvent({
-    fonte: post.fonte,
-    descricao: `Transcricao ${post.externalId} (${MODELO})`,
-    custoBRL: custoTranscricao(duracao),
-  });
+    const resposta = await cliente().audio.transcriptions.create({
+      model: MODELO,
+      file,
+    });
+    const duracao = (resposta as { duration?: number }).duration ?? 60;
+    await registrarCustoEvent({
+      fonte: post.fonte,
+      descricao: `Transcricao ${post.externalId} (${MODELO})`,
+      custoBRL: custoTranscricao(duracao),
+    });
 
-  return {
-    postExternalId: post.externalId,
-    fonte: post.fonte,
-    texto: resposta.text,
-    idioma: resposta.text ? "pt" : null,
-    modelo: MODELO,
-  };
+    return {
+      postExternalId: post.externalId,
+      fonte: post.fonte,
+      texto: resposta.text,
+      idioma: resposta.text ? "pt" : null,
+      modelo: MODELO,
+    };
+  } catch {
+    return null;
+  }
 }
