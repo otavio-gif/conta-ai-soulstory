@@ -2,7 +2,11 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { prisma } from "@/lib/db";
 import type { DocxResultado } from "@/lib/docx/adapter";
-import { getSupabaseAdmin, REPORT_BUCKET } from "@/lib/supabase";
+import {
+  garantirReportBucket,
+  getSupabaseAdmin,
+  REPORT_BUCKET,
+} from "@/lib/supabase";
 
 const DOCX_MIME =
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -23,12 +27,19 @@ export async function persistirRelatorio(params: {
 
   if (supabase) {
     const objectPath = `${projectId}/${docx.nomeArquivo}`;
-    const { error } = await supabase.storage
-      .from(REPORT_BUCKET)
-      .upload(objectPath, docx.buffer, {
+    const subir = () =>
+      supabase.storage.from(REPORT_BUCKET).upload(objectPath, docx.buffer, {
         contentType: DOCX_MIME,
         upsert: true,
       });
+
+    let { error } = await subir();
+    // Autocorrecao: se o bucket nao existe, cria e tenta uma vez mais, para que
+    // um Storage nao provisionado nao derrube o run no ultimo passo.
+    if (error && /bucket not found/i.test(error.message)) {
+      await garantirReportBucket(supabase);
+      ({ error } = await subir());
+    }
     if (error) {
       throw new Error(`Falha ao subir o relatorio ao Supabase: ${error.message}`);
     }

@@ -12,7 +12,8 @@ process.loadEnvFile(".env");
 
 async function main() {
   // Import dinamico: so depois do loadEnvFile, para o cliente ler as envs certas.
-  const { getSupabaseAdmin, REPORT_BUCKET } = await import("../src/lib/supabase");
+  const { garantirReportBucket, getSupabaseAdmin, REPORT_BUCKET } =
+    await import("../src/lib/supabase");
 
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -23,31 +24,12 @@ async function main() {
     process.exit(1);
   }
 
-  const { data: buckets, error: erroLista } =
-    await supabase.storage.listBuckets();
-  if (erroLista) {
-    console.error("Falha ao listar buckets:", erroLista.message);
-    process.exit(1);
-  }
-
-  if (buckets.some((b) => b.name === REPORT_BUCKET)) {
-    console.log(`OK: bucket "${REPORT_BUCKET}" ja existe. Nada a criar.`);
-    return;
-  }
-
-  const { error: erroCria } = await supabase.storage.createBucket(
-    REPORT_BUCKET,
-    {
-      // Privado: relatorios e artefatos brutos nunca sao expostos ao browser.
-      public: false,
-    },
+  const criou = await garantirReportBucket(supabase);
+  console.log(
+    criou
+      ? `Criado: bucket privado "${REPORT_BUCKET}".`
+      : `OK: bucket "${REPORT_BUCKET}" ja existe. Nada a criar.`,
   );
-  if (erroCria) {
-    console.error(`Falha ao criar bucket "${REPORT_BUCKET}":`, erroCria.message);
-    process.exit(1);
-  }
-
-  console.log(`Criado: bucket privado "${REPORT_BUCKET}".`);
 }
 
 main().catch((e) => {
