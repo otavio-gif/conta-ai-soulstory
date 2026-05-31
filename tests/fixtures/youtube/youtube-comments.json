@@ -1,0 +1,45 @@
+{
+  "yt_001": [
+    {
+      "id": "yt_c_001_1",
+      "snippet": {
+        "topLevelComment": {
+          "id": "yt_c_001_1",
+          "snippet": {
+            "authorDisplayName": "Marcos Preparo",
+            "textDisplay": "Melhor tutorial de coado que ja vi, finalmente entendi a florada.",
+            "publishedAt": "2026-02-20T13:30:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "id": "yt_c_001_2",
+      "snippet": {
+        "topLevelComment": {
+          "id": "yt_c_001_2",
+          "snippet": {
+            "authorDisplayName": "Clara Cafe",
+            "textDisplay": "A explicacao da temperatura da agua salvou meu cafe da manha.",
+            "publishedAt": "2026-02-20T15:10:00.000Z"
+          }
+        }
+      }
+    }
+  ],
+  "yt_002": [
+    {
+      "id": "yt_c_002_1",
+      "snippet": {
+        "topLevelComment": {
+          "id": "yt_c_002_1",
+          "snippet": {
+            "authorDisplayName": "Rita Origem",
+            "textDisplay": "Ver a origem do grao me deixa muito mais confiante na marca.",
+            "publishedAt": "2026-03-14T18:05:00.000Z"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Bastidor de origem reforca confianca",
+        "conteudo": "Mostrar a colheita no sitio do produtor puxa comentarios de confianca na marca, repetindo o vinculo de procedencia visto nas outras fontes.",
+        "suportes": ["tt_002", "tt_c_002_1"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O bastidor de colheita gera comentario espontaneo de confianca na procedencia do grao.",
+        "tipoSuporte": "citacao_direta",
+        "suportes": ["tt_c_002_1"],
+        "construto": "promotores"
+      }
+    ],
+    "termosNativos": []
+  }
+}

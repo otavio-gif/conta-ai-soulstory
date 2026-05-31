@@ -42,10 +42,12 @@ export async function sintetizar(
   corpus: Corpus,
   analise: SaidaAnalise,
 ): Promise<{ findings: FindingItem[]; claims: ClaimCandidato[] }> {
+  const fontes = [...new Set(corpus.posts.map((p) => p.fonte))];
   const entrada = {
     marca: corpus.marca,
     tipo: corpus.tipo,
     bio: corpus.bio ?? null,
+    fontesPresentes: [...fontes, ...(corpus.reclamacoes.length > 0 ? ["reclame_aqui"] : [])],
     indicadoresReclameAqui: corpus.indicadoresRA,
     reclamacoes: corpus.reclamacoes.map((r) => ({
       id: r.id,

@@ -117,6 +117,10 @@ export interface PlanoColeta {
   instagramHandle?: string;
   /** URL da pagina do Reclame Aqui, quando a marca tem presenca. */
   reclameAquiUrl?: string;
+  /** Handle do perfil no TikTok, interpretado do briefing. */
+  tiktokHandle?: string;
+  /** Handle ou identificador do canal no YouTube, interpretado do briefing. */
+  youtubeHandle?: string;
   fontes: FontePlanejada[];
   custo: CustoEstimado;
 }
@@ -198,6 +202,8 @@ export interface IndicadoresReclameAqui {
 
 export interface TranscricaoItem {
   postExternalId: string;
+  // Fonte do item transcrito, para persistir no campo Transcript.fonte correto.
+  fonte: SourceKind;
   texto: string;
   idioma?: string | null;
   modelo: string;
@@ -220,13 +226,17 @@ export interface Corpus {
   indicadoresRA: IndicadoresReclameAqui | null;
   transcricoes: TranscricaoItem[];
   ocr: OcrItem[];
+  // Legendas oficiais do YouTube por externalId do video, preenchidas na coleta.
+  // Curto-circuitam a transcricao paga no estagio de transcricao.
+  legendasOficiais?: Record<string, { texto: string; idioma: string }>;
   lacunas: LacunaColeta[];
   metricasIndisponiveis: string[];
 }
 
 export interface AmostraItem {
   origem: string;
-  tipo: "transcricao" | "ocr";
+  fonte: SourceKind;
+  tipo: "transcricao" | "legenda" | "ocr";
   trecho: string;
 }
 

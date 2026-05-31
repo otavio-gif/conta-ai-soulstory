@@ -1,0 +1,20 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Rastreabilidade por talhao sustenta o proposito",
+        "conteudo": "O video de colheita explica a separacao por talhao para manter a rastreabilidade, reforcando o proposito de origem da marca.",
+        "suportes": ["yt_002", "yt_c_002_1"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O video de colheita mostra a separacao por talhao para manter a rastreabilidade da origem.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["yt_002"],
+        "construto": "ondas_valor"
+      }
+    ],
+    "termosNativos": []
+  }
+}

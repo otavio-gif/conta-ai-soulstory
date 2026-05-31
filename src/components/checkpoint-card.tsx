@@ -46,6 +46,13 @@ function DetalhePayload({ payload }: { payload: CheckpointPayload }) {
       return (
         <div className="space-y-1">
           <Linha rotulo="Artefatos brutos" valor={String(inventario.totalArtefatos)} />
+          {inventario.porFonte.map((f) => (
+            <Linha
+              key={f.fonte}
+              rotulo={f.fonte}
+              valor={`${f.posts} posts, ${f.videos} videos, ${f.comentarios} comentarios, ${f.reclamacoes} reclamacoes`}
+            />
+          ))}
           <Linha rotulo="Lacunas" valor={String(inventario.lacunas.length)} />
           <Linha
             rotulo="Metricas indisponiveis"

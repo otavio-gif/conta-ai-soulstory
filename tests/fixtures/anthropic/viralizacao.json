@@ -1,0 +1,28 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Conteudo de metodo lidera o alcance em todas as fontes",
+        "conteudo": "Os itens de maior alcance publico, o Reel e o video de erros do coado, sao os que ensinam um preparo melhor, padrao que se repete no Instagram, no TikTok e no YouTube.",
+        "suportes": ["ig_002", "tt_001", "yt_001"]
+      },
+      {
+        "titulo": "Identificacao com o ritual em casa explica o compartilhamento",
+        "conteudo": "O publico se reconhece na cena de preparar cafe em casa, o que ajuda a explicar o volume de compartilhamentos publico do TikTok.",
+        "suportes": ["tt_001", "tt_c_001_2"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O conteudo que ensina o metodo de preparo concentra o maior alcance publico em Instagram, TikTok e YouTube na janela.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": ["ig_002", "tt_001", "yt_001"]
+      },
+      {
+        "texto": "O video tt_001, de maior alcance no TikTok, teve 512000 visualizacoes publicas, acima das demais pecas de video da janela.",
+        "tipoSuporte": "agregacao",
+        "suportes": ["tt_001", "yt_001"]
+      }
+    ]
+  }
+}

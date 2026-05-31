@@ -7,17 +7,21 @@ Soulstory. Sem travessao.
 
 Contexto permanente em `CLAUDE.md`. PRD completo em `docs/PRD.md`.
 
-## Estado: Fase 1 (MVP vertical)
+## Estado: Fase 2 (video em escala)
 
-O pipeline e real e vertical para Instagram e Reclame Aqui, ponta a ponta,
-mantendo os 7 checkpoints. Inclui coleta via Apify (perfil, posts, Reels,
-carrosseis, comentarios integrais e mencoes) com webhook fechando o waitpoint,
-Reclame Aqui via Firecrawl com retomada, transcricao de Reels (gpt-4o-transcribe),
-OCR de carrosseis (visao do Claude), as duas oticas de analise e a sintese
-metodologica via API Anthropic com prompt caching, evidence ledger com
-verificacao factual bloqueante e o relatorio completo (Parte I e II) em
-soulstory-docx com anexos e graficos. TikTok, YouTube e SEO entram nas fases
-seguintes.
+O pipeline e real e ponta a ponta para quatro fontes, Instagram, Reclame Aqui,
+TikTok e YouTube, integradas ao mesmo relatorio, mantendo os 7 checkpoints.
+Inclui coleta via Apify (Instagram e TikTok, perfil, posts, Reels, videos,
+carrosseis e comentarios integrais) com webhook fechando o waitpoint, YouTube via
+Data API v3 (videos, comentarios e legendas oficiais com transcricao como
+fallback), Reclame Aqui via Firecrawl com retomada, transcricao de audio em
+volume (gpt-4o-transcribe, paralelismo, custo por chamada), OCR de carrosseis
+(visao do Claude), as duas oticas de analise mais a analise de viralizacao
+cross-fonte, sintese metodologica via API Anthropic com prompt caching, evidence
+ledger com verificacao factual bloqueante e o relatorio completo (Parte I e II)
+em soulstory-docx com anexos por fonte e graficos. Nesta fase a coleta de TikTok
+e YouTube cobre a conta da propria marca ou criador; descoberta de video de
+terceiros e SEO entram nas fases seguintes.
 
 Modelos (preset Equilibrio): Sonnet 4.6 para OCR, analise e (com Haiku 4.5 nas
 tarefas mecanicas); Opus 4.8 para sintese, verificacao factual e redacao. O

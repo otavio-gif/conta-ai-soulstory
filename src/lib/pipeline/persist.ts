@@ -45,40 +45,58 @@ export async function persistirColeta(
     const artifact = await prisma.rawArtifact.create({
       data: {
         projectId,
-        fonte: "instagram",
+        fonte: p.fonte,
         url: p.url,
         payload: toJson(p),
       },
     });
 
-    await prisma.post.create({
-      data: {
-        projectId,
-        externalId: p.externalId,
-        fonte: "instagram",
-        legenda: p.legenda,
-        url: p.url,
-        publicadoEm: new Date(p.publicadoEm),
-        raw: toJson({
-          rawArtifactId: artifact.id,
-          tipoMidia: p.tipoMidia,
-          ehMencao: p.ehMencao,
-          autorMencao: p.autorMencao ?? null,
-          videoUrl: p.videoUrl ?? null,
-          imagens: p.imagens,
-        }),
-      },
+    const raw = toJson({
+      rawArtifactId: artifact.id,
+      tipoMidia: p.tipoMidia,
+      ehMencao: p.ehMencao,
+      autorMencao: p.autorMencao ?? null,
+      videoUrl: p.videoUrl ?? null,
+      imagens: p.imagens,
     });
+
+    // Instagram vai para o modelo Post; videos de TikTok e YouTube para o modelo
+    // Video (PRD secao 11). Ambos compartilham comentarios e metricas.
+    if (p.fonte === "instagram") {
+      await prisma.post.create({
+        data: {
+          projectId,
+          externalId: p.externalId,
+          fonte: p.fonte,
+          legenda: p.legenda,
+          url: p.url,
+          publicadoEm: new Date(p.publicadoEm),
+          raw,
+        },
+      });
+    } else {
+      await prisma.video.create({
+        data: {
+          projectId,
+          externalId: p.externalId,
+          fonte: p.fonte,
+          titulo: p.legenda,
+          url: p.url,
+          publicadoEm: new Date(p.publicadoEm),
+          raw,
+        },
+      });
+    }
 
     await prisma.metric.createMany({
       data: p.metricas.map((m) => ({
         projectId,
-        itemTipo: "post",
+        itemTipo: p.fonte === "instagram" ? "post" : "video",
         itemId: p.externalId,
         nome: m.nome,
         valor: m.valor,
         disponivel: m.disponivel,
-        fonte: "instagram" as const,
+        fonte: p.fonte,
       })),
     });
 
@@ -128,7 +146,7 @@ export async function persistirTranscricoes(
     await prisma.transcript.create({
       data: {
         projectId,
-        fonte: "instagram",
+        fonte: t.fonte,
         texto: t.texto,
         idioma: t.idioma ?? null,
         modelo: t.modelo,

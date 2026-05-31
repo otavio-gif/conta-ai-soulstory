@@ -1,0 +1,25 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Tutorial longo vira referencia de preparo",
+        "conteudo": "O guia completo de coado no YouTube e citado pelo publico como a melhor referencia de metodo, o que aprofunda a relacao didatica da marca.",
+        "suportes": ["yt_001", "yt_c_001_1"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O tutorial yt_001 e citado pelo publico como a melhor referencia de metodo coado.",
+        "tipoSuporte": "citacao_direta",
+        "suportes": ["yt_c_001_1"],
+        "construto": "persona"
+      }
+    ],
+    "termosNativos": [
+      {
+        "termo": "pre infusao",
+        "definicao": "Etapa inicial do coado que o publico aprende no tutorial, molhar o po antes de despejar o restante da agua."
+      }
+    ]
+  }
+}

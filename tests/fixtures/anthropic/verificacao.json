@@ -8,16 +8,22 @@
       { "indice": 4, "status": "confirmada" },
       { "indice": 5, "status": "confirmada" },
       { "indice": 6, "status": "confirmada" },
+      { "indice": 7, "status": "confirmada" },
+      { "indice": 8, "status": "confirmada" },
+      { "indice": 9, "status": "confirmada" },
+      { "indice": 10, "status": "confirmada" },
+      { "indice": 11, "status": "confirmada" },
+      { "indice": 12, "status": "confirmada" },
       {
-        "indice": 7,
+        "indice": 13,
         "status": "imprecisa",
         "nota": "Ha um unico caso de atraso na janela, ja resolvido. Ajustado para nao generalizar.",
         "textoAjustado": "A entrega aparece como atrito logistico pontual na percepcao publica, em caso resolvido pela marca."
       },
-      { "indice": 8, "status": "confirmada" },
-      { "indice": 9, "status": "confirmada" },
-      { "indice": 10, "status": "confirmada" },
-      { "indice": 11, "status": "confirmada" }
+      { "indice": 14, "status": "confirmada" },
+      { "indice": 15, "status": "confirmada" },
+      { "indice": 16, "status": "confirmada" },
+      { "indice": 17, "status": "confirmada" }
     ]
   }
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "cid": "tt_c_001_1",
+    "videoId": "tt_001",
+    "uniqueId": "barista.sp",
+    "text": "O erro da agua fervendo eu cometia direto, mudou tudo aqui.",
+    "createTimeISO": "2026-02-12T19:10:00.000Z"
+  },
+  {
+    "cid": "tt_c_001_2",
+    "videoId": "tt_001",
+    "uniqueId": "cafe.todo.dia",
+    "text": "Salvei pra assistir de novo, didatica perfeita. Ja compartilhei com os amigos.",
+    "createTimeISO": "2026-02-12T20:02:00.000Z"
+  },
+  {
+    "cid": "tt_c_002_1",
+    "videoId": "tt_002",
+    "uniqueId": "amante.de.cafe",
+    "text": "Adoro ver a origem do grao, da pra confiar na marca.",
+    "createTimeISO": "2026-03-08T16:20:00.000Z"
+  }
+]

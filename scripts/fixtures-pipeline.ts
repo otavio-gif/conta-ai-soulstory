@@ -44,7 +44,7 @@ async function main() {
 
   const plano = await interpretarBriefing({
     briefing:
-      "Diagnostico da marca Cafes Serra Azul no Instagram e Reclame Aqui, com foco em torra artesanal e cafe especial.",
+      "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok e YouTube, com foco em torra artesanal e cafe especial.",
     janela,
   });
   checkpoint(
@@ -100,7 +100,7 @@ async function main() {
   checkpoint(7, `Documento gerado: ${out} (${(docx.buffer.length / 1024).toFixed(1)} KB).`);
 
   // ----- Verificacoes de aceite -----
-  console.log("\nAceite da Fase 1\n----------------");
+  console.log("\nAceite\n------");
 
   const semLastro = spec.evidencias.filter(
     (e) => (e.status === "confirmada" || e.status === "imprecisa") && e.suporte === "sem lastro",
@@ -128,6 +128,57 @@ async function main() {
   const totalSecoes = spec.parteI.secoes.length + spec.parteII.secoes.length + spec.anexos.length;
   console.log(
     `Estrutura: ${spec.parteI.secoes.length} secoes na Parte I, ${spec.parteII.secoes.length} na Parte II, ${spec.anexos.length} anexos (total ${totalSecoes} blocos).`,
+  );
+
+  // ----- Aceite especifico da Fase 2 (video em escala) -----
+  console.log("\nAceite da Fase 2\n----------------");
+
+  const fontes = inventario.porFonte.map((f) => f.fonte);
+  const quatroFontes = ["instagram", "reclame_aqui", "tiktok", "youtube"].filter((f) =>
+    fontes.includes(f as (typeof fontes)[number]),
+  );
+  console.log(
+    quatroFontes.length === 4
+      ? `OK: as quatro fontes integradas ao mesmo relatorio (${quatroFontes.join(", ")}).`
+      : `FALHA: fontes presentes ${fontes.join(", ")} (esperadas 4).`,
+  );
+
+  const viralizacaoVerificada = verificacao.claims.some(
+    (c) =>
+      c.construto === "viralizacao" &&
+      (c.status === "confirmada" || c.status === "imprecisa"),
+  );
+  console.log(
+    viralizacaoVerificada
+      ? "OK: ao menos uma afirmacao de viralizacao cross-fonte verificada."
+      : "FALHA: nenhuma afirmacao de viralizacao verificada.",
+  );
+
+  function metricaDisponivel(fonte: string, nome: string): boolean {
+    const post = corpusTr.posts.find((p) => p.fonte === fonte && !p.ehMencao);
+    return Boolean(post?.metricas.find((m) => m.nome === nome)?.disponivel);
+  }
+  const sharesTiktok = metricaDisponivel("tiktok", "compartilhamentos");
+  const sharesInstagram = metricaDisponivel("instagram", "compartilhamentos");
+  console.log(
+    sharesTiktok && !sharesInstagram
+      ? "OK: compartilhamentos publico no TikTok e indisponivel no Instagram."
+      : `FALHA: disponibilidade de compartilhamentos inesperada (tiktok=${sharesTiktok}, instagram=${sharesInstagram}).`,
+  );
+
+  const salvamentosTiktok = inventario.metricasIndisponiveis.includes("tiktok.salvamentos");
+  console.log(
+    salvamentosTiktok
+      ? "OK: salvamentos do TikTok declarados indisponiveis (nunca estimados)."
+      : "FALHA: salvamentos do TikTok nao declarados indisponiveis.",
+  );
+
+  const usouLegenda = corpusTr.transcricoes.some((t) => t.modelo === "youtube-captions");
+  const usouFallback = corpusTr.transcricoes.some((t) => t.modelo === "gpt-4o-transcribe");
+  console.log(
+    usouLegenda && usouFallback
+      ? "OK: legenda oficial e fallback de transcricao exercidos."
+      : `FALHA: legenda=${usouLegenda}, fallback=${usouFallback} (esperados ambos).`,
   );
 
   console.log("\nConcluido. Os 7 checkpoints passaram sobre o pipeline real (fixtures).");
