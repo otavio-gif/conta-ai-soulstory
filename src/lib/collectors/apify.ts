@@ -53,7 +53,10 @@ export async function iniciarRun(
       requestUrl: webhookRequestUrl,
     },
   ]);
-  const url = `${BASE}/acts/${actorId}/runs?token=${token}&webhooks=${webhooks}`;
+  // A API REST do Apify usa "username~actorName" no caminho, nao a barra do
+  // identificador legivel (apify/instagram-scraper -> apify~instagram-scraper).
+  const actorPath = actorId.replaceAll("/", "~");
+  const url = `${BASE}/acts/${actorPath}/runs?token=${token}&webhooks=${webhooks}`;
   const resp = await fetchComRetry(url, {
     method: "POST",
     headers: { "content-type": "application/json" },
