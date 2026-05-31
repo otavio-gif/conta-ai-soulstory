@@ -1,0 +1,51 @@
+[
+  {
+    "id": "c_001_1",
+    "postId": "ig_001",
+    "ownerUsername": "ana.bebe.cafe",
+    "text": "O sabor dessa torra e incomparavel, virei cliente fiel.",
+    "timestamp": "2026-02-04T14:10:00.000Z"
+  },
+  {
+    "id": "c_001_2",
+    "postId": "ig_001",
+    "ownerUsername": "marina.degusta",
+    "text": "Amo saber a origem do grao, isso me faz confiar na marca.",
+    "timestamp": "2026-02-04T15:40:00.000Z"
+  },
+  {
+    "id": "c_002_1",
+    "postId": "ig_002",
+    "ownerUsername": "joao.barista",
+    "text": "Adorei o passo a passo, finalmente acertei o coado em casa.",
+    "timestamp": "2026-02-18T19:02:00.000Z"
+  },
+  {
+    "id": "c_002_2",
+    "postId": "ig_002",
+    "ownerUsername": "pedro.cafe.diario",
+    "text": "Esse metodo mudou meu cafe da manha, salvei pra ver de novo.",
+    "timestamp": "2026-02-18T20:15:00.000Z"
+  },
+  {
+    "id": "c_002_3",
+    "postId": "ig_002",
+    "ownerUsername": "leticia.home",
+    "text": "Que didatica boa, ja compartilhei com a familia toda.",
+    "timestamp": "2026-02-19T08:05:00.000Z"
+  },
+  {
+    "id": "c_003_1",
+    "postId": "ig_003",
+    "ownerUsername": "cliente.curitiba",
+    "text": "A entrega demorou mais do que o prometido, mas o cafe compensou.",
+    "timestamp": "2026-03-03T09:40:00.000Z"
+  },
+  {
+    "id": "c_003_2",
+    "postId": "ig_003",
+    "ownerUsername": "rafa.coffee",
+    "text": "Edicao de inverno maravilhosa, queria que fosse permanente.",
+    "timestamp": "2026-03-03T11:20:00.000Z"
+  }
+]

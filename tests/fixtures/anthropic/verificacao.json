@@ -1,0 +1,23 @@
+{
+  "dados": {
+    "classificacoes": [
+      { "indice": 0, "status": "confirmada" },
+      { "indice": 1, "status": "confirmada" },
+      { "indice": 2, "status": "confirmada" },
+      { "indice": 3, "status": "confirmada" },
+      { "indice": 4, "status": "confirmada" },
+      { "indice": 5, "status": "confirmada" },
+      { "indice": 6, "status": "confirmada" },
+      {
+        "indice": 7,
+        "status": "imprecisa",
+        "nota": "Ha um unico caso de atraso na janela, ja resolvido. Ajustado para nao generalizar.",
+        "textoAjustado": "A entrega aparece como atrito logistico pontual na percepcao publica, em caso resolvido pela marca."
+      },
+      { "indice": 8, "status": "confirmada" },
+      { "indice": 9, "status": "confirmada" },
+      { "indice": 10, "status": "confirmada" },
+      { "indice": 11, "status": "confirmada" }
+    ]
+  }
+}

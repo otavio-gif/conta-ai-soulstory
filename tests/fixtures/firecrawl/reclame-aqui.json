@@ -1,0 +1,30 @@
+{
+  "reclamacoes": [
+    {
+      "id": "ra_001",
+      "titulo": "Atraso na entrega",
+      "texto": "Pedido feito ha 12 dias e ainda nao chegou. Tentei contato e demorou para responder.",
+      "resposta": "Pedimos desculpas, reenviamos com prioridade e frete cortesia.",
+      "status": "Resolvido",
+      "avaliacao": 4,
+      "url": "https://www.reclameaqui.com.br/empresa/cafes-serra-azul/atraso-na-entrega",
+      "publicadoEm": "2026-02-20T10:00:00.000Z"
+    },
+    {
+      "id": "ra_002",
+      "titulo": "Embalagem danificada",
+      "texto": "O pacote chegou rasgado e parte do cafe vazou na caixa.",
+      "resposta": "Lamentamos o ocorrido, enviamos um novo pacote sem custo.",
+      "status": "Resolvido",
+      "avaliacao": 5,
+      "url": "https://www.reclameaqui.com.br/empresa/cafes-serra-azul/embalagem-danificada",
+      "publicadoEm": "2026-03-05T16:30:00.000Z"
+    }
+  ],
+  "indicadores": {
+    "nota": 8.2,
+    "indiceResposta": "100%",
+    "indiceSolucao": "92%",
+    "reclamacoesRespondidas": "2 de 2"
+  }
+}

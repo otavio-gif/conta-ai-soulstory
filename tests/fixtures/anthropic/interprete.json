@@ -1,0 +1,11 @@
+{
+  "dados": {
+    "marca": "Cafes Serra Azul",
+    "tipo": "marca",
+    "instagramHandle": "@cafesserraazul",
+    "reclameAquiUrl": "https://www.reclameaqui.com.br/empresa/cafes-serra-azul/",
+    "palavrasChave": ["cafe especial", "serra azul", "torra artesanal"],
+    "volumeInstagram": 4,
+    "volumeReclameAqui": 2
+  }
+}

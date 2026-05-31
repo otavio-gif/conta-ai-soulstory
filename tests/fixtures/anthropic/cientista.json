@@ -1,0 +1,36 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Reel supera os posts estaticos em engajamento",
+        "conteudo": "O Reel ig_002 lidera curtidas e comentarios na janela, acima dos posts de imagem e do carrossel.",
+        "suportes": ["ig_002", "ig_001", "ig_003"]
+      },
+      {
+        "titulo": "Curtidas crescem ao longo da janela",
+        "conteudo": "A serie de curtidas sobe do primeiro ao ultimo post da janela, com pico no Reel de metodo.",
+        "suportes": ["ig_001", "ig_002", "ig_003"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O Reel ig_002 teve 2210 curtidas, acima das 1280 do ig_001 e das 1740 do ig_003.",
+        "tipoSuporte": "agregacao",
+        "suportes": ["ig_001", "ig_002", "ig_003"],
+        "parte": "I"
+      },
+      {
+        "texto": "As visualizacoes de Reels sao publicas e o ig_002 alcancou 41200.",
+        "tipoSuporte": "contagem",
+        "suportes": ["ig_002"],
+        "parte": "I"
+      },
+      {
+        "texto": "A marca tem alto indice de salvamentos no Instagram.",
+        "tipoSuporte": "agregacao",
+        "suportes": [],
+        "parte": "I"
+      }
+    ]
+  }
+}

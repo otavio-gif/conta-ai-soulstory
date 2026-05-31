@@ -1,0 +1,25 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Origem rastreavel ancora a confianca",
+        "conteudo": "O post de torra media puxa a procedencia da Serra da Mantiqueira e o publico responde citando confianca e fidelidade.",
+        "suportes": ["ig_001", "c_001_2"]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "O publico associa a marca a procedencia da Mantiqueira, citada espontaneamente nos comentarios.",
+        "tipoSuporte": "citacao_direta",
+        "suportes": ["c_001_2"],
+        "construto": "promotores"
+      }
+    ],
+    "termosNativos": [
+      {
+        "termo": "torra media",
+        "definicao": "Como o publico chama o perfil de torra da marca, associado a sabor equilibrado."
+      }
+    ]
+  }
+}

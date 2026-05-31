@@ -1,0 +1,204 @@
+/* =========================================================================
+   Soulstory Design System 2.0
+   Editorial-mystical brand system — Parchment ↔ Void
+   ========================================================================= */
+
+/* ---- Fonts: Adobe Typekit (Mr Eaves Sans OT + Minion 3 Pro) -------------- */
+
+/* Adobe Fonts kit: mr-eaves-sans, mr-eaves-modern, minion-3 (400/700 + italics) */
+@import url('https://use.typekit.net/wnf4ddz.css');
+/* Mono — JetBrains Mono (400 regular + 700 for the 600 fallback to land on Bold) */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  /* ============== COLOR PALETTE ============== */
+
+  /* Brand */
+  --ss-indigo:        #3D396E;   /* Indigo Authority */
+  --ss-periwinkle:    #8E9FEE;   /* Lavender Insight */
+  --ss-sky:           #8CC6FF;   /* Sky Awakening */
+
+  /* Surfaces — Light */
+  --ss-cream:         #FAF8F5;   /* Parchment Canvas */
+  --ss-warm-veil:     #F1EFEC;   /* Warm Veil */
+  --ss-white:         #FFFFFF;
+  --ss-lavender:      #E1E4F6;   /* Mist Lavender */
+
+  /* Surfaces — Dark */
+  --ss-ink:           #0C0B14;   /* Deep Indigo Void */
+  --ss-elevated:      #15131F;   /* Elevated Void */
+  --ss-surface-indigo:#1F1B2E;   /* Surface Indigo */
+
+  /* Brand-deepest variants */
+  --ss-indigo-press:  #2D2A52;
+
+  /* Text on light */
+  --text-primary:     #0C0B14;
+  --text-body:        rgba(12, 11, 20, 0.78);
+  --text-secondary:   rgba(12, 11, 20, 0.62);
+  --text-tertiary:    rgba(12, 11, 20, 0.58);   /* raised from 0.46 → meets WCAG AA */
+  --text-muted:       rgba(12, 11, 20, 0.32);   /* decoration / non-text only */
+
+  /* Text on dark */
+  --text-primary-dark:    #FAF8F5;
+  --text-body-dark:       rgba(250, 248, 245, 0.82);
+  --text-secondary-dark:  rgba(250, 248, 245, 0.66);
+  --text-tertiary-dark:   rgba(250, 248, 245, 0.60);   /* raised from 0.48 → meets WCAG AA */
+  --text-muted-dark:      rgba(250, 248, 245, 0.32);   /* decoration / non-text only */
+
+  /* Borders */
+  --line-whisper:     rgba(60, 57, 110, 0.10);
+  --line-default:     rgba(60, 57, 110, 0.18);
+  --line-whisper-dark:rgba(225, 228, 246, 0.08);
+  --line-default-dark:rgba(225, 228, 246, 0.14);
+  --line-active:      #8E9FEE;
+
+  /* Status (desaturated) */
+  --status-success: #5C8B7A;
+  --status-error:   #9B4444;
+  --status-warning: #9B7C44;
+  --status-info:    #8CC6FF;
+
+  /* ============== SHADOWS — indigo-tinted ============== */
+  --shadow-1: 0 1px 2px rgba(60, 57, 110, 0.06);
+  --shadow-2: 0 4px 12px rgba(60, 57, 110, 0.08), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-3: 0 16px 32px rgba(60, 57, 110, 0.10), 0 4px 8px rgba(0,0,0,0.04);
+  --shadow-soft-indigo:
+    rgba(60, 57, 110, 0.04) 0px 4px 18px,
+    rgba(60, 57, 110, 0.027) 0px 2px 7.85px,
+    rgba(60, 57, 110, 0.02) 0px 0.8px 2.93px;
+  --shadow-elevated:
+    rgba(60, 57, 110, 0.08) 0px 14px 28px,
+    rgba(60, 57, 110, 0.05) 0px 23px 52px,
+    rgba(0, 0, 0, 0.04) 0px 7px 15px;
+  --shadow-floating:
+    rgba(60, 57, 110, 0.16) 0px 30px 60px -12px,
+    rgba(60, 57, 110, 0.10) 0px 18px 36px -18px,
+    rgba(0, 0, 0, 0.04) 0px 8px 17px;
+  --shadow-ring-hover: 0 0 0 1px rgba(60, 57, 110, 0.18);
+  --shadow-ring-focus: 0 0 0 3px rgba(142, 159, 238, 0.20);
+
+  /* ============== RADIUS ============== */
+  --r-xs:    4px;   /* sharp */
+  --r-sm:    6px;   /* subtle (badges) */
+  --r-md:    10px;  /* buttons, inputs */
+  --r-lg:    12px;  /* cards */
+  --r-xl:    16px;  /* featured cards */
+  --r-2xl:   20px;
+  --r-3xl:   24px;
+  --r-4xl:   32px;  /* heroes — top of scale */
+
+  /* ============== SPACING (8px base) ============== */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-7:  32px;
+  --sp-8:  40px;
+  --sp-9:  48px;
+  --sp-10: 64px;
+  --sp-11: 80px;
+  --sp-12: 96px;
+  --sp-13: 128px;
+  --sp-14: 160px;
+
+  /* ============== MOTION ============== */
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ============== TYPOGRAPHY ============== */
+  --font-sans:  'mr-eaves-sans', 'Mr Eaves Sans OT', 'Avenir Next', 'Avenir', 'Helvetica Neue', system-ui, Arial, sans-serif;
+  --font-serif: 'minion-3', 'Minion 3 Pro', 'Minion Pro', Garamond, Georgia, serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --tracking-tight:  -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide:   0.06em;
+  --tracking-wider:  0.12em;
+
+  /* Container */
+  --container-max: 1200px;
+}
+
+/* ---------- Type utility classes (mirror DESIGN.md hierarchy) ---------- */
+.t-display-hero  { font-family: var(--font-sans); font-size: 72px; font-weight: 400; line-height: 1.05; letter-spacing: -1.8px; }
+.t-display-large { font-family: var(--font-sans); font-size: 56px; font-weight: 400; line-height: 1.08; letter-spacing: -1.4px; }
+.t-display       { font-family: var(--font-sans); font-size: 44px; font-weight: 600; line-height: 1.12; letter-spacing: -1.0px; }
+.t-h1            { font-family: var(--font-sans); font-size: 36px; font-weight: 600; line-height: 1.18; letter-spacing: -0.6px; }
+.t-h2            { font-family: var(--font-sans); font-size: 28px; font-weight: 600; line-height: 1.25; letter-spacing: -0.4px; }
+.t-h3            { font-family: var(--font-sans); font-size: 22px; font-weight: 600; line-height: 1.30; letter-spacing: -0.2px; }
+.t-h4            { font-family: var(--font-sans); font-size: 18px; font-weight: 600; line-height: 1.35; }
+
+.t-tagline       { font-family: var(--font-serif); font-style: italic; font-size: 14px; font-weight: 400; line-height: 1.45; letter-spacing: 0.2px; }
+.t-attribution   { font-family: var(--font-serif); font-style: italic; font-size: 14px; font-weight: 400; line-height: 1.45; }
+.t-pull-quote    { font-family: var(--font-serif); font-size: 28px; font-weight: 400; line-height: 1.30; }
+.t-pull-quote-sans { font-family: var(--font-sans); font-size: 32px; font-weight: 400; line-height: 1.20; letter-spacing: -0.4px; }
+.t-editorial     { font-family: var(--font-serif); font-size: 17px; font-weight: 400; line-height: 1.70; }
+
+.t-body-large    { font-family: var(--font-sans); font-size: 18px; font-weight: 400; line-height: 1.65; }
+.t-body          { font-family: var(--font-sans); font-size: 16px; font-weight: 400; line-height: 1.60; }
+.t-body-medium   { font-family: var(--font-sans); font-size: 16px; font-weight: 600; line-height: 1.50; }
+.t-body-small    { font-family: var(--font-sans); font-size: 15px; font-weight: 400; line-height: 1.55; }
+
+.t-caption       { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 1.50; }
+.t-label         { font-family: var(--font-sans); font-size: 13px; font-weight: 600; line-height: 1.40; letter-spacing: 0.1px; }
+.t-button        { font-family: var(--font-sans); font-size: 15px; font-weight: 600; line-height: 1.00; }
+.t-overline      { font-family: var(--font-sans); font-size: 11px; font-weight: 600; line-height: 1.40; letter-spacing: 0.6px; text-transform: uppercase; }
+.t-micro         { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 1.40; letter-spacing: 0.1px; }
+
+/* ---------- Base element resets to feel native to the brand ---------- */
+html, body {
+  background: var(--ss-cream);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- A11y · keyboard focus ring (uses brand periwinkle) ---------- */
+:focus { outline: none; }
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+summary:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring-focus);
+  border-radius: var(--r-sm);
+}
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--line-active);
+  box-shadow: var(--shadow-ring-focus);
+}
+
+/* ---------- A11y · reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Type weight notes for Typekit kit wnf4ddz ----------
+   The Adobe kit ships only weights 400 and 700 for both mr-eaves-sans
+   and minion-3 (the foundries didn’t license Medium for web use).
+   To recover a heading/body hierarchy without a Medium, all UI accents
+   (h2, h3, .btn, .badge, .label, eyebrows, kickers) use font-weight: 600
+   instead of 500. CSS’s font-matching algorithm resolves 600 UPWARD to
+   the available 700 (Bold), giving us the heavier voice we need. 500
+   would have resolved DOWNWARD to 400, collapsing the hierarchy.
+   If Adobe ever ships Medium for these families, set --font-weight-ui: 500
+   and replace the 600s. */

@@ -1,0 +1,58 @@
+{
+  "dados": {
+    "secoes": [
+      {
+        "titulo": "Como a marca e vista",
+        "paragrafos": [
+          "A percepcao publica de Cafes Serra Azul se organiza em torno de uma ideia simples e poderosa: este e um cafe com origem e com gente por tras. A bio reforca a torra artesanal em pequenos lotes na Serra da Mantiqueira, e a conversa nos comentarios devolve exatamente esse vocabulario, com mencoes espontaneas a procedencia e a confianca que ela gera.",
+          "O tom percebido e proximo e didatico. A marca nao fala de cima para baixo, ela ensina. Cada post funciona menos como vitrine e mais como convite para participar de um ritual, o que aproxima o seguidor e transforma audiencia em comunidade. Esse tom e um ativo, porque sustenta vinculo sem depender de promocao.",
+          "Os temas recorrentes sao tres: a origem do grao, o metodo de preparo e a sazonalidade dos lancamentos. Eles aparecem de forma consistente na janela e se reforcam entre si, criando uma narrativa coerente que o publico consegue repetir com as proprias palavras.",
+          "Vale registrar o que nao e possivel afirmar. Salvamentos e compartilhamentos do Instagram nao sao metricas publicas e, por isso, nao entram em nenhuma leitura quantitativa deste diagnostico. Onde a fala do publico sugere que guardou ou repassou um conteudo, tratamos como indicio qualitativo, nunca como numero."
+        ],
+        "callouts": [
+          {
+            "eyebrow": "PRINCIPIO DE LEITURA",
+            "texto": "A marca comunica tecnica e origem. O publico devolve pertencimento e ritual. O encontro entre essas duas camadas e o fio condutor de todo o diagnostico."
+          }
+        ]
+      },
+      {
+        "titulo": "Viralizacao e desempenho publico",
+        "paragrafos": [
+          "O desempenho publico da janela tem um protagonista claro: o Reel de metodo. Ele lidera curtidas e comentarios e e tratado pelo publico como material de consulta, algo para guardar e repassar. Esse comportamento explica por que o conteudo didatico rende mais conversa do que o anuncio direto de produto.",
+          "Os graficos a seguir mostram o engajamento por post e a evolucao das curtidas ao longo da janela, sempre com base apenas no que e publico. Os numeros confirmam a leitura qualitativa: o pico de engajamento coincide com o conteudo que ensina, nao com o que apenas vende.",
+          "A leitura de viralizacao aponta tres fatores de destaque. Primeiro, utilidade: o conteudo resolve um problema real do seguidor. Segundo, clareza: o passo a passo e facil de seguir. Terceiro, identificacao: o publico se ve na cena de preparar cafe em casa."
+        ],
+        "callouts": [],
+        "cards": [
+          { "numero": "01.", "titulo": "Utilidade", "texto": "O conteudo que ensina um preparo melhor rende mais conversa do que o anuncio de produto." },
+          { "numero": "02.", "titulo": "Clareza", "texto": "Passo a passo simples e direto reduz a friccao e convida a reproducao em casa." },
+          { "numero": "03.", "titulo": "Identificacao", "texto": "O seguidor se reconhece na cena do preparo, o que aproxima a marca do cotidiano." }
+        ],
+        "graficos": ["engajamento-curtidas", "engajamento-comentarios"]
+      },
+      {
+        "titulo": "Linguagem nativa do publico",
+        "paragrafos": [
+          "A forma como o publico fala da marca e materia-prima valiosa para copy e para a futura plataforma de marca. As expressoes abaixo apareceram de forma espontanea na janela e merecem entrar no vocabulario oficial da marca, porque ja sao a ponte entre o que a marca diz e o que o publico entende.",
+          "Adotar a linguagem nativa nao significa abandonar a tecnica, e sim traduzi-la. Quando a marca usa as palavras do proprio publico, reduz a distancia entre intencao e percepcao e acelera o reconhecimento."
+        ],
+        "callouts": [],
+        "glossario": [
+          { "termo": "torra media", "definicao": "Como o publico chama o perfil de torra da marca, associado a sabor equilibrado." },
+          { "termo": "coado em casa", "definicao": "Expressao do publico para o preparo manual que a marca ensina no Reel." },
+          { "termo": "edicao de inverno", "definicao": "Como o publico se refere ao lancamento sazonal da marca." }
+        ]
+      },
+      {
+        "titulo": "Linha do tempo da conversa",
+        "paragrafos": [
+          "Dentro da janela, a conversa publica tem uma inflexao clara no Reel de metodo, que puxa o pico de engajamento e redefine o tom dos comentarios, de elogio ao produto para elogio ao aprendizado. Antes dele, a fala gira em torno de origem e sabor; depois, passa a girar tambem em torno de tecnica e ritual.",
+          "O lancamento da edicao limitada fecha a janela reativando o desejo de recorrencia. A combinacao de conteudo util com escassez sazonal cria um ritmo de conversa que a marca pode planejar, alternando posts que ensinam com posts que oferecem."
+        ],
+        "callouts": [],
+        "graficos": ["linha-tempo-curtidas"]
+      }
+    ]
+  }
+}

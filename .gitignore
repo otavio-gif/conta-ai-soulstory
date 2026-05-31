@@ -48,6 +48,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Claude Code (configuracao pessoal; agents e skills sao versionados)
+.claude/settings.local.json
+
 # Testes / cobertura
 coverage/
 .nyc_output/
