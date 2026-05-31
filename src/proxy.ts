@@ -18,6 +18,10 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Protege tudo, exceto a tela de login, a rota de login e estaticos.
-  matcher: ["/((?!login|api/login|_next/static|_next/image|favicon.ico).*)"],
+  // Protege tudo, exceto a tela de login, a rota de login, os webhooks de
+  // coleta assincrona (Apify e DataForSEO, autenticados pelo token do waitpoint
+  // na query) e estaticos.
+  matcher: [
+    "/((?!login|api/login|api/webhooks|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
