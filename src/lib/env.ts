@@ -15,8 +15,24 @@ export const USD_BRL = Number(process.env.USD_BRL ?? "5.40");
 /** Raiz das fixtures gravadas das respostas de API. */
 export const FIXTURES_DIR = path.join(process.cwd(), "tests", "fixtures");
 
+/**
+ * Conjunto de fixtures de larga escala (marca grande), Fase 4. Quando
+ * FIXTURE_SET=grande, a leitura procura primeiro em tests/fixtures/grande e cai
+ * para a base, de modo que o conjunto grande so precisa sobrescrever os arquivos
+ * de alto volume (corpus e saidas de modelo), reaproveitando o resto.
+ */
+const FIXTURE_SET = process.env.FIXTURE_SET;
+
 /** Le uma fixture JSON pelo caminho relativo dentro de tests/fixtures. */
 export async function lerFixture<T>(relativo: string): Promise<T> {
+  if (FIXTURE_SET) {
+    try {
+      const sobrescrita = path.join(FIXTURES_DIR, FIXTURE_SET, relativo);
+      return JSON.parse(await fs.readFile(sobrescrita, "utf8")) as T;
+    } catch {
+      // Sem sobrescrita no conjunto grande: cai para a fixture base.
+    }
+  }
   const caminho = path.join(FIXTURES_DIR, relativo);
   const conteudo = await fs.readFile(caminho, "utf8");
   return JSON.parse(conteudo) as T;

@@ -9,7 +9,6 @@
 // Com MOCK_EXTERNAL=1 le fixtures. Teto de volume por rota para conter custo, com
 // o volume sinalizado no checkpoint 1, nunca cortado em silencio.
 
-import { wait } from "@trigger.dev/sdk";
 import { lerFixture, MOCK_EXTERNAL } from "@/lib/env";
 import {
   custoApifyRun,
@@ -17,7 +16,9 @@ import {
   custoYoutubeApi,
   registrarCustoEvent,
 } from "@/lib/cost";
-import { iniciarRun, itensDoDataset } from "@/lib/collectors/apify";
+import { coletarRunApify } from "@/lib/collectors/apify-run";
+import { lacunaPorStatus } from "@/lib/collectors/lacunas";
+import { timeoutColeta } from "@/lib/collectors/retry";
 import { scrape } from "@/lib/collectors/firecrawl";
 import { normalizarPosts } from "@/lib/collectors/instagram";
 import { normalizarVideosTiktok } from "@/lib/collectors/tiktok";
@@ -179,35 +180,32 @@ export async function coletarMencoes(params: {
 
   // Rota 2: TikTok de terceiros por palavra-chave/hashtag (Apify, webhook).
   const termoBusca = termosFiltro[0] ?? params.marca;
+  const timeoutRota = timeoutColeta(TETO_TIKTOK);
   try {
-    const tokenTt = await wait.createToken({ timeout: "1h", tags: [projectId] });
-    const runTt = await iniciarRun(
-      ACTOR_TIKTOK,
-      {
+    const resTt = await coletarRunApify({
+      projectId,
+      actorId: ACTOR_TIKTOK,
+      fonte: "mencoes",
+      descricao: "Apify tiktok-scraper (mencoes)",
+      webhookBase: base,
+      timeout: timeoutRota,
+      montarInput: (proxyConfiguration) => ({
         searchQueries: [termoBusca],
         resultsPerPage: TETO_TIKTOK,
         shouldDownloadVideos: false,
         oldestPostDate: janela.inicio,
-      },
-      `${base}/api/webhooks/apify?token=${tokenTt.id}`,
-    );
-    await registrarCustoEvent({
-      fonte: "mencoes",
-      descricao: "Apify tiktok-scraper (mencoes)",
-      custoBRL: custoApifyRun(0.08),
+        proxyConfiguration,
+      }),
+      custoBRL: (residencial) => custoApifyRun(residencial ? 0.18 : 0.08),
     });
-    const okTt = await wait.forToken<{ ok: boolean }>(tokenTt.id);
-    if (okTt.ok && okTt.output.ok) {
-      const brutos = await itensDoDataset(runTt.datasetId);
-      posts.push(
-        ...normalizarVideosTiktok(brutos, { projectId, janela })
-          .filter((p) => citaMarca(p.legenda, termosFiltro))
-          .slice(0, TETO_TIKTOK)
-          .map((p) => comoMencao(p, "tiktok")),
-      );
-    } else {
-      lacunas.push({ fonte: "mencoes", motivo: "Busca de mencoes no TikTok nao concluiu." });
-    }
+    posts.push(
+      ...normalizarVideosTiktok(resTt.itens, { projectId, janela })
+        .filter((p) => citaMarca(p.legenda, termosFiltro))
+        .slice(0, TETO_TIKTOK)
+        .map((p) => comoMencao(p, "tiktok")),
+    );
+    const lacunaTt = lacunaPorStatus("mencoes", "Mencoes no TikTok", resTt.status);
+    if (lacunaTt) lacunas.push(lacunaTt);
   } catch {
     lacunas.push({ fonte: "mencoes", motivo: "Busca de mencoes no TikTok falhou." });
   }
@@ -236,29 +234,28 @@ export async function coletarMencoes(params: {
 
   // Rota 4: Instagram de terceiros por hashtag (Apify, webhook).
   try {
-    const tokenIg = await wait.createToken({ timeout: "1h", tags: [projectId] });
-    const runIg = await iniciarRun(
-      ACTOR_INSTAGRAM,
-      { hashtags: [termoBusca.replace(/\s+/g, "")], resultsLimit: TETO_INSTAGRAM },
-      `${base}/api/webhooks/apify?token=${tokenIg.id}`,
-    );
-    await registrarCustoEvent({
+    const resIg = await coletarRunApify({
+      projectId,
+      actorId: ACTOR_INSTAGRAM,
       fonte: "mencoes",
       descricao: "Apify instagram-hashtag-scraper (mencoes)",
-      custoBRL: custoApifyRun(0.08),
+      webhookBase: base,
+      timeout: timeoutColeta(TETO_INSTAGRAM),
+      montarInput: (proxyConfiguration) => ({
+        hashtags: [termoBusca.replace(/\s+/g, "")],
+        resultsLimit: TETO_INSTAGRAM,
+        proxyConfiguration,
+      }),
+      custoBRL: (residencial) => custoApifyRun(residencial ? 0.18 : 0.08),
     });
-    const okIg = await wait.forToken<{ ok: boolean }>(tokenIg.id);
-    if (okIg.ok && okIg.output.ok) {
-      const brutos = await itensDoDataset(runIg.datasetId);
-      posts.push(
-        ...normalizarPosts(brutos, { projectId, janela })
-          .filter((p) => citaMarca(p.legenda, termosFiltro))
-          .slice(0, TETO_INSTAGRAM)
-          .map((p) => comoMencao(p, "instagram")),
-      );
-    } else {
-      lacunas.push({ fonte: "mencoes", motivo: "Busca de mencoes no Instagram nao concluiu." });
-    }
+    posts.push(
+      ...normalizarPosts(resIg.itens, { projectId, janela })
+        .filter((p) => citaMarca(p.legenda, termosFiltro))
+        .slice(0, TETO_INSTAGRAM)
+        .map((p) => comoMencao(p, "instagram")),
+    );
+    const lacunaIg = lacunaPorStatus("mencoes", "Mencoes no Instagram", resIg.status);
+    if (lacunaIg) lacunas.push(lacunaIg);
   } catch {
     lacunas.push({ fonte: "mencoes", motivo: "Busca de mencoes no Instagram falhou." });
   }

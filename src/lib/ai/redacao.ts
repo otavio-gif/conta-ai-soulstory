@@ -7,12 +7,14 @@ import { bloco, blocoCacheavel, chamarClaude } from "@/lib/ai/anthropic";
 import { doutrina } from "@/lib/ai/doctrine";
 import { PROMPT_REDATOR } from "@/lib/ai/prompts";
 import { afirmacoesValidas } from "@/lib/ai/verificacao";
+import { revisarVozReportSpec } from "@/lib/ai/editor-voz";
 import { aplicarVozSoulstory } from "@/lib/text";
 import { formatBRL } from "@/lib/utils";
 import type {
   AmostraTranscricao,
   ClaimVerificada,
   Corpus,
+  DesempenhoResumo,
   ElementoSecao,
   Inventario,
   Outline,
@@ -140,10 +142,10 @@ async function redigirParte(params: {
     conteudo: [
       blocoCacheavel(JSON.stringify(material, null, 2)),
       bloco(
-        `Escreva a Parte ${parte} em profundidade de consultoria. Use apenas as afirmacoes verificadas. Marque metricas indisponiveis. Referencie os graficos pelo id quando ajudarem.`,
+        `Escreva a Parte ${parte} em profundidade de consultoria de elite, uma secao por construto, com varios paragrafos densos, callouts para principios e cards para listas. Use apenas as afirmacoes verificadas. Marque metricas indisponiveis. Referencie os graficos pelo id quando ajudarem.`,
       ),
     ],
-    maxTokens: 16000,
+    maxTokens: 24000,
     ferramenta: {
       nome: "registrar_secoes",
       descricao: "Registra as secoes redigidas da parte do relatorio.",
@@ -166,10 +168,132 @@ function metrica(corpus: Corpus, externalId: string, nome: string): string {
   return m.disponivel ? String(m.valor) : "indisponivel";
 }
 
+function anexoDesempenho(desempenho: DesempenhoResumo): ReportSpecAnexo {
+  const segundos = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "tabela",
+      titulo: "Tempo por estagio",
+      cabecalho: ["Estagio", "Tempo"],
+      linhas: [
+        ...desempenho.estagios.map((e) => [e.estagio, segundos(e.ms)]),
+        ["Total", segundos(desempenho.totalMs)],
+      ],
+    },
+  ];
+  if (desempenho.custoPorFonte.length > 0) {
+    elementos.push({
+      tipo: "tabela",
+      titulo: "Custo por fonte (medido)",
+      cabecalho: ["Fonte", "Custo"],
+      linhas: desempenho.custoPorFonte.map((c) => [c.fonte, formatBRL(c.custoBRL)]),
+    });
+  } else {
+    elementos.push({
+      tipo: "callout",
+      eyebrow: "Custo por fonte",
+      paragrafos: [
+        "O custo por fonte e medido por CostEvent em runs reais. Nesta validacao sem credenciais nao ha chamada paga.",
+      ],
+    });
+  }
+  return {
+    titulo: "Desempenho e custo",
+    descricao:
+      "Tempo de parede por estagio e custo medido por fonte. A medicao serve a visibilidade e ao guardrail de custo do checkpoint 1, nunca como teto de tempo.",
+    elementos,
+  };
+}
+
+const ROTULO_FONTE_ANEXO: Record<string, string> = {
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  mencoes: "Mencoes",
+};
+
+/**
+ * Anexo de comentarios ilustrativos por fonte (Fase 4). Amostra de vozes reais
+ * do publico, com o autor ja pseudonimizado por hash (LGPD). Da profundidade e
+ * volume ao relatorio sem nenhuma estimativa: e dado bruto coletado.
+ */
+function anexoComentariosIlustrativos(corpus: Corpus): ReportSpecAnexo | null {
+  const fontes = ["instagram", "tiktok", "youtube", "mencoes"] as const;
+  const elementos: ElementoSecao[] = [];
+  for (const fonte of fontes) {
+    const comentarios = corpus.posts
+      .filter((p) => p.fonte === fonte)
+      .flatMap((p) => p.comentarios.map((c) => ({ peca: p.externalId, c })))
+      .filter((x) => x.c.texto.trim().length > 0)
+      .slice(0, 15);
+    if (comentarios.length === 0) continue;
+    elementos.push({
+      tipo: "tabela",
+      titulo: `Comentarios ilustrativos no ${ROTULO_FONTE_ANEXO[fonte]}`,
+      cabecalho: ["Peca", "Autor", "Comentario"],
+      linhas: comentarios.map((x) => [x.peca, x.c.autor, x.c.texto.slice(0, 240)]),
+    });
+  }
+  if (elementos.length === 0) return null;
+  return {
+    titulo: "Comentarios ilustrativos por fonte",
+    descricao:
+      "Amostra de vozes do publico por fonte, com autores pseudonimizados por hash (LGPD). Dado bruto coletado, nunca estimado.",
+    elementos,
+  };
+}
+
+/** Anexo de sentimento longitudinal (Fase 4), a partir dos achados verificaveis. */
+function anexoSentimento(analise: SaidaAnalise): ReportSpecAnexo | null {
+  const sentimento = analise.findings.filter((f) => f.construto === "sentimento");
+  if (sentimento.length === 0) return null;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "callout",
+      eyebrow: "Sentimento longitudinal",
+      paragrafos: sentimento.map((f) => `${f.titulo}: ${f.conteudo}`),
+    },
+  ];
+  if (analise.graficos.some((g) => g.id === "linha-tempo-sentimento")) {
+    elementos.push({ tipo: "grafico", graficoId: "linha-tempo-sentimento" });
+  }
+  return {
+    titulo: "Sentimento longitudinal",
+    descricao:
+      "Evolucao do sentimento das pecas sobre a marca por mes na janela. Cada ponto e lastreado nas pecas que o sustentam.",
+    elementos,
+  };
+}
+
+/** Anexo do mapa de temas (Fase 4), a partir dos achados de tema. */
+function anexoTemas(analise: SaidaAnalise): ReportSpecAnexo | null {
+  const temas = analise.findings.filter((f) => f.construto === "temas");
+  if (temas.length === 0) return null;
+  const elementos: ElementoSecao[] = [
+    {
+      tipo: "tabela",
+      titulo: "Temas que orbitam a marca",
+      cabecalho: ["Tema", "Leitura"],
+      linhas: temas.map((f) => [f.titulo, f.conteudo.slice(0, 280)]),
+    },
+  ];
+  if (analise.graficos.some((g) => g.id === "mapa-temas")) {
+    elementos.push({ tipo: "grafico", graficoId: "mapa-temas" });
+  }
+  return {
+    titulo: "Mapa de temas",
+    descricao:
+      "Os temas recorrentes na conversa publica sobre a marca, com o numero de pecas que sustenta cada um.",
+    elementos,
+  };
+}
+
 function anexos(
   corpus: Corpus,
   inventario: Inventario,
   verificacao: ResultadoVerificacao,
+  analise: SaidaAnalise,
+  desempenho?: DesempenhoResumo,
 ): ReportSpecAnexo[] {
   const lista: ReportSpecAnexo[] = [];
 
@@ -387,6 +511,14 @@ function anexos(
     });
   }
 
+  // Anexos de profundidade (Fase 4): vozes do publico, sentimento e temas.
+  const comentarios = anexoComentariosIlustrativos(corpus);
+  if (comentarios) lista.push(comentarios);
+  const sentimento = anexoSentimento(analise);
+  if (sentimento) lista.push(sentimento);
+  const temas = anexoTemas(analise);
+  if (temas) lista.push(temas);
+
   lista.push({
     titulo: "Registro de evidencias",
     descricao: "Todas as afirmacoes candidatas e o resultado da verificacao factual.",
@@ -404,6 +536,9 @@ function anexos(
     ],
   });
 
+  // Anexo de desempenho e custo (Fase 4), quando o run foi instrumentado.
+  if (desempenho) lista.push(anexoDesempenho(desempenho));
+
   // Numera os anexos sequencialmente (Anexo A, B, C, ...) na ordem montada.
   return lista.map((anexo, i) => ({
     ...anexo,
@@ -419,6 +554,7 @@ export async function comporRelatorio(params: {
   analise: SaidaAnalise;
   outline: Outline;
   verificacao: ResultadoVerificacao;
+  desempenho?: DesempenhoResumo;
 }): Promise<ReportSpec> {
   const { plano, corpus, inventario, amostra, analise, outline, verificacao } =
     params;
@@ -467,9 +603,13 @@ export async function comporRelatorio(params: {
       status: c.status,
       suporte: c.suportes.length ? c.suportes.join(", ") : "sem lastro",
     })),
-    anexos: anexos(corpus, inventario, verificacao),
+    anexos: anexos(corpus, inventario, verificacao, analise, params.desempenho),
     graficos: analise.graficos,
+    desempenho: params.desempenho,
   };
 
-  return aplicarVozSoulstory(spec);
+  // Passe de voz por modelo (editor_voz) com guarda de digitos, e so entao o
+  // sanitizador deterministico, por ultimo, para garantir a regra do travessao.
+  const revisado = await revisarVozReportSpec(spec);
+  return aplicarVozSoulstory(revisado);
 }

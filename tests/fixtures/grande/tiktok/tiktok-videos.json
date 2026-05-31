@@ -1,0 +1,882 @@
+[
+  {
+    "id": "tt_g_0001",
+    "createTimeISO": "2026-02-01T00:00:00.000Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": "Aurora Cafes Especiais no TikTok"
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0001",
+    "videoUrl": "https://cdn.exemplo/tt_g_0001.mp4",
+    "diggCount": 5355,
+    "commentCount": 239,
+    "playCount": 169919,
+    "shareCount": 286
+  },
+  {
+    "id": "tt_g_0002",
+    "createTimeISO": "2026-02-02T01:44:43.618Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0002",
+    "videoUrl": "https://cdn.exemplo/tt_g_0002.mp4",
+    "diggCount": 4505,
+    "commentCount": 115,
+    "playCount": 52054,
+    "shareCount": 385
+  },
+  {
+    "id": "tt_g_0003",
+    "createTimeISO": "2026-02-03T03:29:27.236Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0003",
+    "videoUrl": "https://cdn.exemplo/tt_g_0003.mp4",
+    "diggCount": 4356,
+    "commentCount": 383,
+    "playCount": 10965,
+    "shareCount": 632
+  },
+  {
+    "id": "tt_g_0004",
+    "createTimeISO": "2026-02-04T05:14:10.854Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0004",
+    "videoUrl": "https://cdn.exemplo/tt_g_0004.mp4",
+    "diggCount": 8341,
+    "commentCount": 166,
+    "playCount": 112848,
+    "shareCount": 562
+  },
+  {
+    "id": "tt_g_0005",
+    "createTimeISO": "2026-02-05T06:58:54.472Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0005",
+    "videoUrl": "https://cdn.exemplo/tt_g_0005.mp4",
+    "diggCount": 1477,
+    "commentCount": 284,
+    "playCount": 102877,
+    "shareCount": 662
+  },
+  {
+    "id": "tt_g_0006",
+    "createTimeISO": "2026-02-06T08:43:38.090Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0006",
+    "videoUrl": "https://cdn.exemplo/tt_g_0006.mp4",
+    "diggCount": 8223,
+    "commentCount": 187,
+    "playCount": 62867,
+    "shareCount": 423
+  },
+  {
+    "id": "tt_g_0007",
+    "createTimeISO": "2026-02-07T10:28:21.709Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0007",
+    "videoUrl": "https://cdn.exemplo/tt_g_0007.mp4",
+    "diggCount": 7566,
+    "commentCount": 367,
+    "playCount": 66261,
+    "shareCount": 220
+  },
+  {
+    "id": "tt_g_0008",
+    "createTimeISO": "2026-02-08T12:13:05.327Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0008",
+    "videoUrl": "https://cdn.exemplo/tt_g_0008.mp4",
+    "diggCount": 704,
+    "commentCount": 258,
+    "playCount": 15662,
+    "shareCount": 29
+  },
+  {
+    "id": "tt_g_0009",
+    "createTimeISO": "2026-02-09T13:57:48.945Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0009",
+    "videoUrl": "https://cdn.exemplo/tt_g_0009.mp4",
+    "diggCount": 4394,
+    "commentCount": 336,
+    "playCount": 170127,
+    "shareCount": 388
+  },
+  {
+    "id": "tt_g_0010",
+    "createTimeISO": "2026-02-10T15:42:32.563Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0010",
+    "videoUrl": "https://cdn.exemplo/tt_g_0010.mp4",
+    "diggCount": 1341,
+    "commentCount": 37,
+    "playCount": 131062,
+    "shareCount": 373
+  },
+  {
+    "id": "tt_g_0011",
+    "createTimeISO": "2026-02-11T17:27:16.181Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0011",
+    "videoUrl": "https://cdn.exemplo/tt_g_0011.mp4",
+    "diggCount": 8948,
+    "commentCount": 59,
+    "playCount": 152484,
+    "shareCount": 232
+  },
+  {
+    "id": "tt_g_0012",
+    "createTimeISO": "2026-02-12T19:11:59.800Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0012",
+    "videoUrl": "https://cdn.exemplo/tt_g_0012.mp4",
+    "diggCount": 2544,
+    "commentCount": 242,
+    "playCount": 97383,
+    "shareCount": 746
+  },
+  {
+    "id": "tt_g_0013",
+    "createTimeISO": "2026-02-13T20:56:43.418Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0013",
+    "videoUrl": "https://cdn.exemplo/tt_g_0013.mp4",
+    "diggCount": 3330,
+    "commentCount": 385,
+    "playCount": 106453,
+    "shareCount": 708
+  },
+  {
+    "id": "tt_g_0014",
+    "createTimeISO": "2026-02-14T22:41:27.036Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0014",
+    "videoUrl": "https://cdn.exemplo/tt_g_0014.mp4",
+    "diggCount": 7142,
+    "commentCount": 201,
+    "playCount": 132820,
+    "shareCount": 582
+  },
+  {
+    "id": "tt_g_0015",
+    "createTimeISO": "2026-02-16T00:26:10.654Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0015",
+    "videoUrl": "https://cdn.exemplo/tt_g_0015.mp4",
+    "diggCount": 3908,
+    "commentCount": 216,
+    "playCount": 124146,
+    "shareCount": 626
+  },
+  {
+    "id": "tt_g_0016",
+    "createTimeISO": "2026-02-17T02:10:54.272Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0016",
+    "videoUrl": "https://cdn.exemplo/tt_g_0016.mp4",
+    "diggCount": 3580,
+    "commentCount": 251,
+    "playCount": 11375,
+    "shareCount": 367
+  },
+  {
+    "id": "tt_g_0017",
+    "createTimeISO": "2026-02-18T03:55:37.890Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0017",
+    "videoUrl": "https://cdn.exemplo/tt_g_0017.mp4",
+    "diggCount": 4813,
+    "commentCount": 297,
+    "playCount": 74782,
+    "shareCount": 101
+  },
+  {
+    "id": "tt_g_0018",
+    "createTimeISO": "2026-02-19T05:40:21.509Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0018",
+    "videoUrl": "https://cdn.exemplo/tt_g_0018.mp4",
+    "diggCount": 4648,
+    "commentCount": 403,
+    "playCount": 24130,
+    "shareCount": 73
+  },
+  {
+    "id": "tt_g_0019",
+    "createTimeISO": "2026-02-20T07:25:05.127Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0019",
+    "videoUrl": "https://cdn.exemplo/tt_g_0019.mp4",
+    "diggCount": 7645,
+    "commentCount": 64,
+    "playCount": 161517,
+    "shareCount": 667
+  },
+  {
+    "id": "tt_g_0020",
+    "createTimeISO": "2026-02-21T09:09:48.745Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0020",
+    "videoUrl": "https://cdn.exemplo/tt_g_0020.mp4",
+    "diggCount": 2864,
+    "commentCount": 324,
+    "playCount": 162100,
+    "shareCount": 334
+  },
+  {
+    "id": "tt_g_0021",
+    "createTimeISO": "2026-02-22T10:54:32.363Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0021",
+    "videoUrl": "https://cdn.exemplo/tt_g_0021.mp4",
+    "diggCount": 6001,
+    "commentCount": 245,
+    "playCount": 172297,
+    "shareCount": 240
+  },
+  {
+    "id": "tt_g_0022",
+    "createTimeISO": "2026-02-23T12:39:15.981Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0022",
+    "videoUrl": "https://cdn.exemplo/tt_g_0022.mp4",
+    "diggCount": 7941,
+    "commentCount": 285,
+    "playCount": 110899,
+    "shareCount": 156
+  },
+  {
+    "id": "tt_g_0023",
+    "createTimeISO": "2026-02-24T14:23:59.600Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0023",
+    "videoUrl": "https://cdn.exemplo/tt_g_0023.mp4",
+    "diggCount": 2071,
+    "commentCount": 268,
+    "playCount": 95605,
+    "shareCount": 26
+  },
+  {
+    "id": "tt_g_0024",
+    "createTimeISO": "2026-02-25T16:08:43.218Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0024",
+    "videoUrl": "https://cdn.exemplo/tt_g_0024.mp4",
+    "diggCount": 8547,
+    "commentCount": 308,
+    "playCount": 122071,
+    "shareCount": 744
+  },
+  {
+    "id": "tt_g_0025",
+    "createTimeISO": "2026-02-26T17:53:26.836Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0025",
+    "videoUrl": "https://cdn.exemplo/tt_g_0025.mp4",
+    "diggCount": 5647,
+    "commentCount": 385,
+    "playCount": 203606,
+    "shareCount": 99
+  },
+  {
+    "id": "tt_g_0026",
+    "createTimeISO": "2026-02-27T19:38:10.454Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0026",
+    "videoUrl": "https://cdn.exemplo/tt_g_0026.mp4",
+    "diggCount": 378,
+    "commentCount": 309,
+    "playCount": 130227,
+    "shareCount": 758
+  },
+  {
+    "id": "tt_g_0027",
+    "createTimeISO": "2026-02-28T21:22:54.072Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0027",
+    "videoUrl": "https://cdn.exemplo/tt_g_0027.mp4",
+    "diggCount": 7511,
+    "commentCount": 355,
+    "playCount": 120784,
+    "shareCount": 485
+  },
+  {
+    "id": "tt_g_0028",
+    "createTimeISO": "2026-03-01T23:07:37.690Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0028",
+    "videoUrl": "https://cdn.exemplo/tt_g_0028.mp4",
+    "diggCount": 7658,
+    "commentCount": 272,
+    "playCount": 207853,
+    "shareCount": 620
+  },
+  {
+    "id": "tt_g_0029",
+    "createTimeISO": "2026-03-03T00:52:21.309Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0029",
+    "videoUrl": "https://cdn.exemplo/tt_g_0029.mp4",
+    "diggCount": 6198,
+    "commentCount": 290,
+    "playCount": 95038,
+    "shareCount": 198
+  },
+  {
+    "id": "tt_g_0030",
+    "createTimeISO": "2026-03-04T02:37:04.927Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0030",
+    "videoUrl": "https://cdn.exemplo/tt_g_0030.mp4",
+    "diggCount": 563,
+    "commentCount": 123,
+    "playCount": 53815,
+    "shareCount": 219
+  },
+  {
+    "id": "tt_g_0031",
+    "createTimeISO": "2026-03-05T04:21:48.545Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0031",
+    "videoUrl": "https://cdn.exemplo/tt_g_0031.mp4",
+    "diggCount": 446,
+    "commentCount": 59,
+    "playCount": 34004,
+    "shareCount": 107
+  },
+  {
+    "id": "tt_g_0032",
+    "createTimeISO": "2026-03-06T06:06:32.163Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0032",
+    "videoUrl": "https://cdn.exemplo/tt_g_0032.mp4",
+    "diggCount": 4577,
+    "commentCount": 152,
+    "playCount": 36430,
+    "shareCount": 61
+  },
+  {
+    "id": "tt_g_0033",
+    "createTimeISO": "2026-03-07T07:51:15.781Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0033",
+    "videoUrl": "https://cdn.exemplo/tt_g_0033.mp4",
+    "diggCount": 1243,
+    "commentCount": 249,
+    "playCount": 24907,
+    "shareCount": 249
+  },
+  {
+    "id": "tt_g_0034",
+    "createTimeISO": "2026-03-08T09:35:59.400Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0034",
+    "videoUrl": "https://cdn.exemplo/tt_g_0034.mp4",
+    "diggCount": 2213,
+    "commentCount": 132,
+    "playCount": 186776,
+    "shareCount": 456
+  },
+  {
+    "id": "tt_g_0035",
+    "createTimeISO": "2026-03-09T11:20:43.018Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0035",
+    "videoUrl": "https://cdn.exemplo/tt_g_0035.mp4",
+    "diggCount": 9180,
+    "commentCount": 127,
+    "playCount": 159278,
+    "shareCount": 79
+  },
+  {
+    "id": "tt_g_0036",
+    "createTimeISO": "2026-03-10T13:05:26.636Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0036",
+    "videoUrl": "https://cdn.exemplo/tt_g_0036.mp4",
+    "diggCount": 7551,
+    "commentCount": 89,
+    "playCount": 16050,
+    "shareCount": 619
+  },
+  {
+    "id": "tt_g_0037",
+    "createTimeISO": "2026-03-11T14:50:10.254Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0037",
+    "videoUrl": "https://cdn.exemplo/tt_g_0037.mp4",
+    "diggCount": 1958,
+    "commentCount": 43,
+    "playCount": 168024,
+    "shareCount": 395
+  },
+  {
+    "id": "tt_g_0038",
+    "createTimeISO": "2026-03-12T16:34:53.872Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0038",
+    "videoUrl": "https://cdn.exemplo/tt_g_0038.mp4",
+    "diggCount": 5321,
+    "commentCount": 366,
+    "playCount": 64762,
+    "shareCount": 291
+  },
+  {
+    "id": "tt_g_0039",
+    "createTimeISO": "2026-03-13T18:19:37.490Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0039",
+    "videoUrl": "https://cdn.exemplo/tt_g_0039.mp4",
+    "diggCount": 6920,
+    "commentCount": 214,
+    "playCount": 24082,
+    "shareCount": 782
+  },
+  {
+    "id": "tt_g_0040",
+    "createTimeISO": "2026-03-14T20:04:21.109Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0040",
+    "videoUrl": "https://cdn.exemplo/tt_g_0040.mp4",
+    "diggCount": 4138,
+    "commentCount": 26,
+    "playCount": 65451,
+    "shareCount": 469
+  },
+  {
+    "id": "tt_g_0041",
+    "createTimeISO": "2026-03-15T21:49:04.727Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0041",
+    "videoUrl": "https://cdn.exemplo/tt_g_0041.mp4",
+    "diggCount": 4071,
+    "commentCount": 198,
+    "playCount": 116181,
+    "shareCount": 223
+  },
+  {
+    "id": "tt_g_0042",
+    "createTimeISO": "2026-03-16T23:33:48.345Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0042",
+    "videoUrl": "https://cdn.exemplo/tt_g_0042.mp4",
+    "diggCount": 5516,
+    "commentCount": 72,
+    "playCount": 19386,
+    "shareCount": 593
+  },
+  {
+    "id": "tt_g_0043",
+    "createTimeISO": "2026-03-18T01:18:31.963Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0043",
+    "videoUrl": "https://cdn.exemplo/tt_g_0043.mp4",
+    "diggCount": 3487,
+    "commentCount": 247,
+    "playCount": 204623,
+    "shareCount": 605
+  },
+  {
+    "id": "tt_g_0044",
+    "createTimeISO": "2026-03-19T03:03:15.581Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0044",
+    "videoUrl": "https://cdn.exemplo/tt_g_0044.mp4",
+    "diggCount": 968,
+    "commentCount": 150,
+    "playCount": 37222,
+    "shareCount": 798
+  },
+  {
+    "id": "tt_g_0045",
+    "createTimeISO": "2026-03-20T04:47:59.200Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0045",
+    "videoUrl": "https://cdn.exemplo/tt_g_0045.mp4",
+    "diggCount": 5835,
+    "commentCount": 132,
+    "playCount": 102962,
+    "shareCount": 99
+  },
+  {
+    "id": "tt_g_0046",
+    "createTimeISO": "2026-03-21T06:32:42.818Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0046",
+    "videoUrl": "https://cdn.exemplo/tt_g_0046.mp4",
+    "diggCount": 1267,
+    "commentCount": 342,
+    "playCount": 192822,
+    "shareCount": 394
+  },
+  {
+    "id": "tt_g_0047",
+    "createTimeISO": "2026-03-22T08:17:26.436Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0047",
+    "videoUrl": "https://cdn.exemplo/tt_g_0047.mp4",
+    "diggCount": 7593,
+    "commentCount": 96,
+    "playCount": 80807,
+    "shareCount": 340
+  },
+  {
+    "id": "tt_g_0048",
+    "createTimeISO": "2026-03-23T10:02:10.054Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0048",
+    "videoUrl": "https://cdn.exemplo/tt_g_0048.mp4",
+    "diggCount": 3463,
+    "commentCount": 318,
+    "playCount": 36270,
+    "shareCount": 637
+  },
+  {
+    "id": "tt_g_0049",
+    "createTimeISO": "2026-03-24T11:46:53.672Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0049",
+    "videoUrl": "https://cdn.exemplo/tt_g_0049.mp4",
+    "diggCount": 3979,
+    "commentCount": 228,
+    "playCount": 166415,
+    "shareCount": 61
+  },
+  {
+    "id": "tt_g_0050",
+    "createTimeISO": "2026-03-25T13:31:37.290Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Ritual da manha com Aurora Cafes Especiais, do moedor a xicara, sem pressa",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0050",
+    "videoUrl": "https://cdn.exemplo/tt_g_0050.mp4",
+    "diggCount": 5869,
+    "commentCount": 336,
+    "playCount": 39226,
+    "shareCount": 397
+  },
+  {
+    "id": "tt_g_0051",
+    "createTimeISO": "2026-03-26T15:16:20.909Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Torra media da Aurora Cafes Especiais para quem gosta de doce de caramelo no final",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0051",
+    "videoUrl": "https://cdn.exemplo/tt_g_0051.mp4",
+    "diggCount": 1102,
+    "commentCount": 320,
+    "playCount": 167230,
+    "shareCount": 416
+  },
+  {
+    "id": "tt_g_0052",
+    "createTimeISO": "2026-03-27T17:01:04.527Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Bastidores do controle de qualidade dos graos na Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0052",
+    "videoUrl": "https://cdn.exemplo/tt_g_0052.mp4",
+    "diggCount": 8193,
+    "commentCount": 136,
+    "playCount": 171935,
+    "shareCount": 641
+  },
+  {
+    "id": "tt_g_0053",
+    "createTimeISO": "2026-03-28T18:45:48.145Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Como a Aurora Cafes Especiais escolhe os produtores da Mantiqueira",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0053",
+    "videoUrl": "https://cdn.exemplo/tt_g_0053.mp4",
+    "diggCount": 7306,
+    "commentCount": 14,
+    "playCount": 103103,
+    "shareCount": 500
+  },
+  {
+    "id": "tt_g_0054",
+    "createTimeISO": "2026-03-29T20:30:31.763Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Receita de coado perfeito com o cafe da Aurora Cafes Especiais",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0054",
+    "videoUrl": "https://cdn.exemplo/tt_g_0054.mp4",
+    "diggCount": 446,
+    "commentCount": 366,
+    "playCount": 96798,
+    "shareCount": 585
+  },
+  {
+    "id": "tt_g_0055",
+    "createTimeISO": "2026-03-30T22:15:15.381Z",
+    "authorMeta": {
+      "name": "auroracafes",
+      "signature": ""
+    },
+    "authorUniqueId": "auroracafes",
+    "text": "Origem rastreavel: a Aurora Cafes Especiais mostra a fazenda parceira e o lote de torra da semana",
+    "webVideoUrl": "https://www.tiktok.com/@auroracafes/video/tt_g_0055",
+    "videoUrl": "https://cdn.exemplo/tt_g_0055.mp4",
+    "diggCount": 3248,
+    "commentCount": 380,
+    "playCount": 55748,
+    "shareCount": 176
+  }
+]

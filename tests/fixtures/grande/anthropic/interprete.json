@@ -1,0 +1,29 @@
+{
+  "dados": {
+    "marca": "Aurora Cafes Especiais",
+    "tipo": "marca",
+    "instagramHandle": "auroracafes",
+    "reclameAquiUrl": "https://www.reclameaqui.com.br/empresa/aurora-cafes/",
+    "tiktokHandle": "auroracafes",
+    "youtubeHandle": "auroracafes",
+    "palavrasChave": [
+      "cafe especial",
+      "torra artesanal",
+      "origem rastreavel"
+    ],
+    "termosBusca": [
+      "Aurora Cafes Especiais",
+      "Aurora Cafes",
+      "cafe Aurora"
+    ],
+    "dominiosMarca": [
+      "auroracafes.com.br"
+    ],
+    "volumeInstagram": 70,
+    "volumeReclameAqui": 30,
+    "volumeTiktok": 55,
+    "volumeYoutube": 30,
+    "volumeSeoSerp": 3,
+    "volumeMencoes": 65
+  }
+}

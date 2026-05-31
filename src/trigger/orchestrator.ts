@@ -25,7 +25,20 @@ import {
   type Decisao,
   type DecisaoCheckpoint,
 } from "@/lib/pipeline/types";
+import { Cronometro } from "@/lib/pipeline/perf";
 import { persistirRelatorio } from "@/lib/report-storage";
+
+/** Agrega o custo medido por fonte (CostEvent) para o anexo de desempenho. */
+async function custoPorFonte(
+  projectId: string,
+): Promise<Array<{ fonte: string; custoBRL: number }>> {
+  const grupos = await prisma.costEvent.groupBy({
+    by: ["fonte"],
+    where: { projectId },
+    _sum: { custoBRL: true },
+  });
+  return grupos.map((g) => ({ fonte: g.fonte, custoBRL: g._sum.custoBRL ?? 0 }));
+}
 
 function toJson(value: unknown): Prisma.InputJsonValue {
   return value as unknown as Prisma.InputJsonValue;
@@ -169,11 +182,14 @@ export const orchestrator = task({
       };
       const briefingInput = { briefing: project.briefing, janela };
 
+      // Cronometro de desempenho (Fase 4): tempo de parede por estagio.
+      const cron = new Cronometro();
+
       // Checkpoint 1: Plano de coleta (com custo estimado e orcamento do projeto).
       const plano = await comCheckpoint(
         projectId,
         1,
-        () => interpretarBriefing(briefingInput),
+        () => cron.medir("Plano de coleta", () => interpretarBriefing(briefingInput)),
         (p) => ({ id: "plano_coleta", plano: p }),
         (p) => persistirPlano(projectId, p),
       );
@@ -183,7 +199,7 @@ export const orchestrator = task({
       const coleta = await comCheckpoint(
         projectId,
         2,
-        () => coletar(plano, projectId),
+        () => cron.medir("Coleta", () => coletar(plano, projectId)),
         (r) => ({ id: "inventario_coleta", inventario: r.inventario }),
         (r) => persistirColeta(projectId, r.corpus),
       );
@@ -193,7 +209,7 @@ export const orchestrator = task({
       const transc = await comCheckpoint(
         projectId,
         3,
-        () => transcreverOcr(coleta.corpus),
+        () => cron.medir("Transcricoes e OCR", () => transcreverOcr(coleta.corpus)),
         (r) => ({ id: "transcricoes_ocr", amostra: r.amostra }),
         (r) => persistirTranscricoes(projectId, r.corpus),
       );
@@ -203,7 +219,7 @@ export const orchestrator = task({
       const analise = await comCheckpoint(
         projectId,
         4,
-        () => analisar(transc.corpus, projectId),
+        () => cron.medir("Analises", () => analisar(transc.corpus, projectId)),
         (a) => ({ id: "analises", analise: a }),
         (a) => persistirAnalise(projectId, a),
       );
@@ -222,22 +238,25 @@ export const orchestrator = task({
       const verificacao = await comCheckpoint(
         projectId,
         6,
-        () => verificar(transc.corpus, analise),
+        () => cron.medir("Verificacao factual", () => verificar(transc.corpus, analise)),
         (v) => ({ id: "verificacao_factual", verificacao: v }),
         (v) => persistirVerificacao(projectId, v),
       );
       if (!verificacao) return abortar(projectId);
 
       // Checkpoint 7: Draft final (redige, compoe e armazena o docx).
-      const spec = await comporRelatorio({
-        plano,
-        corpus: transc.corpus,
-        inventario: coleta.inventario,
-        amostra: transc.amostra,
-        analise,
-        outline,
-        verificacao,
-      });
+      const spec = await cron.medir("Redacao e composicao", async () =>
+        comporRelatorio({
+          plano,
+          corpus: transc.corpus,
+          inventario: coleta.inventario,
+          amostra: transc.amostra,
+          analise,
+          outline,
+          verificacao,
+          desempenho: cron.resumo(await custoPorFonte(projectId)),
+        }),
+      );
       const docx = await comporDocx(spec);
       const { storagePath } = await persistirRelatorio({
         projectId,

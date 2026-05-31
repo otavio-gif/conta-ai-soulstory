@@ -1,0 +1,162 @@
+{
+  "dados": {
+    "findings": [
+      {
+        "construto": "gap_percepcao",
+        "titulo": "Sintese de gap_percepcao",
+        "conteudo": "Leitura de gap_percepcao da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003",
+          "ig_g_0004"
+        ]
+      },
+      {
+        "construto": "promotores",
+        "titulo": "Sintese de promotores",
+        "conteudo": "Leitura de promotores da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0005",
+          "ig_g_0006",
+          "ig_g_0007",
+          "ig_g_0008"
+        ]
+      },
+      {
+        "construto": "detratores",
+        "titulo": "Sintese de detratores",
+        "conteudo": "Leitura de detratores da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0009",
+          "ig_g_0010",
+          "ig_g_0011",
+          "ig_g_0012"
+        ]
+      },
+      {
+        "construto": "aceleradores",
+        "titulo": "Sintese de aceleradores",
+        "conteudo": "Leitura de aceleradores da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0013",
+          "ig_g_0014",
+          "ig_g_0015",
+          "ig_g_0016"
+        ]
+      },
+      {
+        "construto": "persona",
+        "titulo": "Sintese de persona",
+        "conteudo": "Leitura de persona da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0017",
+          "ig_g_0018",
+          "ig_g_0019",
+          "ig_g_0020"
+        ]
+      },
+      {
+        "construto": "ondas_valor",
+        "titulo": "Sintese de ondas_valor",
+        "conteudo": "Leitura de ondas_valor da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0021",
+          "ig_g_0022",
+          "ig_g_0023",
+          "ig_g_0024"
+        ]
+      },
+      {
+        "construto": "depara",
+        "titulo": "Sintese de depara",
+        "conteudo": "Leitura de depara da Aurora Cafes Especiais consolidada a partir das oticas, sem dado novo.",
+        "suportes": [
+          "ig_g_0025",
+          "ig_g_0026",
+          "ig_g_0027",
+          "ig_g_0028"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "Conclusao de gap_percepcao lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003",
+          "ig_g_0004"
+        ],
+        "construto": "gap_percepcao"
+      },
+      {
+        "texto": "Conclusao de promotores lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0005",
+          "ig_g_0006",
+          "ig_g_0007",
+          "ig_g_0008"
+        ],
+        "construto": "promotores"
+      },
+      {
+        "texto": "Conclusao de detratores lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0009",
+          "ig_g_0010",
+          "ig_g_0011",
+          "ig_g_0012"
+        ],
+        "construto": "detratores"
+      },
+      {
+        "texto": "Conclusao de aceleradores lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0013",
+          "ig_g_0014",
+          "ig_g_0015",
+          "ig_g_0016"
+        ],
+        "construto": "aceleradores"
+      },
+      {
+        "texto": "Conclusao de persona lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0017",
+          "ig_g_0018",
+          "ig_g_0019",
+          "ig_g_0020"
+        ],
+        "construto": "persona"
+      },
+      {
+        "texto": "Conclusao de ondas_valor lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0021",
+          "ig_g_0022",
+          "ig_g_0023",
+          "ig_g_0024"
+        ],
+        "construto": "ondas_valor"
+      },
+      {
+        "texto": "Conclusao de depara lastreada na percepcao publica da Aurora Cafes Especiais.",
+        "tipoSuporte": "padrao_observado",
+        "suportes": [
+          "ig_g_0025",
+          "ig_g_0026",
+          "ig_g_0027",
+          "ig_g_0028"
+        ],
+        "construto": "depara"
+      }
+    ]
+  }
+}

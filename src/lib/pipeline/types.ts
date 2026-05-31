@@ -298,8 +298,16 @@ export interface GraficoRef {
   id: string;
   titulo: string;
   descricao: string;
-  tipo: "barras" | "linha" | "distribuicao";
+  tipo:
+    | "barras"
+    | "barras_horizontais"
+    | "linha"
+    | "area"
+    | "donut"
+    | "distribuicao";
   caminhoPng?: string;
+  // Unidade dos valores, exibida no eixo e nos rotulos quando presente (Fase 4).
+  unidade?: string;
   // Dados que originaram o grafico, para anexo e fallback de tabela.
   dados: Array<{ rotulo: string; valor: number }>;
 }
@@ -362,6 +370,20 @@ export interface ResultadoVerificacao {
   descartadas: number;
 }
 
+// ----- Desempenho e custo (Fase 4) -----
+
+export interface PerfEstagio {
+  estagio: string;
+  ms: number;
+}
+
+export interface DesempenhoResumo {
+  estagios: PerfEstagio[];
+  totalMs: number;
+  // Custo medido por fonte (CostEvent). Vazio em runs sem banco (fixtures).
+  custoPorFonte: Array<{ fonte: string; custoBRL: number }>;
+}
+
 // ----- Contrato do documento (entrada da skill soulstory-docx) -----
 
 /** Componentes visuais do padrao Soulstory mapeados pelo build script. */
@@ -406,6 +428,8 @@ export interface ReportSpec {
   anexos: ReportSpecAnexo[];
   // Charts gerados, referenciados por id nos elementos do tipo "grafico".
   graficos?: GraficoRef[];
+  // Desempenho medido do run (tempo por estagio e custo por fonte), Fase 4.
+  desempenho?: DesempenhoResumo;
 }
 
 /** Payload tipado por checkpoint, usado no campo Checkpoint.payload (Json). */

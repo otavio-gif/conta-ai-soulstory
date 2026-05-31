@@ -5,10 +5,11 @@
 // janela, apenas da conta da propria marca ou criador. Apify assincrono com
 // webhook fechando o waitpoint do orquestrador, igual ao Instagram.
 
-import { wait } from "@trigger.dev/sdk";
 import { lerFixture, MOCK_EXTERNAL } from "@/lib/env";
-import { custoApifyRun, registrarCustoEvent } from "@/lib/cost";
-import { iniciarRun, itensDoDataset } from "@/lib/collectors/apify";
+import { custoApifyRun } from "@/lib/cost";
+import { coletarRunApify } from "@/lib/collectors/apify-run";
+import { lacunaPorStatus } from "@/lib/collectors/lacunas";
+import { timeoutColeta } from "@/lib/collectors/retry";
 import {
   comoObjeto,
   lista,
@@ -146,6 +147,7 @@ export async function coletarTiktok(params: {
   handle: string;
   janela: { inicio: string; fim: string };
   webhookBase?: string;
+  volumeEstimado?: number;
 }): Promise<ResultadoTiktok> {
   const { projectId, handle, janela } = params;
 
@@ -173,33 +175,29 @@ export async function coletarTiktok(params: {
 
   const lacunas: LacunaColeta[] = [];
   const base = params.webhookBase ?? "";
+  const timeout = timeoutColeta(params.volumeEstimado ?? 0);
 
-  // 1. Perfil e videos da janela (captura integral).
-  const tokenVideos = await wait.createToken({ timeout: "1h", tags: [projectId] });
-  const runVideos = await iniciarRun(
-    ACTOR_SCRAPER,
-    {
+  // 1. Perfil e videos da janela (captura integral, com degradacao graciosa).
+  const resVideos = await coletarRunApify({
+    projectId,
+    actorId: ACTOR_SCRAPER,
+    fonte: "tiktok",
+    descricao: "Apify tiktok-scraper (videos)",
+    webhookBase: base,
+    timeout,
+    montarInput: (proxyConfiguration) => ({
       profiles: [handle.replace(/^@/, "")],
       resultsPerPage: 1000,
       shouldDownloadVideos: false,
       oldestPostDate: janela.inicio,
-    },
-    `${base}/api/webhooks/apify?token=${tokenVideos.id}`,
-  );
-  await registrarCustoEvent({
-    fonte: "tiktok",
-    descricao: "Apify tiktok-scraper (videos)",
-    custoBRL: custoApifyRun(0.05),
+      proxyConfiguration,
+    }),
+    custoBRL: (residencial) => custoApifyRun(residencial ? 0.12 : 0.05),
   });
-  const okVideos = await wait.forToken<{ ok: boolean }>(tokenVideos.id);
-  if (!okVideos.ok || !okVideos.output.ok) {
-    lacunas.push({
-      fonte: "tiktok",
-      motivo: "Coleta de videos do TikTok nao concluiu (timeout ou bloqueio).",
-    });
-    return { bio: "", posts: [], lacunas, metricasIndisponiveis: METRICAS_INDISPONIVEIS };
-  }
-  const videosBrutos = await itensDoDataset(runVideos.datasetId);
+  const lacunaVideos = lacunaPorStatus("tiktok", "Videos do TikTok", resVideos.status);
+  if (lacunaVideos) lacunas.push(lacunaVideos);
+
+  const videosBrutos = resVideos.itens;
   const posts = normalizarVideosTiktok(videosBrutos, {
     projectId,
     brandHandle: handle,
@@ -209,31 +207,27 @@ export async function coletarTiktok(params: {
 
   // 2. Comentarios de todos os videos (sem teto; volume sinalizado no CP1).
   if (posts.length > 0) {
-    const tokenC = await wait.createToken({ timeout: "2h", tags: [projectId] });
-    const runC = await iniciarRun(
-      ACTOR_COMMENTS,
-      { postURLs: posts.map((p) => p.url), commentsPerPost: 100000 },
-      `${base}/api/webhooks/apify?token=${tokenC.id}`,
-    );
-    await registrarCustoEvent({
+    const resC = await coletarRunApify({
+      projectId,
+      actorId: ACTOR_COMMENTS,
       fonte: "tiktok",
       descricao: "Apify tiktok-comments-scraper",
-      custoBRL: custoApifyRun(0.1),
+      webhookBase: base,
+      timeout,
+      montarInput: (proxyConfiguration) => ({
+        postURLs: posts.map((p) => p.url),
+        commentsPerPost: 100000,
+        proxyConfiguration,
+      }),
+      custoBRL: (residencial) => custoApifyRun(residencial ? 0.22 : 0.1),
     });
-    const okC = await wait.forToken<{ ok: boolean }>(tokenC.id);
-    if (okC.ok && okC.output.ok) {
-      const comentariosBrutos = await itensDoDataset(runC.datasetId);
-      const comentarios = agruparComentariosTiktok(comentariosBrutos, {
-        projectId,
-        brandHandle: handle,
-      });
-      for (const p of posts) p.comentarios = comentarios.get(p.externalId) ?? [];
-    } else {
-      lacunas.push({
-        fonte: "tiktok",
-        motivo: "Coleta de comentarios do TikTok nao concluiu para todos os videos.",
-      });
-    }
+    const comentarios = agruparComentariosTiktok(resC.itens, {
+      projectId,
+      brandHandle: handle,
+    });
+    for (const p of posts) p.comentarios = comentarios.get(p.externalId) ?? [];
+    const lacunaC = lacunaPorStatus("tiktok", "Comentarios do TikTok", resC.status);
+    if (lacunaC) lacunas.push(lacunaC);
   }
 
   return { bio, posts, lacunas, metricasIndisponiveis: METRICAS_INDISPONIVEIS };

@@ -68,28 +68,23 @@ export interface RespostaClaude<T> {
 
 let clienteSingleton: Anthropic | null = null;
 
-function cliente(): Anthropic {
+/** Cliente Anthropic singleton, reusado pela chamada unica e pelo lote (batch). */
+export function clienteAnthropic(): Anthropic {
   if (!clienteSingleton) {
     clienteSingleton = new Anthropic({ apiKey: requireEnv("ANTHROPIC_API_KEY") });
   }
   return clienteSingleton;
 }
 
-export async function chamarClaude<T = never>(
+/** Modelo efetivo de uma chamada (override explicito ou o do papel). */
+export function modeloDaChamada<T>(params: ChamadaClaude<T>): ModeloId {
+  return params.modelo ?? MODELO_POR_PAPEL[params.papel];
+}
+
+/** Corpo da requisicao a Messages, compartilhado entre chamada unica e lote. */
+export function corpoMensagem<T>(
   params: ChamadaClaude<T>,
-): Promise<RespostaClaude<T>> {
-  const modelo = params.modelo ?? MODELO_POR_PAPEL[params.papel];
-
-  if (MOCK_EXTERNAL) {
-    const fixture = await lerFixture<{ texto?: string; dados?: T }>(
-      `anthropic/${params.fixtureKey}.json`,
-    );
-    return {
-      texto: fixture.texto ?? "",
-      dados: (fixture.dados ?? null) as T | null,
-    };
-  }
-
+): Anthropic.Messages.MessageCreateParamsNonStreaming {
   const tools = params.ferramenta
     ? [
         {
@@ -99,9 +94,8 @@ export async function chamarClaude<T = never>(
         },
       ]
     : undefined;
-
-  const resposta = await cliente().messages.create({
-    model: modelo,
+  return {
+    model: modeloDaChamada(params),
     max_tokens: params.maxTokens ?? 8192,
     system: params.system,
     messages: [{ role: "user", content: params.conteudo }],
@@ -109,7 +103,42 @@ export async function chamarClaude<T = never>(
     tool_choice: params.ferramenta
       ? { type: "tool", name: params.ferramenta.nome }
       : undefined,
-  });
+  };
+}
+
+/** Extrai texto e a saida estruturada (tool_use) do conteudo de uma resposta. */
+export function interpretarConteudo<T>(
+  content: Anthropic.Messages.ContentBlock[],
+  ferramenta?: FerramentaSaida<T>,
+): RespostaClaude<T> {
+  let texto = "";
+  let dados: T | null = null;
+  for (const b of content) {
+    if (b.type === "text") texto += b.text;
+    if (b.type === "tool_use" && ferramenta) dados = ferramenta.parse(b.input);
+  }
+  return { texto, dados };
+}
+
+/** Le a fixture de uma chamada quando MOCK_EXTERNAL, com fallback por papel. */
+export async function lerFixtureChamada<T>(
+  params: ChamadaClaude<T>,
+): Promise<RespostaClaude<T>> {
+  // Fallback por papel (Fase 4): habilita centenas de itens em larga escala sem
+  // uma fixture por externalId. A fixture especifica das fases anteriores vence.
+  const fixture = await lerFixture<{ texto?: string; dados?: T }>(
+    `anthropic/${params.fixtureKey}.json`,
+  ).catch(() => lerFixture<{ texto?: string; dados?: T }>(`anthropic/${params.papel}.default.json`));
+  return { texto: fixture.texto ?? "", dados: (fixture.dados ?? null) as T | null };
+}
+
+export async function chamarClaude<T = never>(
+  params: ChamadaClaude<T>,
+): Promise<RespostaClaude<T>> {
+  if (MOCK_EXTERNAL) return lerFixtureChamada(params);
+
+  const modelo = modeloDaChamada(params);
+  const resposta = await clienteAnthropic().messages.create(corpoMensagem(params));
 
   await registrarCustoEvent({
     fonte: "anthropic",
@@ -117,14 +146,5 @@ export async function chamarClaude<T = never>(
     custoBRL: custoAnthropic(modelo, resposta.usage),
   });
 
-  let texto = "";
-  let dados: T | null = null;
-  for (const bloco of resposta.content) {
-    if (bloco.type === "text") texto += bloco.text;
-    if (bloco.type === "tool_use" && params.ferramenta) {
-      dados = params.ferramenta.parse(bloco.input);
-    }
-  }
-
-  return { texto, dados };
+  return interpretarConteudo(resposta.content, params.ferramenta);
 }

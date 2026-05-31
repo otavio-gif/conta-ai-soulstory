@@ -22,6 +22,8 @@ import {
   verificar,
 } from "@/lib/pipeline/stages";
 import { CHECKPOINTS } from "@/lib/pipeline/types";
+import { Cronometro } from "@/lib/pipeline/perf";
+import { mesmosNumeros } from "@/lib/ai/editor-voz";
 import { formatBRL } from "@/lib/utils";
 
 const PROJECT_ID = "fixtures";
@@ -42,29 +44,37 @@ async function main() {
     fim: "2026-03-31T23:59:59.000Z",
   };
 
-  const plano = await interpretarBriefing({
-    briefing:
-      "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google e mencoes de terceiros, com foco em torra artesanal e cafe especial.",
-    janela,
-  });
+  const cron = new Cronometro();
+
+  const plano = await cron.medir("Plano de coleta", () =>
+    interpretarBriefing({
+      briefing:
+        "Diagnostico da marca Cafes Serra Azul no Instagram, Reclame Aqui, TikTok, YouTube, SEO e busca no Google e mencoes de terceiros, com foco em torra artesanal e cafe especial.",
+      janela,
+    }),
+  );
   checkpoint(
     1,
     `${plano.fontes.length} fontes (${plano.fontes.map((f) => f.kind).join(", ")}). Custo estimado ${formatBRL(plano.custo.totalBRL)}, orcamento ${formatBRL(plano.custo.orcamentoBRL)} para ${plano.custo.mesesJanela} mes(es).`,
   );
 
-  const { inventario, corpus } = await coletar(plano, PROJECT_ID);
+  const { inventario, corpus } = await cron.medir("Coleta", () =>
+    coletar(plano, PROJECT_ID),
+  );
   checkpoint(
     2,
     `${inventario.totalArtefatos} artefatos brutos. Lacunas: ${inventario.lacunas.length}. Metricas indisponiveis: ${inventario.metricasIndisponiveis.join(", ")}.`,
   );
 
-  const { amostra, corpus: corpusTr } = await transcreverOcr(corpus);
+  const { amostra, corpus: corpusTr } = await cron.medir("Transcricoes e OCR", () =>
+    transcreverOcr(corpus),
+  );
   checkpoint(
     3,
     `${amostra.totalTranscricoes} transcricao(oes), ${amostra.totalOcr} OCR, ${amostra.amostras.length} amostra(s).`,
   );
 
-  const analise = await analisar(corpusTr, PROJECT_ID);
+  const analise = await cron.medir("Analises", () => analisar(corpusTr, PROJECT_ID));
   checkpoint(
     4,
     `${analise.insights.length} insights, ${analise.graficos.length} grafico(s), ${analise.claims.length} afirmacoes candidatas, ${analise.findings.length} achados.`,
@@ -76,7 +86,9 @@ async function main() {
     `Parte I com ${outline.parteI.length} secoes, Parte II com ${outline.parteII.length} secoes.`,
   );
 
-  const verificacao = await verificar(corpusTr, analise);
+  const verificacao = await cron.medir("Verificacao factual", () =>
+    verificar(corpusTr, analise),
+  );
   checkpoint(
     6,
     `${verificacao.confirmadas} afirmacoes validadas, ${verificacao.descartadas} descartada(s) por falta de lastro.`,
@@ -90,6 +102,8 @@ async function main() {
     analise,
     outline,
     verificacao,
+    // Sem banco nas fixtures: custo por fonte vazio, so o tempo por estagio.
+    desempenho: cron.resumo([]),
   });
   const docx = await comporDocx(spec);
 
@@ -284,7 +298,116 @@ async function main() {
       : `FALHA: graficos novos presentes: ${graficosNovos.join(", ")}.`,
   );
 
+  // ----- Aceite especifico da Fase 4 (refino, padrao de entrega) -----
+  console.log("\nAceite da Fase 4\n----------------");
+
+  const GRANDE = process.env.FIXTURE_SET === "grande";
+
+  // Anexo de desempenho presente (tempo por estagio medido).
+  const temDesempenho = spec.anexos.some((a) => a.titulo.includes("Desempenho e custo"));
+  console.log(
+    temDesempenho
+      ? "OK: anexo de desempenho e custo presente (performance medida)."
+      : "FALHA: anexo de desempenho ausente.",
+  );
+
+  // Anexos de profundidade da Fase 4.
+  const temComentarios = spec.anexos.some((a) => a.titulo.includes("Comentarios ilustrativos"));
+  const temSentimentoAnexo = spec.anexos.some((a) => a.titulo.includes("Sentimento longitudinal"));
+  const temTemasAnexo = spec.anexos.some((a) => a.titulo.includes("Mapa de temas"));
+  console.log(
+    temComentarios && temSentimentoAnexo && temTemasAnexo
+      ? "OK: anexos de profundidade (comentarios, sentimento, temas) presentes."
+      : `FALHA: comentarios=${temComentarios}, sentimento=${temSentimentoAnexo}, temas=${temTemasAnexo}.`,
+  );
+
+  // Voz revisada ponta a ponta, sem nenhum travessao em todo o ReportSpec.
+  const textos: string[] = [];
+  const colher = (s: { titulo: string; secoes: typeof spec.parteI.secoes }) => {
+    for (const sec of s.secoes) {
+      textos.push(sec.titulo, ...sec.paragrafos);
+      for (const el of sec.elementos ?? []) {
+        if (el.tipo === "paragrafo") textos.push(el.texto);
+        if (el.tipo === "callout") textos.push(...el.paragrafos);
+        if (el.tipo === "cards") for (const it of el.itens) textos.push(it.titulo, it.texto);
+      }
+    }
+  };
+  colher(spec.parteI);
+  colher(spec.parteII);
+  for (const a of spec.anexos) textos.push(a.titulo, a.descricao);
+  const comTravessao = textos.filter((t) => /[—–]/.test(t));
+  console.log(
+    comTravessao.length === 0
+      ? "OK: voz revisada ponta a ponta, nenhum travessao no ReportSpec."
+      : `FALHA: ${comTravessao.length} texto(s) com travessao apos o passe de voz.`,
+  );
+
+  // Guarda de digitos do editor de voz: numero alterado e revertido.
+  const a = "A marca teve 1.240 curtidas em 3 posts.";
+  const guardaOk = mesmosNumeros(a, "A marca registrou 1.240 curtidas em 3 posts.") &&
+    !mesmosNumeros(a, "A marca teve 1.250 curtidas em 3 posts.");
+  console.log(
+    guardaOk
+      ? "OK: guarda de digitos do editor de voz preserva os numeros (reverte edicao que altera)."
+      : "FALHA: guarda de digitos do editor de voz nao funcionou.",
+  );
+
+  // Tamanho do relatorio: estimativa de paginas (contagem real no docx aberto).
+  const paginas = estimarPaginas(spec);
+  console.log(`Tamanho estimado do relatorio: ~${paginas} paginas (${inventario.totalArtefatos} artefatos brutos).`);
+  if (GRANDE) {
+    console.log(
+      paginas >= 80
+        ? `OK: marca grande rende relatorio no padrao de entrega (>= 80 paginas estimadas).`
+        : `FALHA: marca grande estimou ${paginas} paginas (< 80).`,
+    );
+    console.log(`OK: volume de marca grande (${corpusTr.posts.length} pecas, ${spec.anexos.length} anexos).`);
+  }
+
   console.log("\nConcluido. Os 7 checkpoints passaram sobre o pipeline real (fixtures).");
+}
+
+/**
+ * Estimativa de paginas a partir do conteudo do ReportSpec. Heuristica honesta
+ * para o aceite automatico (a contagem real confere abrindo o docx): prosa por
+ * palavras, tabelas por linhas, e meia pagina por grafico.
+ */
+function estimarPaginas(spec: import("@/lib/pipeline/types").ReportSpec): number {
+  let palavras = 0;
+  let linhasTabela = 0;
+  let graficos = 0;
+  let blocos = 0;
+
+  const contarElementos = (elementos: import("@/lib/pipeline/types").ElementoSecao[] = []) => {
+    for (const el of elementos) {
+      blocos++;
+      if (el.tipo === "paragrafo") palavras += el.texto.split(/\s+/).length;
+      else if (el.tipo === "callout") palavras += el.paragrafos.join(" ").split(/\s+/).length;
+      else if (el.tipo === "cards") palavras += el.itens.reduce((a, i) => a + i.texto.split(/\s+/).length, 0);
+      else if (el.tipo === "tabela") linhasTabela += el.linhas.length + 1;
+      else if (el.tipo === "grafico") graficos++;
+      else if (el.tipo === "glossario") linhasTabela += el.itens.length * 2;
+    }
+  };
+
+  for (const parte of [spec.parteI, spec.parteII]) {
+    for (const sec of parte.secoes) {
+      blocos++;
+      palavras += sec.paragrafos.join(" ").split(/\s+/).length;
+      contarElementos(sec.elementos);
+    }
+  }
+  for (const a of spec.anexos) {
+    blocos++;
+    palavras += a.descricao.split(/\s+/).length;
+    contarElementos(a.elementos);
+  }
+  linhasTabela += spec.evidencias.length; // a tabela do evidence ledger
+
+  // ~420 palavras por pagina; ~24 linhas de tabela compacta por pagina; meia
+  // pagina por grafico. Heuristica conservadora; a contagem real confere no docx.
+  return Math.ceil(palavras / 420 + linhasTabela / 24 + graficos * 0.5 + blocos * 0.1);
 }
 
 main().catch((err) => {

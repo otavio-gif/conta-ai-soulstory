@@ -3,10 +3,11 @@
 // publicas, carrosseis, Reels e posts de terceiros que citam a marca.
 // Salvamentos e compartilhamentos sao sempre indisponiveis, nunca estimados.
 
-import { wait } from "@trigger.dev/sdk";
 import { lerFixture, MOCK_EXTERNAL } from "@/lib/env";
-import { custoApifyRun, registrarCustoEvent } from "@/lib/cost";
-import { iniciarRun, itensDoDataset } from "@/lib/collectors/apify";
+import { custoApifyRun } from "@/lib/cost";
+import { coletarRunApify } from "@/lib/collectors/apify-run";
+import { lacunaPorStatus } from "@/lib/collectors/lacunas";
+import { timeoutColeta } from "@/lib/collectors/retry";
 import {
   comoObjeto,
   lista,
@@ -147,6 +148,7 @@ export async function coletarInstagram(params: {
   palavrasChave: string[];
   janela: { inicio: string; fim: string };
   webhookBase?: string;
+  volumeEstimado?: number;
 }): Promise<ResultadoInstagram> {
   const { projectId, handle, janela } = params;
 
@@ -172,66 +174,56 @@ export async function coletarInstagram(params: {
 
   const lacunas: LacunaColeta[] = [];
   const base = params.webhookBase ?? "";
+  const timeout = timeoutColeta(params.volumeEstimado ?? 0);
 
   // 1. Perfil, posts, Reels e carrosseis (captura integral da janela).
-  const tokenPosts = await wait.createToken({ timeout: "1h", tags: [projectId] });
-  const runPosts = await iniciarRun(
-    ACTOR_SCRAPER,
-    {
+  // Degradacao graciosa: parcial ou vazio viram lacuna, mas a fonte nunca aborta
+  // o pipeline; seguimos com o que veio.
+  const resPosts = await coletarRunApify({
+    projectId,
+    actorId: ACTOR_SCRAPER,
+    fonte: "instagram",
+    descricao: "Apify instagram-scraper (posts)",
+    webhookBase: base,
+    timeout,
+    montarInput: (proxyConfiguration) => ({
       username: [handle.replace(/^@/, "")],
       resultsType: "posts",
       onlyPostsNewerThan: janela.inicio,
       addParentData: true,
-    },
-    `${base}/api/webhooks/apify?token=${tokenPosts.id}`,
-  );
-  await registrarCustoEvent({
-    fonte: "instagram",
-    descricao: "Apify instagram-scraper (posts)",
-    custoBRL: custoApifyRun(0.05),
+      proxyConfiguration,
+    }),
+    custoBRL: (residencial) => custoApifyRun(residencial ? 0.12 : 0.05),
   });
-  const okPosts = await wait.forToken<{ ok: boolean }>(tokenPosts.id);
-  if (!okPosts.ok || !okPosts.output.ok) {
-    lacunas.push({
-      fonte: "instagram",
-      motivo: "Coleta de posts do Instagram nao concluiu (timeout ou bloqueio).",
-    });
-    return { bio: "", posts: [], lacunas, metricasIndisponiveis: METRICAS_INDISPONIVEIS };
-  }
-  const postsBrutos = await itensDoDataset(runPosts.datasetId);
+  const lacunaPosts = lacunaPorStatus("instagram", "Posts do Instagram", resPosts.status);
+  if (lacunaPosts) lacunas.push(lacunaPosts);
+
+  const postsBrutos = resPosts.itens;
   const posts = normalizarPosts(postsBrutos, { projectId, brandHandle: handle, janela });
   const bio = texto(comoObjeto(postsBrutos[0]), "biography");
 
   // 2. Comentarios de todos os posts (sem teto; volume sinalizado no CP1).
   if (posts.length > 0) {
-    const tokenC = await wait.createToken({ timeout: "2h", tags: [projectId] });
-    const runC = await iniciarRun(
-      ACTOR_COMMENTS,
-      { directUrls: posts.map((p) => p.url), resultsLimit: 100000 },
-      `${base}/api/webhooks/apify?token=${tokenC.id}`,
-    );
-    await registrarCustoEvent({
+    const resC = await coletarRunApify({
+      projectId,
+      actorId: ACTOR_COMMENTS,
       fonte: "instagram",
       descricao: "Apify instagram-comment-scraper",
-      custoBRL: custoApifyRun(0.1),
+      webhookBase: base,
+      timeout,
+      montarInput: (proxyConfiguration) => ({
+        directUrls: posts.map((p) => p.url),
+        resultsLimit: 100000,
+        proxyConfiguration,
+      }),
+      custoBRL: (residencial) => custoApifyRun(residencial ? 0.22 : 0.1),
     });
-    const okC = await wait.forToken<{ ok: boolean }>(tokenC.id);
-    if (okC.ok && okC.output.ok) {
-      const comentariosBrutos = await itensDoDataset(runC.datasetId);
-      const comentarios = agruparComentarios(comentariosBrutos, {
-        projectId,
-        brandHandle: handle,
-      });
-      for (const p of posts) {
-        p.comentarios =
-          comentarios.get(p.externalId) ?? comentarios.get(p.url) ?? [];
-      }
-    } else {
-      lacunas.push({
-        fonte: "instagram",
-        motivo: "Coleta de comentarios nao concluiu para todos os posts.",
-      });
+    const comentarios = agruparComentarios(resC.itens, { projectId, brandHandle: handle });
+    for (const p of posts) {
+      p.comentarios = comentarios.get(p.externalId) ?? comentarios.get(p.url) ?? [];
     }
+    const lacunaC = lacunaPorStatus("instagram", "Comentarios do Instagram", resC.status);
+    if (lacunaC) lacunas.push(lacunaC);
   }
 
   return { bio, posts, lacunas, metricasIndisponiveis: METRICAS_INDISPONIVEIS };

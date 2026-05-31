@@ -57,7 +57,7 @@ export function calcularShareOfVoice(corpus: Corpus): SaidaShareOfVoice {
       titulo: "Share of voice de mencao",
       descricao:
         "Proporcao de pecas sobre a marca produzidas por terceiros versus pela propria marca na janela.",
-      tipo: "barras",
+      tipo: "donut",
       dados: [
         { rotulo: "Terceiros", valor: terceiros.length },
         { rotulo: "Propria marca", valor: proprias.length },

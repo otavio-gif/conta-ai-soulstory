@@ -1,0 +1,33 @@
+{
+  "dados": {
+    "insights": [
+      {
+        "titulo": "Reels lideram o alcance publico",
+        "conteudo": "Os videos concentram as maiores visualizacoes publicas na janela.",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003"
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "texto": "As pecas de maior alcance da Aurora Cafes Especiais estao entre os videos da janela.",
+        "tipoSuporte": "agregacao",
+        "suportes": [
+          "ig_g_0001",
+          "ig_g_0002",
+          "ig_g_0003"
+        ],
+        "parte": "I"
+      },
+      {
+        "texto": "A marca tem alto indice de salvamentos no Instagram.",
+        "tipoSuporte": "agregacao",
+        "suportes": [],
+        "parte": "I"
+      }
+    ]
+  }
+}

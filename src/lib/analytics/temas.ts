@@ -99,7 +99,7 @@ export async function mapearTemas(corpus: Corpus): Promise<SaidaTemas> {
             id: "mapa-temas",
             titulo: "Mapa de temas",
             descricao: "Numero de pecas por tema que orbita a marca na janela.",
-            tipo: "barras",
+            tipo: "barras_horizontais",
             dados: temas.map((t) => ({ rotulo: t.tema, valor: t.itens.length })),
           },
         ]
