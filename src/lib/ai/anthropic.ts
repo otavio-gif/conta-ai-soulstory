@@ -138,7 +138,13 @@ export async function chamarClaude<T = never>(
   if (MOCK_EXTERNAL) return lerFixtureChamada(params);
 
   const modelo = modeloDaChamada(params);
-  const resposta = await clienteAnthropic().messages.create(corpoMensagem(params));
+  // Streaming: a redacao do relatorio (Opus, saida longa) pode passar de 10 min
+  // numa unica chamada, e o SDK exige streaming nesse caso. finalMessage() junta
+  // o stream e devolve a mensagem completa (com usage), servindo a qualquer
+  // tamanho de saida, das chamadas curtas a redacao inteira.
+  const resposta = await clienteAnthropic()
+    .messages.stream(corpoMensagem(params))
+    .finalMessage();
 
   await registrarCustoEvent({
     fonte: "anthropic",
