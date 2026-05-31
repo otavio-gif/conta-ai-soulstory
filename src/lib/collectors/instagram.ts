@@ -186,8 +186,10 @@ export async function coletarInstagram(params: {
     descricao: "Apify instagram-scraper (posts)",
     webhookBase: base,
     timeout,
+    // O ator apify/instagram-scraper espera o perfil em directUrls (a URL
+    // completa). Com "username" ele responde no_items. Ver run real, Fase 5.
     montarInput: (proxyConfiguration) => ({
-      username: [handle.replace(/^@/, "")],
+      directUrls: [`https://www.instagram.com/${handle.replace(/^@/, "")}/`],
       resultsType: "posts",
       onlyPostsNewerThan: janela.inicio,
       addParentData: true,

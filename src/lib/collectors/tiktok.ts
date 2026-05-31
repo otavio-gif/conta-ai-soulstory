@@ -115,6 +115,12 @@ export function normalizarVideosTiktok(
   return posts;
 }
 
+/** Extrai o id numerico do video de uma URL do TikTok (.../video/<id>). */
+function idDeUrlTiktok(url: string): string {
+  const m = url.match(/\/video\/(\d+)/);
+  return m ? m[1] : "";
+}
+
 /** Normaliza comentarios e os agrupa por video (pseudonimizando o autor). */
 export function agruparComentariosTiktok(
   itens: unknown[],
@@ -123,9 +129,13 @@ export function agruparComentariosTiktok(
   const mapa = new Map<string, ComentarioColetado[]>();
   for (const item of itens) {
     const o = comoObjeto(item);
+    // O ator clockworks/tiktok-comments-scraper nao traz videoId; o vinculo com
+    // o video vem na URL (submittedVideoUrl/videoWebUrl). Extraimos o id dela
+    // para casar com o externalId do video. Ver run real, Fase 5.
     const postRef =
       texto(o, "videoId", "videoWebId", "aweme_id", "awemeId") ||
-      texto(comoObjeto(o.video), "id");
+      texto(comoObjeto(o.video), "id") ||
+      idDeUrlTiktok(texto(o, "submittedVideoUrl", "videoWebUrl"));
     if (!postRef) continue;
     const autor =
       texto(o, "uniqueId", "username") || texto(comoObjeto(o.user), "uniqueId", "nickname");
