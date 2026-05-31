@@ -1,0 +1,19 @@
+{
+  "dados": {
+    "classificacoes": [
+      { "externalId": "ig_001", "sentimento": "positivo" },
+      { "externalId": "ig_002", "sentimento": "positivo" },
+      { "externalId": "ig_003", "sentimento": "neutro" },
+      { "externalId": "tt_001", "sentimento": "positivo" },
+      { "externalId": "tt_002", "sentimento": "positivo" },
+      { "externalId": "yt_001", "sentimento": "positivo" },
+      { "externalId": "yt_002", "sentimento": "neutro" },
+      { "externalId": "web:https://blogdocafe.com.br/serra-azul-resenha", "sentimento": "positivo" },
+      { "externalId": "web:https://guiacafeespecial.com.br/marcas/serra-azul", "sentimento": "positivo" },
+      { "externalId": "tiktok:ttm_001", "sentimento": "positivo" },
+      { "externalId": "tiktok:ttm_002", "sentimento": "positivo" },
+      { "externalId": "youtube:ytm_001", "sentimento": "neutro" },
+      { "externalId": "instagram:igm_001", "sentimento": "positivo" }
+    ]
+  }
+}

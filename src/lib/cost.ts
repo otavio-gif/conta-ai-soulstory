@@ -152,3 +152,22 @@ export function custoFirecrawl(creditos: number): number {
   const usd = creditos * 0.0008;
   return Number((usd * USD_BRL).toFixed(4));
 }
+
+/**
+ * Custo aproximado de chamadas a DataForSEO (Fase 3), em USD por chamada, por
+ * tipo de endpoint. SERP Advanced (Task POST/GET) e mais caro; Live de volume e
+ * Labs sao baratos. Cada chamada paga vira um CostEvent.
+ */
+export function custoDataForSeo(
+  tipo: "serp" | "volume" | "labs" | "autocomplete",
+  chamadas = 1,
+): number {
+  const precoUSD: Record<typeof tipo, number> = {
+    serp: 0.0025,
+    volume: 0.0006,
+    labs: 0.01,
+    autocomplete: 0.0006,
+  };
+  const usd = precoUSD[tipo] * chamadas;
+  return Number((usd * USD_BRL).toFixed(4));
+}

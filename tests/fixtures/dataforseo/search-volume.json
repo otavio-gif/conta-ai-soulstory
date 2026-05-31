@@ -1,0 +1,26 @@
+[
+  {
+    "keyword": "cafes serra azul",
+    "location_code": 2076,
+    "language_code": "pt",
+    "search_volume": 2400,
+    "competition": "LOW",
+    "cpc": 0.42
+  },
+  {
+    "keyword": "cafe especial",
+    "location_code": 2076,
+    "language_code": "pt",
+    "search_volume": 18100,
+    "competition": "MEDIUM",
+    "cpc": 1.1
+  },
+  {
+    "keyword": "torra artesanal",
+    "location_code": 2076,
+    "language_code": "pt",
+    "search_volume": null,
+    "competition": null,
+    "cpc": null
+  }
+]

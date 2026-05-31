@@ -1,0 +1,46 @@
+{
+  "dados": {
+    "temas": [
+      {
+        "tema": "Torra media e perfil de sabor",
+        "descricao": "Conversa sobre a torra media da marca e o equilibrio de sabor que ela entrega.",
+        "itens": ["ig_001", "tt_001", "web:https://blogdocafe.com.br/serra-azul-resenha", "youtube:ytm_001"]
+      },
+      {
+        "tema": "Metodo de preparo coado",
+        "descricao": "Tutoriais e dicas de coado em casa com o cafe da marca.",
+        "itens": ["ig_002", "yt_001", "tt_002"]
+      },
+      {
+        "tema": "Procedencia e rastreabilidade do grao",
+        "descricao": "Origem na Serra da Mantiqueira e colheita manual como ancora de confianca.",
+        "itens": ["ig_001", "yt_002", "guiacafeespecial"]
+      },
+      {
+        "tema": "Logistica e prazo de entrega",
+        "descricao": "Criticas e elogios sobre o prazo de entrega e o frete.",
+        "itens": ["ig_003", "web:https://blogdocafe.com.br/serra-azul-resenha"]
+      },
+      {
+        "tema": "Lancamentos e edicoes limitadas",
+        "descricao": "Expectativa em torno das edicoes sazonais e pre-vendas.",
+        "itens": ["ig_003"]
+      },
+      {
+        "tema": "Recomendacao de terceiros",
+        "descricao": "Indicacoes espontaneas de criadores e clientes sobre a marca.",
+        "itens": ["tiktok:ttm_001", "tiktok:ttm_002", "instagram:igm_001"]
+      },
+      {
+        "tema": "Comparacao com outros cafes especiais",
+        "descricao": "Provas as cegas e rankings que posicionam a marca entre cafes especiais.",
+        "itens": ["tiktok:ttm_002", "youtube:ytm_001"]
+      },
+      {
+        "tema": "Custo e percepcao de valor",
+        "descricao": "Discussao sobre preco e frete versus a qualidade percebida.",
+        "itens": ["web:https://guiacafeespecial.com.br/marcas/serra-azul", "ig_003"]
+      }
+    ]
+  }
+}

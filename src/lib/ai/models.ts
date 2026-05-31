@@ -16,6 +16,8 @@ export type PapelIA =
   | "ocr"
   | "analista_conteudo"
   | "cientista_dados"
+  | "sentimento"
+  | "temas"
   | "sintetizador"
   | "verificador"
   | "redator"
@@ -27,6 +29,9 @@ export const MODELO_POR_PAPEL: Record<PapelIA, ModeloId> = {
   ocr: MODELOS.sonnet,
   analista_conteudo: MODELOS.sonnet,
   cientista_dados: MODELOS.sonnet,
+  // Sentimento e mapa de temas (Fase 3): Sonnet, leitura qualitativa estruturada.
+  sentimento: MODELOS.sonnet,
+  temas: MODELOS.sonnet,
   sintetizador: MODELOS.opus,
   verificador: MODELOS.opus,
   redator: MODELOS.opus,

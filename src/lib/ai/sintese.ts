@@ -60,6 +60,20 @@ export async function sintetizar(
       texto: c.texto,
       suportes: c.suportes,
     })),
+    // Analises adicionais (Fase 3) como sinal de percepcao externa direta para a
+    // sintese: share of voice, sentimento, temas, glossario e linha do tempo.
+    analisesAdicionais: analise.findings
+      .filter((f) =>
+        [
+          "share_of_voice",
+          "sentimento",
+          "temas",
+          "glossario",
+          "linha_tempo",
+          "formato_horario",
+        ].includes(f.construto ?? ""),
+      )
+      .map((f) => ({ construto: f.construto, titulo: f.titulo, conteudo: f.conteudo })),
   };
 
   const resp = await chamarClaude<SaidaSintese>({

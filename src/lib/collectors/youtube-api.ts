@@ -91,6 +91,40 @@ export async function videosDoCanal(
   return ids;
 }
 
+/**
+ * Busca videos de terceiros por termo na janela (search.list). Usado pela coleta
+ * de mencoes (Fase 3): videos que falam da marca sem ser do canal dela. Retorna
+ * os ids encontrados, que depois passam por detalhesDosVideos e comentarios.
+ */
+export async function buscarPorTermo(
+  termo: string,
+  janela: { inicio: string; fim: string },
+  maxResultados = 25,
+): Promise<string[]> {
+  const json = await chamarApi(
+    "search",
+    {
+      part: "snippet",
+      q: termo,
+      type: "video",
+      maxResults: String(Math.min(50, maxResultados)),
+      order: "relevance",
+      publishedAfter: new Date(janela.inicio).toISOString(),
+      publishedBefore: new Date(janela.fim).toISOString(),
+    },
+    // search.list custa 100 unidades de quota por chamada.
+    100,
+  );
+  const items = (json.items as Record<string, unknown>[]) ?? [];
+  const ids: string[] = [];
+  for (const it of items) {
+    const id = (it.id as Record<string, unknown>) ?? {};
+    const videoId = String(id.videoId ?? "");
+    if (videoId) ids.push(videoId);
+  }
+  return ids;
+}
+
 /** Metadados e estatisticas publicas dos videos (lotes de 50). */
 export async function detalhesDosVideos(ids: string[]): Promise<Record<string, unknown>[]> {
   const detalhes: Record<string, unknown>[] = [];

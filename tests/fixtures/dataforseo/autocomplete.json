@@ -1,0 +1,11 @@
+[
+  {
+    "keyword": "cafes serra azul",
+    "items": [
+      { "type": "autocomplete", "suggestion": "cafes serra azul onde comprar" },
+      { "type": "autocomplete", "suggestion": "cafes serra azul preco" },
+      { "type": "autocomplete", "suggestion": "cafes serra azul assinatura" },
+      { "type": "autocomplete", "suggestion": "cafes serra azul vale a pena" }
+    ]
+  }
+]
