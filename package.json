@@ -17,6 +17,7 @@
     "fixtures:gerar:grande": "tsx scripts/gerar-fixtures-larga-escala.ts",
     "robustez:sim": "tsx scripts/robustez-sim.ts",
     "smoke:apis": "tsx scripts/smoke-test-apis.ts",
+    "bucket:criar": "tsx scripts/criar-bucket-relatorios.ts",
     "mock:pipeline": "pnpm fixtures:pipeline"
   },
   "prisma": {
